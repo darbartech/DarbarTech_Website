@@ -1,17 +1,14 @@
 import Image from "next/image";
-import Navbar from "./components/common/Navbar";
 import { ArrowRight, RotateCcw, CircleCheck, Plus } from "lucide-react";
 import logo from "@/public/file.svg";
 import illustration from "@/public/Illustrator.png";
-import Footer from "./components/common/Footer";
 
 export default function Home() {
   return (
     <div>
-      <Navbar />
       <main className="py-5">
         {/* hero-section */}
-        <section className="px-30 py-10 text-center flex flex-col justify-center gap-5 text-sm font-bold">
+        <section className="px-30 py-15 text-center flex flex-col justify-center gap-5 text-sm font-bold">
           <h1 className="text-7xl font-bold">
             Create, inspect, and apply synthetic surveillance broadly.
           </h1>
@@ -34,7 +31,7 @@ export default function Home() {
         </section>
 
         {/* partner's logo section */}
-        <section className="flex items-center justify-between px-30 py-10">
+        <section className="flex items-center justify-between px-30 py-15">
           <Image src={logo} alt="Logo 1" />
           <Image src={logo} alt="Logo 2" />
           <Image src={logo} alt="Logo 3" />
@@ -87,7 +84,7 @@ export default function Home() {
         </section>
 
         {/* illustrator and description */}
-        <section className="px-30 py-10 flex items-center gap-5 font-bold">
+        <section className="px-30 py-15 flex items-center gap-5 font-bold">
           {/* illustration image */}
           <div className="w-[45%]">
             <Image src={illustration} alt="Illustration" />
@@ -133,7 +130,7 @@ export default function Home() {
         </section>
 
         {/* why choose us section */}
-        <section className="px-30 py-10 flex items-center justify-between gap-5 font-bold">
+        <section className="px-30 py-15 flex items-center justify-between gap-5 font-bold">
           <div className=" space-y-4 w-[55%]">
             <h1 className="text-5xl">Why Choose Us</h1>
             <p className="text-lg text-(--bg-muted)">
@@ -168,7 +165,7 @@ export default function Home() {
         </section>
 
         {/* testimonials section */}
-        <section className="px-30 py-10 text-center space-y-15 font-bold">
+        <section className="px-30 py-15 text-center space-y-15 font-bold">
           <div className="space-y-3">
             <h3 className="text-(--secondary-bg-color) text-2xl">
               TESTIMONIALS
@@ -207,8 +204,8 @@ export default function Home() {
         </section>
 
         {/* FAQ section */}
-        <section className="px-30 py-10 space-y-15">
-          <div className="max-w-2xl mx-auto text-center font-bold space-y-5">
+        <section className="px-30 py-15 space-y-15">
+          <div className="max-w-2xl mx-auto text-center font-bold space-y-5 bg-(--bg-random)">
             <span className="text-(--secondary-bg-color)">FAQ</span>
             <h2 className="text-5xl">Frequently Asked Questions</h2>
             <p className="text-(--bg-muted)">
@@ -249,7 +246,7 @@ export default function Home() {
         </section>
 
         {/* latest news section */}
-        <section className="px-30 py-10 font-bold space-y-10">
+        <section className="px-30 py-15 font-bold space-y-10">
           <h2 className="text-5xl text-center">Latest News</h2>
           <div className="flex items-center justify-between gap-5">
             {[1, 2, 3].map((item, index) => (
@@ -286,13 +283,11 @@ export default function Home() {
           <span className="block">GET STARTED INSTANTLY!</span>
             <h2 className="text-5xl">Get Only New Update From This Newsletter</h2>
             <div className="p-1 shadow-md w-fit mx-auto rounded-3xl">
-              <input type="email" placeholder="Enter your email" className="px-4"/>
+              <input type="email" placeholder="Enter your email" className="px-4 text-(--bg-muted) outline-none"/>
               <button className="py-2 px-4 bg-(--secondary-bg-color) text-(--primary-bg-color) rounded-4xl">SUBSCRIBE</button>
             </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

@@ -10,16 +10,17 @@ const Navbar = () => {
       <div className="flex items-center gap-10">
         {/* logo */}
         <div>
-          <Image src={logo} alt="Logo" />
+          <Link href="/">
+            <Image src={logo} alt="Logo" />
+          </Link>
         </div>
 
         {/* hyperlinks */}
         <div className="flex items-center gap-5">
-          <Link href="/">Home</Link>
           <Link href="/products" className="h-full flex items-center">
             <span>Product</span>
             <span>
-              <ChevronDown className="h-5"/>
+              <ChevronDown className="h-5" />
             </span>
           </Link>
           <Link href="/shop">Shop</Link>
@@ -32,7 +33,9 @@ const Navbar = () => {
       {/* buttons */}
       <div className="flex items-center gap-3">
         <button className="px-5 py-2">Login</button>
-        <button className="bg-(--secondary-bg-color) px-5 py-2 rounded-4xl text-(--primary-bg-color)">Start for free</button>
+        <button className="bg-(--secondary-bg-color) px-5 py-2 rounded-4xl text-(--primary-bg-color)">
+          Start for free
+        </button>
       </div>
     </div>
   );

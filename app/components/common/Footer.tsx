@@ -68,7 +68,7 @@ const Footer = () => {
       {/* quick links div */}
       <div className="flex-1 space-y-2">
         <h3 className="border-b border-(--bg-muted) py-3">Quick Links</h3>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 gap-2">
           <span>Home</span>
           <span>About</span>
           <span>Blog</span>
