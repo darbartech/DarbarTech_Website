@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <div className="flex items-center justify-between px-10 py-7 font-semibold sticky top-0 bg-(--primary-bg-color)">
+    <div className="flex items-center justify-between px-10 py-7 font-semibold sticky top-0 bg-(--primary-bg-color) z-50">
       <div className="flex items-center gap-10">
         {/* logo */}
         <Link href="/" className="hover:cursor-pointer">

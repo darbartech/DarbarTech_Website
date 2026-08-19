@@ -1,43 +1,94 @@
 import Image from "next/image";
-import { ArrowRight, RotateCcw, CircleCheck, Plus } from "lucide-react";
+import {
+  ArrowRight,
+  RotateCcw,
+  CircleCheck,
+  Plus,
+  CircleDashed,
+  ChessKnight,
+} from "lucide-react";
 import logo from "@/public/file.svg";
 import illustration from "@/public/Illustrator.png";
 import illustration2 from "@/public/illustrator2.png";
+import heroSectionLine from "@/public/hero-section-line.png";
 
 export default function Home() {
   return (
-    <main className="-mt-24 space-y-5">
+    <main className="-mt-24 space-y-5 ">
       {/* hero-section */}
-      <section className="h-screen px-30 py-15 text-center flex flex-col justify-center gap-5 text-sm font-bold overflow-y-hidden">
+      <section className="h-screen px-30 pb-15 text-center flex flex-col justify-center gap-5 text-sm font-bold overflow-y-hidden relative">
         <h1 className="text-7xl font-bold">
           Create, inspect, and apply synthetic surveillance broadly.
         </h1>
-        <p className="text-(--bg-muted) text-xl">
-          Start with a stunning homepage. Stay motivated without hurting your
-          pocket.
-        </p>
-        <button className="bg-(--secondary-bg-color) px-8 py-4 rounded-4xl text-(--primary-bg-color) text-xl mx-auto">
-          Start for free
-        </button>
-        <p className="text-(--bg-muted) text-lg flex justify-center gap-2">
-          Want to talk or get a live demo?
-          <span className="text-(--gray-color) flex items-center gap-1">
-            Get in touch{" "}
-            <span>
-              <ArrowRight size={18} />
+        <div className="font-semibold space-y-5">
+          <p className="text-(--bg-muted) text-xl">
+            Start with a stunning homepage. Stay motivated without hurting your
+            pocket.
+          </p>
+          <button className="bg-(--secondary-bg-color) px-8 py-4 rounded-4xl text-(--primary-bg-color) text-xl mx-auto">
+            Start for free
+          </button>
+          <p className="text-(--bg-muted) text-lg flex justify-center gap-2">
+            Want to talk or get a live demo?
+            <span className="text-(--gray-color) flex items-center gap-1">
+              Get in touch{" "}
+              <span>
+                <ArrowRight size={18} />
+              </span>
             </span>
-          </span>
-        </p>
+          </p>
+        </div>
+
+        {/* Absolute hero-section-line image */}
+        <Image
+          src={heroSectionLine}
+          alt="Hero Section Line Image"
+          className="absolute bottom-10 left-0 w-full"
+        />
+
+        {/* absolute divs */}
+        {/* top left */}
+        <div className="p-3 rounded-2xl bg-pink-600 w-fit absolute left-60 bottom-85">
+          <CircleDashed className="text-(--primary-bg-color)" strokeWidth={3} />
+        </div>
+
+        {/* top right */}
+        <div className="p-3 rounded-2xl bg-(--bg-random) w-fit absolute right-30 bottom-90">
+          <CircleDashed className="text-blue-400" strokeWidth={3} />
+        </div>
+
+        {/* middle left */}
+        <div className="p-3 rounded-2xl bg-(--accent-color) w-fit absolute left-98 bottom-45">
+          <CircleDashed className="text-(--primary-bg-color)" strokeWidth={3} />
+        </div>
+
+        {/* middle right */}
+        <div className="p-3 rounded-2xl bg-(--bg-random) w-fit absolute right-85 bottom-55 ">
+          <CircleDashed
+            className="text-(--primary-text-color)"
+            strokeWidth={3}
+          />
+        </div>
+
+        {/* bottom left */}
+        <div className="p-3 rounded-2xl bg-(--bg-footer) w-fit absolute left-50 bottom-5">
+          <ChessKnight className="text-orange-400" strokeWidth={3} />
+        </div>
+
+        {/* bottom right */}
+        <div className="p-3 rounded-2xl bg-(--bg-footer) w-fit absolute right-100 bottom-20">
+          <CircleDashed className="text-emerald-400" strokeWidth={3} />
+        </div>
       </section>
 
       {/* partner's logo section */}
       <section className="flex items-center justify-between px-30 py-15">
-        <Image src={logo} alt="Logo 1" />
-        <Image src={logo} alt="Logo 2" />
-        <Image src={logo} alt="Logo 3" />
-        <Image src={logo} alt="Logo 4" />
-        <Image src={logo} alt="Logo 5" />
-        <Image src={logo} alt="Logo 6" />
+        <Image src={logo} alt="Logo 1" height={30} width={30} />
+        <Image src={logo} alt="Logo 2" height={30} width={30} />
+        <Image src={logo} alt="Logo 3" height={30} width={30} />
+        <Image src={logo} alt="Logo 4" height={30} width={30} />
+        <Image src={logo} alt="Logo 5" height={30} width={30} />
+        <Image src={logo} alt="Logo 6" height={30} width={30} />
       </section>
 
       {/* featured solutions section */}
@@ -115,7 +166,7 @@ export default function Home() {
           </div>
 
           {/* buttons */}
-          <div className="text-lg space-x-2 flex">
+          <div className="text-lg space-x-2 flex font-semibold">
             <button className="px-7 py-2 border border-(--secondary-bg-color) text-(--accent-color) rounded-3xl ">
               Contact Us
             </button>
@@ -181,11 +232,9 @@ export default function Home() {
               </p>
 
               <div className="flex items-center justify-start gap-2 text-start font-bold">
-                <Image
-                  src={illustration}
-                  alt="Profile Image"
-                  className="h-10 w-10 rounded-[50%] "
-                />
+                <div className="h-10 w-10 rounded-[50%] object-cover overflow-hidden">
+                  <Image src={illustration} alt="Profile Image" />
+                </div>
                 <div className="">
                   <h3 className="text-xl -mb-1">Ram Bahadur</h3>
                   <p className="text-normal text-(--secondary-bg-color)">
@@ -195,13 +244,12 @@ export default function Home() {
               </div>
             </div>
           ))}
-          
         </div>
         <div className="flex gap-1 justify-center">
-            <button className="h-3 w-3 rounded-[50%] bg-(--secondary-bg-color)"></button>
-            <button className="h-3 w-3 rounded-[50%] bg-(--surface)"></button>
-            <button className="h-3 w-3 rounded-[50%] bg-(--surface)"></button>
-          </div>
+          <button className="h-3 w-3 rounded-[50%] bg-(--secondary-bg-color)"></button>
+          <button className="h-3 w-3 rounded-[50%] bg-(--surface)"></button>
+          <button className="h-3 w-3 rounded-[50%] bg-(--surface)"></button>
+        </div>
       </section>
 
       {/* FAQ section */}
