@@ -1,0 +1,11 @@
+Primary-color : FFFFFF
+Secondary-Color :FF591E
+acent_color : FB432C
+Gray color : 3F3C3C
+Black color: 000000
+
+928C8C ,
+
+
+D9D9D9,  282828
+
