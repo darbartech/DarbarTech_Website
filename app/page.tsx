@@ -8,9 +8,9 @@ import {
   ChessKnight,
 } from "lucide-react";
 import logo from "@/public/file.svg";
-import illustration from "@/public/Illustrator.png";
-import illustration2 from "@/public/illustrator2.png";
-import heroSectionLine from "@/public/hero-section-line.png";
+import illustration from "@/public/home/illustrator2.png";
+import illustration2 from "@/public/home/illustrator2.png";
+import heroSectionLine from "@/public/home/hero-section-line.png";
 
 export default function Home() {
   return (
@@ -42,7 +42,6 @@ export default function Home() {
           className="
       text-4xl
       leading-tight
-      font-bold
 
       sm:text-5xl
       md:text-6xl

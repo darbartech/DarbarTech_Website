@@ -2,7 +2,7 @@ import React from "react";
 
 import Image from "next/image";
 
-import illustration from "@/public/Illustrator.png";
+import illustration from "@/public/home/Illustrator.png";
 
 import {
   MessageCircleIcon,
@@ -44,7 +44,7 @@ const Footer = () => {
 
           sm:grid-cols-2
 
-          lg:grid-cols-4
+          lg:grid-cols-3
           lg:gap-5
         "
       >

@@ -4,6 +4,7 @@ html{
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+
 }
 
 :root {
@@ -11,6 +12,7 @@ html{
   --primary-text-color: #000000;
 
   --secondary-bg-color: #FF591E;
+  --secondary-dark-bg-color: #FF391E;
 
   --accent-color : #FB432C;
   --gray-color: #3F3C3C;

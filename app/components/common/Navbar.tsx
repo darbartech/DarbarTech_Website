@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
 import {
   ChevronDown,
   ChevronUp,
@@ -16,8 +15,11 @@ import logo from "@/public/window.svg";
 
 const navLinks = [
   {
+    label: "Home",
+    href: "/",
+  },
+  {
     label: "Product",
-    href: "",
     hasDropdown: true,
   },
   {
@@ -35,6 +37,10 @@ const navLinks = [
   {
     label: "Developers",
     href: "/developers",
+  },
+  {
+    label: "Services",
+    href: "/services",
   },
 ];
 
@@ -54,7 +60,7 @@ const productLinks = [
 ];
 
 const linkClasses =
-  "flex items-center gap-1 rounded-3xl px-3 py-2 transition-all hover:text-(--accent-color) hover:shadow-md sm:px-4 lg:px-5";
+  "flex items-center gap-1 rounded-3xl px-3 py-2 transition-all hover:text-(--accent-color) hover:underline hover:cursor-pointer sm:px-4 lg:px-5";
 
 const desktopProductButtonClasses = `
   w-full
@@ -101,6 +107,8 @@ const mobileProductLinkClasses = `
 `;
 
 const Navbar = () => {
+  const pathname = usePathname();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductOpen, setIsProductOpen] = useState(false);
 
@@ -117,14 +125,36 @@ const Navbar = () => {
     setIsProductOpen((prev) => !prev);
   };
 
+  // Check whether a normal navigation link is active
+  const isActive = (href?: string) => {
+    if (!href) {
+      return false;
+    }
+
+    // Home should only be active on "/"
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    // Other routes are active for their child routes too
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  // Product dropdown is active for any /products/... route
+  const isProductActive = pathname.startsWith("/products");
+
   return (
-    <header className="sticky top-0 z-50 bg-(--primary-bg-color) font-semibold">
+    <header className="sticky top-0 z-50 font-semibold bg-(--primary-bg-color)">
       {/* Main navbar */}
       <div className="flex items-center justify-between px-4 py-4 sm:px-6 md:px-10 md:py-5 lg:py-7">
         {/* Logo + Desktop navigation */}
         <div className="flex min-w-0 items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
           {/* Logo */}
-          <Link href="/" aria-label="Home" onClick={closeMenu}>
+          <Link
+            href="/"
+            aria-label="Home"
+            onClick={closeMenu}
+          >
             <Image
               src={logo}
               alt="Logo"
@@ -139,87 +169,135 @@ const Navbar = () => {
             className="hidden lg:block"
           >
             <ul className="flex items-center">
-              {navLinks.map((link) => (
-                <li
-                  key={link.label}
-                  className={link.hasDropdown ? "group relative" : ""}
-                >
-                  <Link href={link.href} className={linkClasses}>
-                    <span>{link.label}</span>
+              {navLinks.map((link) => {
+                const active = link.hasDropdown
+                  ? isProductActive
+                  : isActive(link.href);
 
-                    {link.hasDropdown && (
-                      <span className="relative h-4.5 w-4.5">
-                        <ChevronDown
-                          size={18}
-                          strokeWidth={2}
-                          aria-hidden="true"
-                          className="
-                            absolute
-                            inset-0
-                            opacity-100
-                            transition-opacity
-                            duration-200
-                            group-hover:opacity-0
-                          "
-                        />
+                return (
+                  <li
+                    key={link.label}
+                    className={
+                      link.hasDropdown
+                        ? "group relative"
+                        : ""
+                    }
+                  >
+                    {link.hasDropdown ? (
+                      <button
+                        type="button"
+                        aria-expanded={isProductOpen}
+                        onClick={toggleProduct}
+                        className={`
+                          ${linkClasses}
+                          ${
+                            active
+                              ? "text-(--accent-color)"
+                              : ""
+                          }
+                        `}
+                      >
+                        <span>{link.label}</span>
 
-                        <ChevronUp
-                          size={18}
-                          strokeWidth={2}
-                          aria-hidden="true"
-                          className="
-                            absolute
-                            inset-0
-                            opacity-0
-                            transition-opacity
-                            duration-200
-                            group-hover:opacity-100
-                          "
-                        />
-                      </span>
+                        <span className="relative h-4.5 w-4.5">
+                          <ChevronDown
+                            size={18}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                            className="
+                              absolute
+                              inset-0
+                              opacity-100
+                              transition-opacity
+                              duration-200
+                              group-hover:opacity-0
+                            "
+                          />
+
+                          <ChevronUp
+                            size={18}
+                            strokeWidth={2}
+                            aria-hidden="true"
+                            className="
+                              absolute
+                              inset-0
+                              opacity-0
+                              transition-opacity
+                              duration-200
+                              group-hover:opacity-100
+                            "
+                          />
+                        </span>
+                      </button>
+                    ) : (
+                      <Link
+                        href={link.href!}
+                        aria-current={
+                          active ? "page" : undefined
+                        }
+                        className={`
+                          ${linkClasses}
+                          ${
+                            active
+                              ? "text-(--accent-color)"
+                              : ""
+                          }
+                        `}
+                      >
+                        <span>{link.label}</span>
+                      </Link>
                     )}
-                  </Link>
 
-                  {/* Product dropdown */}
-                  {link.hasDropdown && (
-                    <div
-                      className="
-                        invisible
-                        flex flex-col
-                        absolute
-                        left-6/7
-                        top-full
-                        z-50
-                        mt-2
-                        w-48
-                        -translate-x-1/2
-                        translate-y-2
-                        rounded-xl
-                        bg-(--primary-bg-color)
-                        p-2
-                        opacity-0
-                        shadow-2xl
-                        transition-all
-                        duration-200
-                        group-hover:visible
-                        group-hover:translate-y-0
-                        group-hover:opacity-100
-                        sm:w-52
-                      "
-                    >
-                      {productLinks.map((product) => (
-                        <Link
-                          key={product.href}
-                          href={product.href}
-                          className={desktopProductButtonClasses}
-                        >
-                          {product.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-              ))}
+                    {/* Product dropdown */}
+                    {link.hasDropdown && (
+                      <div
+                        className="
+                          invisible
+                          absolute
+                          left-6/7
+                          top-full
+                          z-50
+                          mt-2
+                          flex
+                          w-48
+                          -translate-x-1/2
+                          translate-y-2
+                          flex-col
+                          rounded-xl
+                          bg-(--primary-bg-color)
+                          p-2
+                          opacity-0
+                          shadow-2xl
+                          transition-all
+                          duration-200
+                          group-hover:visible
+                          group-hover:translate-y-0
+                          group-hover:opacity-100
+                          sm:w-52
+                        "
+                      >
+                        {productLinks.map((product) => (
+                          <Link
+                            key={product.href}
+                            href={product.href}
+                            onClick={closeMenu}
+                            className={`
+                              ${desktopProductButtonClasses}
+                              ${
+                                pathname === product.href
+                                  ? "bg-(--secondary-bg-color) text-(--primary-bg-color)"
+                                  : ""
+                              }
+                            `}
+                          >
+                            {product.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>
@@ -234,9 +312,9 @@ const Navbar = () => {
               py-2
               text-sm
               transition-all
+              hover:cursor-pointer
               hover:text-(--accent-color)
               hover:shadow-md
-              hover:cursor-pointer
               xl:px-5
               xl:text-base
             "
@@ -254,11 +332,11 @@ const Navbar = () => {
               text-sm
               text-(--primary-bg-color)
               transition-all
+              hover:cursor-pointer
               hover:bg-(--primary-bg-color)
               hover:text-(--secondary-bg-color)
               hover:outline-2
               hover:outline-(--secondary-bg-color)
-              hover:cursor-pointer
               xl:px-5
               xl:text-base
             "
@@ -271,7 +349,9 @@ const Navbar = () => {
         <button
           type="button"
           onClick={toggleMenu}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={
+            isMenuOpen ? "Close menu" : "Open menu"
+          }
           aria-expanded={isMenuOpen}
           className="
             ml-auto
@@ -312,7 +392,6 @@ const Navbar = () => {
           sm:right-6
           md:right-10
           lg:hidden
-
           ${
             isMenuOpen
               ? "pointer-events-auto max-h-125 translate-y-2 opacity-100"
@@ -320,75 +399,111 @@ const Navbar = () => {
           }
         `}
       >
-        <nav aria-label="Mobile navigation" className="p-3">
+        <nav
+          aria-label="Mobile navigation"
+          className="p-3"
+        >
           <ul className="flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <li key={link.label}>
-                {link.hasDropdown ? (
-                  <>
-                    {/* Product button */}
-                    <button
-                      type="button"
-                      onClick={toggleProduct}
-                      aria-expanded={isProductOpen}
-                      className={mobileLinkClasses}
-                    >
-                      <span>{link.label}</span>
+            {navLinks.map((link) => {
+              const active = link.hasDropdown
+                ? isProductActive
+                : isActive(link.href);
 
-                      <ChevronDown
-                        size={18}
-                        strokeWidth={2}
-                        aria-hidden="true"
+              return (
+                <li key={link.label}>
+                  {link.hasDropdown ? (
+                    <>
+                      {/* Product button */}
+                      <button
+                        type="button"
+                        onClick={toggleProduct}
+                        aria-expanded={isProductOpen}
                         className={`
-                          transition-transform
-                          duration-200
+                          ${mobileLinkClasses}
                           ${
-                            isProductOpen
-                              ? "rotate-180"
-                              : "rotate-0"
+                            active
+                              ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
+                              : ""
                           }
                         `}
-                      />
-                    </button>
+                      >
+                        <span>{link.label}</span>
 
-                    {/* Mobile Product dropdown */}
-                    <div
+                        <ChevronDown
+                          size={18}
+                          strokeWidth={2}
+                          aria-hidden="true"
+                          className={`
+                            transition-transform
+                            duration-200
+                            ${
+                              isProductOpen
+                                ? "rotate-180"
+                                : "rotate-0"
+                            }
+                          `}
+                        />
+                      </button>
+
+                      {/* Mobile Product dropdown */}
+                      <div
+                        className={`
+                          overflow-hidden
+                          transition-all
+                          duration-300
+                          ${
+                            isProductOpen
+                              ? "max-h-40 opacity-100"
+                              : "max-h-0 opacity-0"
+                          }
+                        `}
+                      >
+                        <div className="ml-3 mt-1 space-y-1 border-l border-(--border) pl-3">
+                          {productLinks.map(
+                            (product) => (
+                              <Link
+                                key={product.href}
+                                href={product.href}
+                                onClick={closeMenu}
+                                className={`
+                                  ${mobileProductLinkClasses}
+                                  ${
+                                    pathname ===
+                                    product.href
+                                      ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
+                                      : ""
+                                  }
+                                `}
+                              >
+                                {product.label}
+                              </Link>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <Link
+                      href={link.href!}
+                      onClick={closeMenu}
+                      aria-current={
+                        active ? "page" : undefined
+                      }
                       className={`
-                        overflow-hidden
-                        transition-all
-                        duration-300
+                        ${mobileLinkClasses}
                         ${
-                          isProductOpen
-                            ? "max-h-40 opacity-100"
-                            : "max-h-0 opacity-0"
+                          active
+                            ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
+                            : ""
                         }
                       `}
                     >
-                      <div className="ml-3 mt-1 space-y-1 border-l border-(--border) pl-3">
-                        {productLinks.map((product) => (
-                          <Link
-                            key={product.href}
-                            href={product.href}
-                            onClick={closeMenu}
-                            className={mobileProductLinkClasses}
-                          >
-                            {product.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <Link
-                    href={link.href}
-                    onClick={closeMenu}
-                    className={mobileLinkClasses}
-                  >
-                    <span>{link.label}</span>
-                  </Link>
-                )}
-              </li>
-            ))}
+                      <span>{link.label}</span>
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           {/* Mobile actions */}
