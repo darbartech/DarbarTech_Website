@@ -41,6 +41,14 @@ const navLinks = [
     label: "About",
     href: "/about",
   },
+  {
+    label: "Register",
+    href: "/register",
+  },
+  {
+    label: "Login",
+    href: "/login",
+  },
 ];
 
 const productLinks = [
@@ -59,7 +67,7 @@ const productLinks = [
 ];
 
 const linkClasses =
-  "flex items-center py-2 hover:cursor-pointer relative w-full overflow-hidden transition-all duration-300 ease-in-out after:content-[''] after:w-full after:h-1 after:absolute after:-left-full after:bottom-0 after:bg-(--accent-color) hover:after:left-0 after:transition-all after:duration-300 after:ease-in-out";
+  "flex items-center py-2 hover:cursor-pointer relative w-full overflow-hidden transition-all duration-200 ease-in-out after:content-[''] after:w-full after:h-1 after:absolute after:-left-full after:bottom-0 after:bg-(--accent-color) hover:after:left-0 after:transition-all after:duration-300 after:ease-in-out";
 
 const desktopProductButtonClasses = `
   w-full
@@ -169,11 +177,7 @@ const Navbar = () => {
                 return (
                   <li
                     key={link.label}
-                    className={
-                      link.hasDropdown
-                        ? "group relative"
-                        : ""
-                    }
+                    className={link.hasDropdown ? "group relative" : ""}
                   >
                     {link.hasDropdown ? (
                       <button
@@ -286,8 +290,7 @@ const Navbar = () => {
 
         {/* Desktop actions */}
         <div className="ml-auto hidden items-center gap-2 lg:flex xl:gap-3">
-          <button
-            type="button"
+          <Link href="/login"
             className="
               rounded-3xl
               px-4
@@ -295,17 +298,17 @@ const Navbar = () => {
               text-sm
               transition-all
               hover:cursor-pointer
-              hover:text-(--accent-color)
-              hover:shadow-md
+              hover:ring-2
+              hover:ring-(--secondary-bg-color)
               xl:px-5
               xl:text-base
             "
           >
             Login
-          </button>
+          </Link>
 
-          <button
-            type="button"
+          <Link
+            href="/register"
             className="
               rounded-4xl
               bg-(--secondary-bg-color)
@@ -324,7 +327,7 @@ const Navbar = () => {
             "
           >
             Start for free
-          </button>
+          </Link>
         </div>
 
         {/* Mobile menu toggle button */}
@@ -476,8 +479,8 @@ const Navbar = () => {
 
           {/* Mobile actions */}
           <div className="mt-3 flex flex-col gap-2 border-t border-(--border) pt-3">
-            <button
-              type="button"
+            <Link
+              href="/login"
               className="
                 w-full
                 rounded-xl
@@ -493,10 +496,10 @@ const Navbar = () => {
               "
             >
               Login
-            </button>
+            </Link>
 
-            <button
-              type="button"
+            <Link
+              href="/register"
               className="
                 w-full
                 rounded-xl
@@ -515,7 +518,7 @@ const Navbar = () => {
               "
             >
               Start for free
-            </button>
+            </Link>
           </div>
         </nav>
       </div>

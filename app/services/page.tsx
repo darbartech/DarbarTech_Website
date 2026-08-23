@@ -7,7 +7,7 @@ import serviceImage4 from "@/public/services/image 24.png";
 
 import IllustrationAndContent from "../components/IllustrationAndContent";
 import { ServicesBox } from "../components/ServiceBox";
-import HeroSectionForPages from "../components/common/HeroSectionForPages";
+import HeroSectionForPages from "../components/HeroSectionForPages";
 
 
 const contents = [
@@ -118,7 +118,7 @@ const page = () => {
   return (
     <main className="font-bold">
       {/* IT services section */}
-      <HeroSectionForPages />
+      <HeroSectionForPages title="IT Services" />
 
       {contents.map((item, index) => (
         <IllustrationAndContent
