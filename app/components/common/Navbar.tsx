@@ -4,12 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ChevronDown,
-  ChevronUp,
-  Menu,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, Menu, X } from "lucide-react";
 
 import logo from "@/public/window.svg";
 
@@ -42,6 +37,10 @@ const navLinks = [
     label: "Services",
     href: "/services",
   },
+  {
+    label: "About",
+    href: "/about",
+  },
 ];
 
 const productLinks = [
@@ -60,7 +59,7 @@ const productLinks = [
 ];
 
 const linkClasses =
-  "flex items-center gap-1 rounded-3xl px-3 py-2 transition-all hover:text-(--accent-color) hover:underline hover:cursor-pointer sm:px-4 lg:px-5";
+  "flex items-center py-2 hover:cursor-pointer relative w-full overflow-hidden transition-all duration-300 ease-in-out after:content-[''] after:w-full after:h-1 after:absolute after:-left-full after:bottom-0 after:bg-(--accent-color) hover:after:left-0 after:transition-all after:duration-300 after:ease-in-out";
 
 const desktopProductButtonClasses = `
   w-full
@@ -150,11 +149,7 @@ const Navbar = () => {
         {/* Logo + Desktop navigation */}
         <div className="flex min-w-0 items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
           {/* Logo */}
-          <Link
-            href="/"
-            aria-label="Home"
-            onClick={closeMenu}
-          >
+          <Link href="/" aria-label="Home" onClick={closeMenu}>
             <Image
               src={logo}
               alt="Logo"
@@ -164,11 +159,8 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop navigation */}
-          <nav
-            aria-label="Main navigation"
-            className="hidden lg:block"
-          >
-            <ul className="flex items-center">
+          <nav aria-label="Main navigation" className="hidden lg:block">
+            <ul className="flex items-center gap-6">
               {navLinks.map((link) => {
                 const active = link.hasDropdown
                   ? isProductActive
@@ -190,11 +182,7 @@ const Navbar = () => {
                         onClick={toggleProduct}
                         className={`
                           ${linkClasses}
-                          ${
-                            active
-                              ? "text-(--accent-color)"
-                              : ""
-                          }
+                          ${active ? "text-(--accent-color)" : ""}
                         `}
                       >
                         <span>{link.label}</span>
@@ -232,16 +220,10 @@ const Navbar = () => {
                     ) : (
                       <Link
                         href={link.href!}
-                        aria-current={
-                          active ? "page" : undefined
-                        }
+                        aria-current={active ? "page" : undefined}
                         className={`
                           ${linkClasses}
-                          ${
-                            active
-                              ? "text-(--accent-color)"
-                              : ""
-                          }
+                          ${active ? "text-(--accent-color)" : ""}
                         `}
                       >
                         <span>{link.label}</span>
@@ -349,9 +331,7 @@ const Navbar = () => {
         <button
           type="button"
           onClick={toggleMenu}
-          aria-label={
-            isMenuOpen ? "Close menu" : "Open menu"
-          }
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
           className="
             ml-auto
@@ -399,10 +379,7 @@ const Navbar = () => {
           }
         `}
       >
-        <nav
-          aria-label="Mobile navigation"
-          className="p-3"
-        >
+        <nav aria-label="Mobile navigation" className="p-3">
           <ul className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const active = link.hasDropdown
@@ -436,11 +413,7 @@ const Navbar = () => {
                           className={`
                             transition-transform
                             duration-200
-                            ${
-                              isProductOpen
-                                ? "rotate-180"
-                                : "rotate-0"
-                            }
+                            ${isProductOpen ? "rotate-180" : "rotate-0"}
                           `}
                         />
                       </button>
@@ -459,26 +432,23 @@ const Navbar = () => {
                         `}
                       >
                         <div className="ml-3 mt-1 space-y-1 border-l border-(--border) pl-3">
-                          {productLinks.map(
-                            (product) => (
-                              <Link
-                                key={product.href}
-                                href={product.href}
-                                onClick={closeMenu}
-                                className={`
+                          {productLinks.map((product) => (
+                            <Link
+                              key={product.href}
+                              href={product.href}
+                              onClick={closeMenu}
+                              className={`
                                   ${mobileProductLinkClasses}
                                   ${
-                                    pathname ===
-                                    product.href
+                                    pathname === product.href
                                       ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
                                       : ""
                                   }
                                 `}
-                              >
-                                {product.label}
-                              </Link>
-                            ),
-                          )}
+                            >
+                              {product.label}
+                            </Link>
+                          ))}
                         </div>
                       </div>
                     </>
@@ -486,9 +456,7 @@ const Navbar = () => {
                     <Link
                       href={link.href!}
                       onClick={closeMenu}
-                      aria-current={
-                        active ? "page" : undefined
-                      }
+                      aria-current={active ? "page" : undefined}
                       className={`
                         ${mobileLinkClasses}
                         ${
