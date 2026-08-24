@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, ChevronUp, Menu, X } from "lucide-react";
 
-import logo from "@/public/window.svg";
+import logo from "@/public/logos/dark_logo.png";
 
 const navLinks = [
   {
@@ -127,23 +127,23 @@ const Navbar = () => {
   const isProductActive = pathname.startsWith("/products");
 
   return (
-    <header className="sticky top-0 z-50 font-semibold bg-(--primary-bg-color)">
+    <header className="sticky top-0 z-50 font-semibold bg-(--primary-bg-color) text-(--primary-text-color)">
       {/* Main navbar */}
       <div className="flex items-center justify-between px-4 py-4 sm:px-6 md:px-10 md:py-5 lg:py-7">
         {/* Logo + Desktop navigation */}
-        <div className="flex min-w-0 items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+        <div className="flex items-center sm:gap-4 lg:gap-10">
           {/* Logo */}
           <Link href="/" aria-label="Home" onClick={closeMenu}>
             <Image
               src={logo}
               alt="Logo"
               priority
-              className="h-auto w-6 sm:w-7"
+              className="w-40"
             />
           </Link>
 
           {/* Desktop navigation */}
-          <nav aria-label="Main navigation" className="hidden lg:block">
+          <nav aria-label="Main navigation" className="hidden lg:block ">
             <ul className="flex items-center gap-6">
               {navLinks.map((link) => {
                 const active = link.hasDropdown
