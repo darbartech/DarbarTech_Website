@@ -2,8 +2,10 @@ import React from "react";
 
 const EnquirySection = () => {
   return (
-    <section
-      className="
+    <section className=""
+      
+    >
+      <div className="
     mx-auto
     my-10
     max-w-5xl
@@ -12,6 +14,8 @@ const EnquirySection = () => {
     py-12
     text-center
     font-bold
+
+    bg-[url('/about/illustrator2.png')]
 
     sm:px-8
     sm:py-15
@@ -22,9 +26,8 @@ const EnquirySection = () => {
 
     lg:px-20
     xl:px-30
-  "
-    >
-      <span className="block text-sm sm:text-base">GET STARTED INSTANTLY!</span>
+  ">
+        <span className="block text-sm sm:text-base">GET STARTED INSTANTLY!</span>
 
       <h2 className="text-3xl sm:text-4xl md:text-5xl">
         Get Only New Update From This Newsletter
@@ -74,6 +77,7 @@ const EnquirySection = () => {
         >
           SUBSCRIBE
         </button>
+      </div>
       </div>
     </section>
   );

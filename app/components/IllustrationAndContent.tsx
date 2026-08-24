@@ -47,7 +47,7 @@ const IllustrationAndContent = ({
   `}
     >
       {/* description side */}
-      <div className="w-full space-y-5 md:w-[50%]">
+      <div className="w-full space-y-5 lg:w-[50%]">
         <h2 className="text-3xl sm:text-4xl md:text-5xl">{topic}</h2>
 
         <p className="text-left text-base text-(--bg-muted) ">

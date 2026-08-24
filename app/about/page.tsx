@@ -62,7 +62,7 @@ const page = () => {
       ))}
 
       {/* history, mission  and who are we section */}
-      <section className="px-30 py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5  text-sm">
+      <section className="px-5 py-10 sm:px-15 lg:px-30 lg:py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5  text-sm">
         {[1, 2, 3].map((item, index) => (
           <div className="space-y-5" key={index}>
             <h3 className="border-b border-(--bg-muted) pb-2 text-2xl">
@@ -89,24 +89,24 @@ const page = () => {
       {/* video section */}
       <section className="text-(--primary-bg-color) bg-[url('/about/illustrator2.png')] bg-cover bg-center">
         <div
-          className="px-30 py-20 space-y-5 flex items-stretch justify-between gap-5 relative after:absolute
+          className=" py-10 px-5 lg:px-30 lg:py-20 space-y-5 flex items-stretch justify-between gap-5 relative after:absolute
     after:inset-0
-    after:bg-(--primary-text-color)/70"
+    after:bg-(--primary-text-color)/70 sm:px-15"
         >
-          <div className="flex-1 space-y-5">
-            <p className="text-(--secondary-bg-color)">WATCH OUR VIDEO</p>
-            <h3 className="text-5xl">Get Better Solution For Your Business</h3>
-            <p className="text-sm">
+          <div className="flex-1 space-y-5 z-10">
+            <p className="text-(--secondary-bg-color) text-sm">WATCH OUR VIDEO</p>
+            <h3 className="text-2xl lg:text-5xl">Get Better Solution For Your Business</h3>
+            <p className="text-sm text-(--bg-muted)">
               No fake products and services. The customer is king. Their lives
               and needs are the inspiration.
             </p>
-            <button className="bg-(--secondary-bg-color) text-(--primary-bg-color) px-5 py-2 rounded">
+            <button className="bg-(--secondary-bg-color) text-(--primary-bg-color) px-5 py-2 rounded text-sm">
               CONTACT US
             </button>
           </div>
 
-{/* play button */}
-          <div className="flex-1 flex items-center justify-center">
+          {/* play button */}
+          <div className="flex-1 flex items-center justify-center z-10">
             <span className="flex h-32 w-32 items-center justify-center rounded-full border border-(--primary-bg-color)">
               <span className="flex h-24 w-24 items-center justify-center rounded-full border border-(--primary-bg-color)">
                 <span className="flex h-16 w-16 items-center justify-center rounded-full bg-(--secondary-bg-color)">

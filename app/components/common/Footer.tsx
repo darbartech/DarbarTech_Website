@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import illustration from "@/public/home/Illustrator.png";
+import Link from "next/link";
 
 import {
   MessageCircleIcon,
@@ -10,7 +11,11 @@ import {
   PhoneCall,
 } from "lucide-react";
 
+const linkClasses =
+  "hover:cursor-pointer hover:text-(--secondary-bg-color) transition-all duration-150";
+
 const Footer = () => {
+
   return (
     <footer
       className="
@@ -120,21 +125,18 @@ const Footer = () => {
             Quick Links
           </h3>
 
-          <div className="grid grid-cols-2 gap-2">
-            <span>Home</span>
-            <span>About</span>
-            <span>Blog</span>
-            <span>Contact</span>
-            <span>Agency</span>
-            <span>Digital</span>
-            <span>Support</span>
-            <span>Shop</span>
-            <span>Agency</span>
-            <span>Digital</span>
-            <span>Support</span>
-            <span>Shop</span>
-            <span>Digital</span>
-            <span>Support</span>
+          <div className="grid grid-cols-2 gap-2 font-semibold">
+            <Link className={linkClasses} href="/">Home</Link>
+            <Link className={linkClasses} href="/about">About</Link>
+            <Link className={linkClasses} href="">Contact</Link>
+            <Link className={linkClasses} href="/product">Product</Link>
+            <Link className={linkClasses} href="/services">Services</Link>
+            <Link className={linkClasses} href="">Agency</Link>
+            <Link className={linkClasses} href="">Digital</Link>
+            <Link className={linkClasses} href="">Support</Link>
+            <Link className={linkClasses} href="">Shop</Link>
+            <Link className={linkClasses} href="">Digital</Link>
+            <Link className={linkClasses} href="">Support</Link>
           </div>
         </div>
 

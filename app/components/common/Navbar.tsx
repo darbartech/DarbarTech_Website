@@ -14,40 +14,16 @@ const navLinks = [
     href: "/",
   },
   {
-    label: "Product",
-    hasDropdown: true,
-  },
-  {
-    label: "Shop",
-    href: "/shop",
-  },
-  {
-    label: "Pages",
-    href: "/pages",
-  },
-  {
-    label: "Integrations",
-    href: "/integrations",
-  },
-  {
-    label: "Developers",
-    href: "/developers",
-  },
-  {
-    label: "Services",
-    href: "/services",
-  },
-  {
     label: "About",
     href: "/about",
   },
   {
-    label: "Register",
-    href: "/register",
+    label: "Product",
+    hasDropdown: true,
   },
   {
-    label: "Login",
-    href: "/login",
+    label: "Services",
+    href: "/services",
   },
 ];
 

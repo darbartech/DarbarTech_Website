@@ -143,9 +143,13 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
   //   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <main className="space-y-3 w-full mx-auto px-4 py-5 sm:px-6 sm:py-14 md:space-y-5 md:px-10 md:py-10 lg:w-full lg:flex lg:items-center lg:justify-around lg:px-20 xl:px-30">
+      
+
       <HeroSectionForPages title="Register" />
-      <div className="bg-(--primary-bg-color) rounded-lg shadow-lg p-8 mb-10">
+
+      {/* form section */}
+      <section className="bg-(--primary-bg-color) rounded-lg shadow-lg px-5 py-4 w-full lg:w-xl">
         <h2 className="text-3xl font-bold text-(--primary-text-color) mb-2 text-center">
           Create Account
         </h2>
@@ -314,7 +318,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
             </Link>
           </p>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
