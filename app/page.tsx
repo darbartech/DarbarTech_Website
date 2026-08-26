@@ -11,15 +11,18 @@ import logo from "@/public/file.svg";
 import illustration from "@/public/home/illustrator2.png";
 import illustration2 from "@/public/home/illustrator2.png";
 import heroSectionLine from "@/public/home/hero-section-line.png";
-import enquirySection from "./components/EnquirySection";
-import EnquirySection from "./components/EnquirySection";
+import EnquirySection from "./(client)/components/EnquirySection";
+import Navbar from "./(client)/components/common/Navbar";
+import Footer from "./(client)/components/common/Footer";
 
 export default function Home() {
   return (
-    <main className="-mt-24 space-y-5 ">
-      {/* hero-section */}
-      <section
-        className="
+    <>
+      <Navbar />
+      <main className="-mt-24 space-y-5 ">
+        {/* hero-section */}
+        <section
+          className="
     relative
     flex
     h-screen
@@ -39,9 +42,9 @@ export default function Home() {
     xl:px-30
     xl:pb-15
   "
-      >
-        <h1
-          className="
+        >
+          <h1
+            className="
       text-4xl
       leading-tight
 
@@ -49,26 +52,26 @@ export default function Home() {
       md:text-6xl
       lg:text-7xl
     "
-        >
-          Create, inspect, and apply synthetic surveillance broadly.
-        </h1>
+          >
+            Create, inspect, and apply synthetic surveillance broadly.
+          </h1>
 
-        <div className="space-y-4 font-semibold sm:space-y-5">
-          <p
-            className="
+          <div className="space-y-4 font-semibold sm:space-y-5">
+            <p
+              className="
         text-base
         text-(--bg-muted)
 
         sm:text-lg
         md:text-xl
       "
-          >
-            Start with a stunning homepage. Stay motivated without hurting your
-            pocket.
-          </p>
+            >
+              Start with a stunning homepage. Stay motivated without hurting
+              your pocket.
+            </p>
 
-          <button
-            className="
+            <button
+              className="
         mx-auto
         rounded-4xl
         bg-(--secondary-bg-color)
@@ -85,12 +88,12 @@ export default function Home() {
         md:py-4
         md:text-xl
       "
-          >
-            Start for free
-          </button>
+            >
+              Start for free
+            </button>
 
-          <p
-            className="
+            <p
+              className="
         flex
         flex-col
         items-center
@@ -105,22 +108,22 @@ export default function Home() {
 
         md:text-lg
       "
-          >
-            <span>Want to talk or get a live demo?</span>
+            >
+              <span>Want to talk or get a live demo?</span>
 
-            <span className="flex items-center gap-1 text-(--gray-color)">
-              Get in touch
-              <ArrowRight size={18} />
-            </span>
-          </p>
-        </div>
+              <span className="flex items-center gap-1 text-(--gray-color)">
+                Get in touch
+                <ArrowRight size={18} />
+              </span>
+            </p>
+          </div>
 
-        {/* Absolute hero-section-line image */}
-        <Image
-          src={heroSectionLine}
-          alt="Hero Section Line Image"
-          loading="eager"
-          className="
+          {/* Absolute hero-section-line image */}
+          <Image
+            src={heroSectionLine}
+            alt="Hero Section Line Image"
+            loading="eager"
+            className="
       absolute
       bottom-5
       left-1/2
@@ -135,11 +138,11 @@ export default function Home() {
 
       lg:bottom-10
     "
-        />
+          />
 
-        {/* top left */}
-        <div
-          className="
+          {/* top left */}
+          <div
+            className="
       absolute
       bottom-24
       left-20
@@ -166,16 +169,16 @@ export default function Home() {
       2xl:bottom-80
       2xl:left-65
     "
-        >
-          <CircleDashed
-            className="h-5 w-5 text-(--primary-bg-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
-            strokeWidth={3}
-          />
-        </div>
+          >
+            <CircleDashed
+              className="h-5 w-5 text-(--primary-bg-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
 
-        {/* top right */}
-        <div
-          className="
+          {/* top right */}
+          <div
+            className="
       absolute
       right-5
       bottom-28
@@ -202,16 +205,16 @@ export default function Home() {
 
       2xl:bottom-90
     "
-        >
-          <CircleDashed
-            className="h-5 w-5 text-blue-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
-            strokeWidth={3}
-          />
-        </div>
+          >
+            <CircleDashed
+              className="h-5 w-5 text-blue-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
 
-        {/* middle left */}
-        <div
-          className="
+          {/* middle left */}
+          <div
+            className="
       absolute
       bottom-12
       left-30
@@ -238,16 +241,16 @@ export default function Home() {
       2xl:bottom-37
       2xl:left-115
     "
-        >
-          <CircleDashed
-            className="h-5 w-5 text-(--primary-bg-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
-            strokeWidth={3}
-          />
-        </div>
+          >
+            <CircleDashed
+              className="h-5 w-5 text-(--primary-bg-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
 
-        {/* middle right */}
-        <div
-          className="
+          {/* middle right */}
+          <div
+            className="
       absolute
       right-20
       bottom-15
@@ -274,16 +277,16 @@ export default function Home() {
       2xl:right-70
       2xl:bottom-55
     "
-        >
-          <CircleDashed
-            className="h-5 w-5 text-(--primary-text-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
-            strokeWidth={3}
-          />
-        </div>
+          >
+            <CircleDashed
+              className="h-5 w-5 text-(--primary-text-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
 
-        {/* bottom left */}
-        <div
-          className="
+          {/* bottom left */}
+          <div
+            className="
       absolute
       bottom-0
       left-10
@@ -306,16 +309,16 @@ export default function Home() {
 
       2xl:bottom-0
     "
-        >
-          <ChessKnight
-            className="h-5 w-5 text-orange-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
-            strokeWidth={3}
-          />
-        </div>
+          >
+            <ChessKnight
+              className="h-5 w-5 text-orange-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
 
-        {/* bottom right */}
-        <div
-          className="
+          {/* bottom right */}
+          <div
+            className="
       absolute
       right-25
       bottom-5
@@ -342,17 +345,17 @@ export default function Home() {
       2xl:right-95
       2xl:bottom-15
     "
-        >
-          <CircleDashed
-            className="h-5 w-5 text-emerald-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
-            strokeWidth={3}
-          />
-        </div>
-      </section>
+          >
+            <CircleDashed
+              className="h-5 w-5 text-emerald-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+        </section>
 
-      {/* partner's logo section */}
-      <section
-        className="
+        {/* partner's logo section */}
+        <section
+          className="
     flex
     flex-wrap
     items-center
@@ -374,39 +377,39 @@ export default function Home() {
 
     xl:px-30
   "
-      >
-        <Image src={logo} alt="Logo 1" height={30} width={30} />
-        <Image src={logo} alt="Logo 2" height={30} width={30} />
-        <Image src={logo} alt="Logo 3" height={30} width={30} />
-        <Image src={logo} alt="Logo 4" height={30} width={30} />
-        <Image src={logo} alt="Logo 5" height={30} width={30} />
-        <Image src={logo} alt="Logo 6" height={30} width={30} />
-      </section>
+        >
+          <Image src={logo} alt="Logo 1" height={30} width={30} />
+          <Image src={logo} alt="Logo 2" height={30} width={30} />
+          <Image src={logo} alt="Logo 3" height={30} width={30} />
+          <Image src={logo} alt="Logo 4" height={30} width={30} />
+          <Image src={logo} alt="Logo 5" height={30} width={30} />
+          <Image src={logo} alt="Logo 6" height={30} width={30} />
+        </section>
 
-      {/* featured solutions section */}
-      <section className="py-10 sm:py-12 md:py-15 font-bold">
-        {/* info div */}
-        <div className="mx-auto max-w-5xl space-y-6 px-5 py-5 text-center sm:px-8 sm:space-y-8 md:px-12 lg:px-20 xl:px-30">
-          <div>
-            <p className="text-xl text-(--secondary-bg-color) sm:text-2xl">
-              What we offer
+        {/* featured solutions section */}
+        <section className="py-10 sm:py-12 md:py-15 font-bold">
+          {/* info div */}
+          <div className="mx-auto max-w-5xl space-y-6 px-5 py-5 text-center sm:px-8 sm:space-y-8 md:px-12 lg:px-20 xl:px-30">
+            <div>
+              <p className="text-xl text-(--secondary-bg-color) sm:text-2xl">
+                What we offer
+              </p>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl">
+                Our Featured Solutions
+              </h2>
+            </div>
+
+            <p className="text-base text-(--bg-muted) sm:text-lg md:text-xl">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis
+              distinctio reiciendis temporibus ratione cupiditate vel et ipsam
+              voluptates!
             </p>
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl">
-              Our Featured Solutions
-            </h2>
           </div>
 
-          <p className="text-base text-(--bg-muted) sm:text-lg md:text-xl">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis
-            distinctio reiciendis temporibus ratione cupiditate vel et ipsam
-            voluptates!
-          </p>
-        </div>
-
-        {/* cards div */}
-        <div
-          className="
+          {/* cards div */}
+          <div
+            className="
       grid
       grid-cols-1
       gap-5
@@ -422,10 +425,10 @@ export default function Home() {
 
       xl:px-30
     "
-        >
-          {[1, 2, 3, 4].map((item, index) => (
-            <div
-              className="
+          >
+            {[1, 2, 3, 4].map((item, index) => (
+              <div
+                className="
           space-y-2
           rounded-lg
           px-4
@@ -435,32 +438,35 @@ export default function Home() {
           sm:px-5
           sm:py-8
         "
-              key={index}
-            >
-              <span>
-                <RotateCcw className="text-(--secondary-bg-color)" size={40} />
-              </span>
+                key={index}
+              >
+                <span>
+                  <RotateCcw
+                    className="text-(--secondary-bg-color)"
+                    size={40}
+                  />
+                </span>
 
-              <h3 className="text-xl font-bold sm:text-2xl">
-                Robotic Automation
-              </h3>
+                <h3 className="text-xl font-bold sm:text-2xl">
+                  Robotic Automation
+                </h3>
 
-              <p className="text-base text-(--bg-muted) sm:text-lg">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Corporis, repudiandae?
-              </p>
+                <p className="text-base text-(--bg-muted) sm:text-lg">
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                  Corporis, repudiandae?
+                </p>
 
-              <button className="text-sm text-(--accent-color) sm:text-md">
-                Discover more
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
+                <button className="text-sm text-(--accent-color) sm:text-md">
+                  Discover more
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
 
-      {/* illustrator and description */}
-      <section
-        className="
+        {/* illustrator and description */}
+        <section
+          className="
     flex
     flex-col
     gap-8
@@ -482,33 +488,33 @@ export default function Home() {
 
     xl:px-30
   "
-      >  
-        {/* illustration image */}
-        <div className="w-full md:w-[45%]">
-          <Image
-            src={illustration}
-            alt="Illustration"
-            className="mx-auto h-auto w-full max-w-xl"
-          />
-        </div>
+        >
+          {/* illustration image */}
+          <div className="w-full md:w-[45%]">
+            <Image
+              src={illustration}
+              alt="Illustration"
+              className="mx-auto h-auto w-full max-w-xl"
+            />
+          </div>
 
-        {/* description side */}
-        <div className="w-full space-y-5 md:w-[55%]">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl">
-            Why We Do Karlson Template
-          </h2>
+          {/* description side */}
+          <div className="w-full space-y-5 md:w-[55%]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl">
+              Why We Do Karlson Template
+            </h2>
 
-          <p className="text-left text-base text-(--bg-muted) sm:text-lg md:text-center">
-            We believe brand interaction is key to communication.{" "}
-            <br className="hidden md:block" /> Real innovations and positive
-            customer experience are teh heart of succecss.
-          </p>
+            <p className="text-left text-base text-(--bg-muted) sm:text-lg md:text-center">
+              We believe brand interaction is key to communication.{" "}
+              <br className="hidden md:block" /> Real innovations and positive
+              customer experience are teh heart of succecss.
+            </p>
 
-          {/* customer service grid list */}
-          <div className="grid grid-cols-1 gap-2 py-5 font-semibold sm:grid-cols-2">
-            {[1, 2, 3, 4, 5, 6].map((item, index) => (
-              <p
-                className="
+            {/* customer service grid list */}
+            <div className="grid grid-cols-1 gap-2 py-5 font-semibold sm:grid-cols-2">
+              {[1, 2, 3, 4, 5, 6].map((item, index) => (
+                <p
+                  className="
             flex
             items-center
             gap-2
@@ -521,22 +527,22 @@ export default function Home() {
 
             sm:text-base
           "
-                key={index}
-              >
-                <span>
-                  <CircleCheck
-                    className="text-(--secondary-bg-color)"
-                    size={18}
-                  />
-                </span>
-                Customer services
-              </p>
-            ))}
-          </div>
+                  key={index}
+                >
+                  <span>
+                    <CircleCheck
+                      className="text-(--secondary-bg-color)"
+                      size={18}
+                    />
+                  </span>
+                  Customer services
+                </p>
+              ))}
+            </div>
 
-          {/* buttons */}
-          <div
-            className="
+            {/* buttons */}
+            <div
+              className="
         flex
         flex-col
         gap-3
@@ -546,21 +552,21 @@ export default function Home() {
         sm:flex-row
         sm:text-lg
       "
-          >
-            <button className="rounded-3xl border border-(--secondary-bg-color) px-7 py-2 text-(--accent-color)">
-              Contact Us
-            </button>
+            >
+              <button className="rounded-3xl border border-(--secondary-bg-color) px-7 py-2 text-(--accent-color)">
+                Contact Us
+              </button>
 
-            <button className="rounded-3xl bg-(--secondary-bg-color) px-7 py-2 text-(--primary-bg-color)">
-              Read More
-            </button>
+              <button className="rounded-3xl bg-(--secondary-bg-color) px-7 py-2 text-(--primary-bg-color)">
+                Read More
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* why choose us section */}
-      <section
-        className="
+        {/* why choose us section */}
+        <section
+          className="
     flex
     flex-col
     gap-8
@@ -582,50 +588,50 @@ export default function Home() {
 
     xl:px-30
   "
-      >
-        <div className="w-full space-y-4 lg:w-[55%]">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl">Why Choose Us</h1>
+        >
+          <div className="w-full space-y-4 lg:w-[55%]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl">Why Choose Us</h1>
 
-          <p className="text-base text-(--bg-muted) sm:text-lg">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex
-            consequatur quo, quam at voluptas illum enim vitae magni illo,
-            architecto, quos
-          </p>
+            <p className="text-base text-(--bg-muted) sm:text-lg">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex
+              consequatur quo, quam at voluptas illum enim vitae magni illo,
+              architecto, quos
+            </p>
 
-          {[1, 2, 3].map((item, index) => (
-            <div className="flex gap-3" key={index}>
-              <span className="mt-1 shrink-0">
-                <CircleCheck size={22} />
-              </span>
+            {[1, 2, 3].map((item, index) => (
+              <div className="flex gap-3" key={index}>
+                <span className="mt-1 shrink-0">
+                  <CircleCheck size={22} />
+                </span>
 
-              <div className="space-y-1">
-                <h3 className="text-lg sm:text-xl">Experienced Developer</h3>
+                <div className="space-y-1">
+                  <h3 className="text-lg sm:text-xl">Experienced Developer</h3>
 
-                <p className="text-sm text-(--bg-muted) sm:text-md">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Perspiciatis, illum?
-                </p>
+                  <p className="text-sm text-(--bg-muted) sm:text-md">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Perspiciatis, illum?
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          <button className="rounded bg-(--secondary-bg-color) px-6 py-3 text-sm text-(--primary-bg-color) sm:px-8 sm:text-md">
-            DISCOVER MORE
-          </button>
-        </div>
+            <button className="rounded bg-(--secondary-bg-color) px-6 py-3 text-sm text-(--primary-bg-color) sm:px-8 sm:text-md">
+              DISCOVER MORE
+            </button>
+          </div>
 
-        <div className="w-full lg:w-[45%]">
-          <Image
-            src={illustration2}
-            alt="Illustrator 2"
-            className="mx-auto h-auto w-full max-w-xl"
-          />
-        </div>
-      </section>
+          <div className="w-full lg:w-[45%]">
+            <Image
+              src={illustration2}
+              alt="Illustrator 2"
+              className="mx-auto h-auto w-full max-w-xl"
+            />
+          </div>
+        </section>
 
-      {/* testimonials section */}
-      <section
-        className="
+        {/* testimonials section */}
+        <section
+          className="
     space-y-10
     px-5
     py-10
@@ -642,21 +648,21 @@ export default function Home() {
 
     xl:px-30
   "
-      >
-        <div className="space-y-3">
-          <h3 className="text-xl text-(--secondary-bg-color) sm:text-2xl">
-            TESTIMONIALS
-          </h3>
+        >
+          <div className="space-y-3">
+            <h3 className="text-xl text-(--secondary-bg-color) sm:text-2xl">
+              TESTIMONIALS
+            </h3>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl">
-            Our Featured Solutions
-          </h2>
-        </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl">
+              Our Featured Solutions
+            </h2>
+          </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((item, index) => (
-            <div
-              className="
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item, index) => (
+              <div
+                className="
           space-y-5
           rounded-lg
           border-2
@@ -665,45 +671,45 @@ export default function Home() {
           text-smx
           shadow-xs
         "
-              key={index}
-            >
-              <p className="text-justify text-base text-(--bg-muted) sm:text-lg">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-                vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf
-                ksd flkasdf slsdklj sdkjf lsd klsdj f
-              </p>
+                key={index}
+              >
+                <p className="text-justify text-base text-(--bg-muted) sm:text-lg">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
+                  vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf
+                  ksd flkasdf slsdklj sdkjf lsd klsdj f
+                </p>
 
-              <div className="flex items-center justify-start gap-2 text-start font-bold">
-                <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                  <Image
-                    src={illustration}
-                    alt="Profile Image"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
+                <div className="flex items-center justify-start gap-2 text-start font-bold">
+                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                    <Image
+                      src={illustration}
+                      alt="Profile Image"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
 
-                <div>
-                  <h3 className="-mb-1 text-lg sm:text-xl">Ram Bahadur</h3>
+                  <div>
+                    <h3 className="-mb-1 text-lg sm:text-xl">Ram Bahadur</h3>
 
-                  <p className="text-sm text-(--secondary-bg-color)">
-                    Developer
-                  </p>
+                    <p className="text-sm text-(--secondary-bg-color)">
+                      Developer
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        <div className="flex justify-center gap-1">
-          <button className="h-3 w-3 rounded-full bg-(--secondary-bg-color)" />
-          <button className="h-3 w-3 rounded-full bg-(--surface)" />
-          <button className="h-3 w-3 rounded-full bg-(--surface)" />
-        </div>
-      </section>
+          <div className="flex justify-center gap-1">
+            <button className="h-3 w-3 rounded-full bg-(--secondary-bg-color)" />
+            <button className="h-3 w-3 rounded-full bg-(--surface)" />
+            <button className="h-3 w-3 rounded-full bg-(--surface)" />
+          </div>
+        </section>
 
-      {/* FAQ section */}
-      <section
-        className="
+        {/* FAQ section */}
+        <section
+          className="
     space-y-10
     px-5
     py-10
@@ -718,53 +724,58 @@ export default function Home() {
 
     xl:px-30
   "
-      >
-        <div className="mx-auto max-w-2xl space-y-5 text-center font-bold">
-          <span className="text-(--secondary-bg-color)">FAQ</span>
+        >
+          <div className="mx-auto max-w-2xl space-y-5 text-center font-bold">
+            <span className="text-(--secondary-bg-color)">FAQ</span>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl">
-            Frequently Asked Questions
-          </h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl">
+              Frequently Asked Questions
+            </h2>
 
-          <p className="text-base text-(--bg-muted) sm:text-lg">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-            natus, similique cumque sapiente veniam odio commodi eveniet ratione
-            totam rerum.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-15">
-          <Image
-            src={illustration}
-            alt="Illustrator"
-            className="mx-auto h-auto w-full max-w-xl lg:w-[45%]"
-          />
-
-          <div className="w-full space-y-3 lg:w-[55%]">
-            {[1, 2, 3, 4, 5, 6].map((item, index) => (
-              <div className="flex items-center rounded shadow-md" key={index}>
-                <span className="shrink-0 bg-(--secondary-bg-color) px-2 py-3">
-                  <Plus />
-                </span>
-
-                <p className="px-4 py-3 text-sm sm:px-6 sm:text-base lg:px-10">
-                  Which material types can you work with?
-                </p>
-              </div>
-            ))}
+            <p className="text-base text-(--bg-muted) sm:text-lg">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
+              natus, similique cumque sapiente veniam odio commodi eveniet
+              ratione totam rerum.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* lets get to work section */}
-      <section
-        className="
+          <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-15">
+            <Image
+              src={illustration}
+              alt="Illustrator"
+              className="mx-auto h-auto w-full max-w-xl lg:w-[45%]"
+            />
+
+            <div className="w-full space-y-3 lg:w-[55%]">
+              {[1, 2, 3, 4, 5, 6].map((item, index) => (
+                <div
+                  className="flex items-center rounded shadow-md"
+                  key={index}
+                >
+                  <span className="shrink-0 bg-(--secondary-bg-color) px-2 py-3">
+                    <Plus />
+                  </span>
+
+                  <p className="px-4 py-3 text-sm sm:px-6 sm:text-base lg:px-10">
+                    Which material types can you work with?
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* lets get to work section */}
+        <section
+          className="
     flex
     flex-col
     gap-6
     px-5
     py-12
     font-bold
+
+    bg-[url('/home/illustrator.png')]
 
     sm:px-8
     sm:py-15
@@ -779,25 +790,25 @@ export default function Home() {
 
     xl:px-30
   "
-      >
-        <div>
-          <span className="text-base sm:text-lg">READY TO DO THIS</span>
+        >
+          <div>
+            <span className="text-base sm:text-lg">READY TO DO THIS</span>
 
-          <h3 className="text-3xl sm:text-4xl md:text-5xl">
-            Let's Get To Work!
-          </h3>
-        </div>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl">
+              Let's Get To Work!
+            </h3>
+          </div>
 
-        <div className="flex items-center">
-          <button className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg">
-            CONTACT US
-          </button>
-        </div>
-      </section>
+          <div className="flex items-center">
+            <button className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg">
+              CONTACT US
+            </button>
+          </div>
+        </section>
 
-      {/* latest news section */}
-      <section
-        className="
+        {/* latest news section */}
+        <section
+          className="
     space-y-8
     px-5
     py-10
@@ -813,53 +824,55 @@ export default function Home() {
 
     xl:px-30
   "
-      >
-        <h2 className="text-center text-3xl sm:text-4xl md:text-5xl">
-          Latest News
-        </h2>
+        >
+          <h2 className="text-center text-3xl sm:text-4xl md:text-5xl">
+            Latest News
+          </h2>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((item, index) => (
-            <div
-              className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg"
-              key={index}
-            >
-              <Image
-                src={illustration}
-                alt="Illustrator"
-                className="h-auto w-full"
-              />
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item, index) => (
+              <div
+                className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg"
+                key={index}
+              >
+                <Image
+                  src={illustration}
+                  alt="Illustrator"
+                  className="h-auto w-full"
+                />
 
-              <div className="space-y-4 px-4 py-4 sm:space-y-5">
-                <span className="block text-sm sm:text-base">
-                  By:{" "}
-                  <span className="text-(--secondary-bg-color)">
-                    James Anderson
-                  </span>{" "}
-                  / June 26, 2025
-                </span>
+                <div className="space-y-4 px-4 py-4 sm:space-y-5">
+                  <span className="block text-sm sm:text-base">
+                    By:{" "}
+                    <span className="text-(--secondary-bg-color)">
+                      James Anderson
+                    </span>{" "}
+                    / June 26, 2025
+                  </span>
 
-                <h3 className="text-xl text-(--primary-text-color) sm:text-2xl">
-                  How To Boost Your Digital Marketing Agency
-                </h3>
+                  <h3 className="text-xl text-(--primary-text-color) sm:text-2xl">
+                    How To Boost Your Digital Marketing Agency
+                  </h3>
 
-                <p className="text-sm sm:text-base">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Iure, cumque!
-                </p>
+                  <p className="text-sm sm:text-base">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Iure, cumque!
+                  </p>
 
-                <button className="flex items-center gap-1 text-sm text-(--secondary-bg-color) sm:text-base">
-                  Read More
-                  <ArrowRight size={16} />
-                </button>
+                  <button className="flex items-center gap-1 text-sm text-(--secondary-bg-color) sm:text-base">
+                    Read More
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      {/* enquiry section */}
-      <EnquirySection />
-    </main>
+        {/* enquiry section */}
+        <EnquirySection />
+      </main>
+      <Footer />
+    </>
   );
 }
