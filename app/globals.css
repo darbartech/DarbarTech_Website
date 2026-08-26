@@ -8,6 +8,7 @@ html{
 }
 
 :root {
+  /* user */
   --primary-bg-color: #FFFFFF;
   --primary-text-color: #000000;
 
@@ -19,8 +20,25 @@ html{
 
   --bg-muted: #928C8C;
   --surface: #D9D9D9;
-  /* --bg-random:#F5F5F5; */
-
+  
   --bg-footer: #282828;
+  
+  /* dashboard */
+  --bg-primary-dashboard:#F9F9FF;
+  --bg-dashboard-hero: #0D1C32;
+
+  --text-primary-dashboard: #111C2D;
+
+  --border-primary-dashboard: #C5C6CD;
+
+  --bg-lightblue: #00D2FF;
+  --color-shape: #00D2FF;
+
+  --secondary-bg-dashboard: #DEE8FF;
+
+  --secondary-text-dashboard: #00677F;
+
+  --tertiary-text-dashboard: #44474D;
+
   
 }
