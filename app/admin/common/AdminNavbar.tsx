@@ -1,6 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+
 import logo from "@/public/logos/dark_logo.png";
 import smallLogo from "@/public/logos/small_logo.png";
 
@@ -24,12 +28,9 @@ import {
   Users,
   Menu,
   X,
-  DoorClosed,
+  CircleArrowOutUpLeft,
 } from "lucide-react";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const menuItems = [
@@ -37,6 +38,11 @@ const menuItems = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/admin",
+  },
+  {
+    label: "Career",
+    icon: CircleArrowOutUpLeft,
+    href: "/admin/career",
   },
   {
     label: "Analytics",
@@ -109,11 +115,14 @@ const menuItems = [
 
 export default function AdminNavbar() {
   const { mobileOpen, toggleMobileSidebar } = useSidebarStore();
+  const { collapsed, toggleCollapsed } = useSidebarStore();
+
   const pathname = usePathname();
 
-  const [collapsed, setCollapsed] = useState(false);
-
-  const [openMenus, setOpenMenus] = useState<string[]>(["CMS", "Users"]);
+  const [openMenus, setOpenMenus] = useState<string[]>([
+    "CMS",
+    "Users",
+  ]);
 
   const toggleMenu = (label: string) => {
     setOpenMenus((prev) =>
@@ -130,11 +139,21 @@ export default function AdminNavbar() {
     "text-(--text-primary-dashboard) hover:bg-(--secondary-bg-dashboard) hover:text-(--bg-dashboard-hero)";
 
   return (
-    <>
+    <div
+      className={`
+        fixed left-0 top-0 h-screen
+        ${mobileOpen ? "z-100" : ""}
+      `}
+    >
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden hover:cursor-pointer"
+          className="
+            fixed inset-0 -z-10
+            bg-black/40
+            hover:cursor-pointer
+            lg:hidden
+          "
           onClick={toggleMobileSidebar}
         />
       )}
@@ -143,39 +162,56 @@ export default function AdminNavbar() {
       <aside
         className={`
           flex h-screen flex-col
+
           border-r border-(--border-primary-dashboard)
           bg-(--bg-primary-dashboard)
+
           transition-all duration-300
+
           ${collapsed ? "lg:w-20" : "lg:w-64"}
-          ${mobileOpen ? "fixed inset-y-0 left-0 z-40 w-64" : "hidden"}
+
+          ${
+            mobileOpen
+              ? "fixed inset-y-0 left-0 z-100 w-64"
+              : "hidden"
+          }
+
           lg:relative
           lg:flex
           lg:z-auto
         `}
       >
-        {/* Header */}
+        {/* ================= HEADER ================= */}
         <div
           className={`
-    flex h-16 items-center
-    border-b border-(--border-primary-dashboard)
-    ${collapsed ? "lg:flex-col lg:justify-center lg:py-10" : "justify-between px-6"}
-  `}
-        >
-          {/* Logo / Title */}
-          <div
-            className="
-    flex items-center
-  "
-          >
-            <Image src={smallLogo} alt="Darbar Tech" className="w-6 lg:w-8" />
+            flex h-16 items-center
+            justify-between
+            px-5
 
+            ${
+              collapsed
+                ? "lg:flex-col lg:justify-center lg:py-5"
+                : "px-6"
+            }
+          `}
+        >
+          {/* Logo */}
+          <div className="flex items-center">
+            {/* Small logo */}
+            <Image
+              src={smallLogo}
+              alt="Darbar Tech"
+              className="w-6 lg:w-8"
+            />
+
+            {/* Full logo */}
             <Image
               src={logo}
               alt="Darbar Tech"
               className={`
-      w-25 lg:w-30
-      ${collapsed ? "lg:hidden" : ""}
-    `}
+                w-25 lg:w-30
+                ${collapsed ? "lg:hidden" : ""}
+              `}
             />
           </div>
 
@@ -183,7 +219,20 @@ export default function AdminNavbar() {
           <button
             type="button"
             onClick={toggleMobileSidebar}
-            className="rounded-lg p-2 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:text-(--bg-dashboard-hero) hover:cursor-pointer lg:hidden"
+            className="
+              rounded-lg
+              p-2
+
+              text-(--text-primary-dashboard)
+
+              transition
+
+              hover:bg-(--secondary-bg-dashboard)
+              hover:text-(--bg-dashboard-hero)
+              hover:cursor-pointer
+
+              lg:hidden
+            "
             aria-label="Close sidebar"
             title="Close sidebar"
           >
@@ -193,10 +242,32 @@ export default function AdminNavbar() {
           {/* Desktop collapse button */}
           <button
             type="button"
-            onClick={() => setCollapsed((prev) => !prev)}
-            className="hidden rounded-lg p-2 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:text-(--bg-dashboard-hero) hover:cursor-pointer lg:block"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={toggleCollapsed}
+            className="
+              hidden
+              rounded-lg
+              p-2
+
+              text-(--text-primary-dashboard)
+
+              transition
+
+              hover:bg-(--secondary-bg-dashboard)
+              hover:text-(--bg-dashboard-hero)
+              hover:cursor-pointer
+
+              lg:block
+            "
+            aria-label={
+              collapsed
+                ? "Expand sidebar"
+                : "Collapse sidebar"
+            }
+            title={
+              collapsed
+                ? "Expand sidebar"
+                : "Collapse sidebar"
+            }
           >
             {collapsed ? (
               <Menu className="h-5 w-5" />
@@ -206,140 +277,317 @@ export default function AdminNavbar() {
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-5">
-          <ul className="space-y-1">
+        {/* ================= NAVIGATION ================= */}
+        <nav
+          className="
+            flex-1
+
+            overflow-y-auto
+            overflow-x-hidden
+
+            px-3
+            py-3
+
+            [&::-webkit-scrollbar]:hidden
+            [scrollbar-width:none]
+          "
+        >
+          <ul className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
 
-              const hasChildren = Boolean(item.children?.length);
-
-              const isOpen = openMenus.includes(item.label);
-
-              const isActive = item.href === pathname;
-
-              const hasActiveChild = item.children?.some(
-                (child) => pathname === child.href,
+              const hasChildren = Boolean(
+                item.children?.length,
               );
+
+              const isOpen = openMenus.includes(
+                item.label,
+              );
+
+              const isActive =
+                item.href === pathname;
+
+              const hasActiveChild =
+                item.children?.some(
+                  (child) =>
+                    pathname === child.href,
+                );
 
               return (
                 <li key={item.label}>
                   {hasChildren ? (
                     <>
+                      {/* ================= PARENT MENU ================= */}
                       <button
                         type="button"
-                        onClick={() => toggleMenu(item.label)}
-                        title={collapsed ? item.label : undefined}
+                        onClick={() =>
+                          toggleMenu(item.label)
+                        }
+                        title={
+                          collapsed
+                            ? item.label
+                            : undefined
+                        }
                         className={`
-                          flex w-full items-center rounded-lg
-                          py-2.5 text-sm font-medium transition
+                          flex
+                          w-full
+                          items-center
+                          rounded-lg
+
+                          py-3
+                          text-sm
+                          font-medium
+
+                          transition
+
                           hover:cursor-pointer
+
                           ${
                             collapsed
-                              ? "justify-center px-2"
-                              : "justify-between px-3"
+                              ? `
+                                justify-between
+                                px-4
+
+                                lg:justify-center
+                                lg:px-2
+                              `
+                              : `
+                                justify-between
+                                px-4
+                              `
                           }
+
                           ${
-                            !collapsed && hasActiveChild
+                            hasActiveChild
                               ? activeStyles
                               : defaultStyles
                           }
                         `}
                       >
+                        {/* Icon + Label */}
                         <span
                           className={`
-                            flex items-center
-                            ${collapsed ? "justify-center" : "gap-3"}
+                            flex
+                            items-center
+
+                            ${
+                              collapsed
+                                ? `
+                                  gap-3
+
+                                  lg:justify-center
+                                `
+                                : "gap-3"
+                            }
                           `}
                         >
                           <Icon className="h-5 w-5 shrink-0" />
 
-                          {!collapsed && (
-                            <span className="whitespace-nowrap">
-                              {item.label}
-                            </span>
-                          )}
+                          {/* Label */}
+                          <span
+                            className={`
+                              whitespace-nowrap
+
+                              ${
+                                collapsed
+                                  ? "lg:hidden"
+                                  : ""
+                              }
+                            `}
+                          >
+                            {item.label}
+                          </span>
                         </span>
 
-                        {!collapsed &&
-                          (isOpen ? (
+                        {/* Chevron */}
+                        <span
+                          className={
+                            collapsed
+                              ? "lg:hidden"
+                              : ""
+                          }
+                        >
+                          {isOpen ? (
                             <ChevronDown className="h-4 w-4 shrink-0" />
                           ) : (
                             <ChevronRight className="h-4 w-4 shrink-0" />
-                          ))}
+                          )}
+                        </span>
                       </button>
 
-                      {/* Children */}
+                      {/* ================= CHILDREN ================= */}
                       {isOpen && (
                         <ul
                           className={`
-                            mt-1 space-y-1
+                            mt-2
+                            space-y-1
+
                             ${
                               collapsed
-                                ? ""
-                                : "ml-5 border-l border-(--border-primary-dashboard) pl-3"
+                                ? `
+                                  lg:ml-0
+                                `
+                                : `
+                                  ml-5
+                                  border-l
+                                  border-(--border-primary-dashboard)
+                                  pl-3
+                                `
                             }
                           `}
                         >
-                          {item.children?.map((child) => {
-                            const ChildIcon = child.icon;
+                          {item.children?.map(
+                            (child) => {
+                              const ChildIcon =
+                                child.icon;
 
-                            const isChildActive = pathname === child.href;
+                              const isChildActive =
+                                pathname ===
+                                child.href;
 
-                            return (
-                              <li key={child.label}>
-                                <Link
-                                  href={child.href}
-                                  title={collapsed ? child.label : undefined}
-                                  onClick={toggleMobileSidebar}
-                                  className={`
-                                    flex items-center rounded-lg
-                                    py-2 text-sm transition
-                                    hover:cursor-pointer
-                                    ${
-                                      isChildActive && !collapsed
-                                        ? activeStyles
-                                        : defaultStyles
-                                    }
-                                    ${
-                                      collapsed
-                                        ? "justify-center px-2"
-                                        : "gap-3 px-3"
-                                    }
-                                  `}
+                              return (
+                                <li
+                                  key={
+                                    child.label
+                                  }
                                 >
-                                  <ChildIcon className="h-4 w-4 shrink-0" />
+                                  <Link
+                                    href={
+                                      child.href
+                                    }
+                                    title={
+                                      collapsed
+                                        ? child.label
+                                        : undefined
+                                    }
+                                    onClick={
+                                      toggleMobileSidebar
+                                    }
+                                    className={`
+                                      flex
+                                      items-center
+                                      rounded-lg
 
-                                  {!collapsed && (
-                                    <span className="whitespace-nowrap">
-                                      {child.label}
+                                      py-2.5
+
+                                      text-sm
+
+                                      transition
+
+                                      hover:cursor-pointer
+
+                                      ${
+                                        isChildActive
+                                          ? activeStyles
+                                          : defaultStyles
+                                      }
+
+                                      ${
+                                        collapsed
+                                          ? `
+                                            gap-3
+                                            px-4
+
+                                            lg:justify-center
+                                            lg:px-2
+                                          `
+                                          : `
+                                            gap-3
+                                            px-4
+                                          `
+                                      }
+                                    `}
+                                  >
+                                    <ChildIcon className="h-4 w-4 shrink-0" />
+
+                                    {/* Child label */}
+                                    <span
+                                      className={`
+                                        whitespace-nowrap
+
+                                        ${
+                                          collapsed
+                                            ? "lg:hidden"
+                                            : ""
+                                        }
+                                      `}
+                                    >
+                                      {
+                                        child.label
+                                      }
                                     </span>
-                                  )}
-                                </Link>
-                              </li>
-                            );
-                          })}
+                                  </Link>
+                                </li>
+                              );
+                            },
+                          )}
                         </ul>
                       )}
                     </>
                   ) : (
+                    /* ================= NORMAL MENU ITEM ================= */
                     <Link
                       href={item.href}
-                      title={collapsed ? item.label : undefined}
-                      onClick={() => toggleMobileSidebar}
+                      title={
+                        collapsed
+                          ? item.label
+                          : undefined
+                      }
+                      onClick={
+                        toggleMobileSidebar
+                      }
                       className={`
-                        flex items-center rounded-lg
-                        py-2.5 text-sm font-medium transition
+                        flex
+                        items-center
+                        rounded-lg
+
+                        py-3
+
+                        text-sm
+                        font-medium
+
+                        transition
+
                         hover:cursor-pointer
-                        ${isActive && !collapsed ? activeStyles : defaultStyles}
-                        ${collapsed ? "justify-center px-2" : "gap-3 px-3"}
+
+                        ${
+                          isActive
+                            ? activeStyles
+                            : defaultStyles
+                        }
+
+                        ${
+                          collapsed
+                            ? `
+                              gap-3
+                              px-4
+
+                              lg:justify-center
+                              lg:px-2
+                            `
+                            : `
+                              gap-3
+                              px-4
+                            `
+                        }
                       `}
                     >
                       <Icon className="h-5 w-5 shrink-0" />
 
-                      {!collapsed && (
-                        <span className="whitespace-nowrap">{item.label}</span>
-                      )}
+                      {/* Label */}
+                      <span
+                        className={`
+                          whitespace-nowrap
+
+                          ${
+                            collapsed
+                              ? "lg:hidden"
+                              : ""
+                          }
+                        `}
+                      >
+                        {item.label}
+                      </span>
                     </Link>
                   )}
                 </li>
@@ -348,48 +596,141 @@ export default function AdminNavbar() {
           </ul>
         </nav>
 
-        {/* Profile / Logout */}
-        <div className="border-t border-(--border-primary-dashboard) p-3">
+        {/* ================= PROFILE / LOGOUT ================= */}
+        <div
+          className="
+            space-y-1
+            border-t
+            border-(--border-primary-dashboard)
+            p-3
+          "
+        >
+          {/* Profile */}
           <Link
             href="/admin/profile"
-            title={collapsed ? "Profile" : undefined}
-            onClick={() => toggleMobileSidebar}
+            title={
+              collapsed
+                ? "Profile"
+                : undefined
+            }
+            onClick={toggleMobileSidebar}
             className={`
-              flex items-center rounded-lg
-              py-2.5 text-sm font-medium transition
+              flex
+              items-center
+              rounded-lg
+
+              py-3
+
+              text-sm
+              font-medium
+
+              transition
+
               hover:cursor-pointer
+
               ${
-                pathname === "/admin/profile" && !collapsed
+                pathname === "/admin/profile"
                   ? activeStyles
                   : defaultStyles
               }
-              ${collapsed ? "justify-center px-2" : "gap-3 px-3"}
+
+              ${
+                collapsed
+                  ? `
+                    gap-3
+                    px-4
+
+                    lg:justify-center
+                    lg:px-2
+                  `
+                  : `
+                    gap-3
+                    px-4
+                  `
+              }
             `}
           >
             <User2Icon className="h-5 w-5 shrink-0" />
 
-            {!collapsed && <span className="whitespace-nowrap">Profile</span>}
+            {/* Profile label */}
+            <span
+              className={`
+                whitespace-nowrap
+
+                ${
+                  collapsed
+                    ? "lg:hidden"
+                    : ""
+                }
+              `}
+            >
+              Profile
+            </span>
           </Link>
 
+          {/* Logout */}
           <button
             type="button"
-            title={collapsed ? "Logout" : undefined}
+            title={
+              collapsed
+                ? "Logout"
+                : undefined
+            }
             className={`
-              mt-1 flex w-full items-center rounded-lg
-              py-2.5 text-sm font-medium transition
+              flex
+              w-full
+              items-center
+              rounded-lg
+
+              py-3
+
+              text-sm
+              font-medium
+
+              transition
+
               hover:cursor-pointer
-              ${collapsed ? "justify-center px-2" : "gap-3 px-3"}
+
+              ${
+                collapsed
+                  ? `
+                    gap-3
+                    px-4
+
+                    lg:justify-center
+                    lg:px-2
+                  `
+                  : `
+                    gap-3
+                    px-4
+                  `
+              }
+
               text-(--text-primary-dashboard)
+
               hover:bg-(--secondary-bg-dashboard)
               hover:text-(--bg-dashboard-hero)
             `}
           >
             <LogOut className="h-5 w-5 shrink-0" />
 
-            {!collapsed && <span className="whitespace-nowrap">Logout</span>}
+            {/* Logout label */}
+            <span
+              className={`
+                whitespace-nowrap
+
+                ${
+                  collapsed
+                    ? "lg:hidden"
+                    : ""
+                }
+              `}
+            >
+              Logout
+            </span>
           </button>
         </div>
       </aside>
-    </>
+    </div>
   );
 }
