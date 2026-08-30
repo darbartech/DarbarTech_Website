@@ -74,7 +74,7 @@ const applications = [
 ];
 
 export default function CareerPage() {
-  const { mobileOpen, toggleMobileSidebar } = useSidebarStore();
+  const { mobileSidebar, toggleMobileSidebar } = useSidebarStore();
   const { collapsed, toggleCollapsed } = useSidebarStore();
 
   return (

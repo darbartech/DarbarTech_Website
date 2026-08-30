@@ -3,7 +3,7 @@ import { Bell, Search, User2, Menu, X } from "lucide-react";
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const Topbar = () => {
-  const { mobileOpen, toggleMobileSidebar } = useSidebarStore();
+  const { mobileSidebar, toggleMobileSidebar } = useSidebarStore();
   const { collapsed, toggleCollapsed } = useSidebarStore();
 
   const handleInputChange = () => {
@@ -19,36 +19,40 @@ const Topbar = () => {
         {/* Mobile Menu Button */}
         <button
           type="button"
-          aria-label={mobileOpen ? "Close sidebar" : "Open sidebar"}
-          title={mobileOpen ? "Close sidebar" : "Open sidebar"}
+          aria-label={mobileSidebar ? "Close sidebar" : "Open sidebar"}
+          title={mobileSidebar ? "Close sidebar" : "Open sidebar"}
           className="rounded-lg p-2 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:text-(--bg-dashboard-hero) lg:hidden"
           onClick={toggleMobileSidebar}
         >
           <Menu className="h-5 w-5" />
         </button>
 
-        <h1 className="shrink-0 text-lg font-semibold text-(--text-primary-dashboard) sm:text-xl">
+        <h1 className="hidden shrink-0 text-lg font-semibold text-(--text-primary-dashboard) md:text-xl md:block">
           Dashboard
         </h1>
 
-        <span className="truncate text-sm text-(--secondary-text-dashboard)">
+        <span className=" hidden truncate text-sm text-(--secondary-text-dashboard) md:block">
           Progress
         </span>
       </div>
 
       {/* Actions */}
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-        <form className="flex items-center gap-2 border border-(--border-primary-dashboard) rounded-3xl px-5 py-1">
+        <form className="flex items-center gap-2 border border-(--border-primary-dashboard) rounded-3xl px-2 text-xs md:text-base md:py-1 md:px-5">
           <input
             type="text"
             onChange={() => handleInputChange}
             placeholder="Search anything..."
             aria-label="Search"
-            className=" py-1 text-(--text-primary-dashboard) outline-none"
+            className=" text-(--text-primary-dashboard) outline-none "
           />
-          <button type="button" className="rounded-lg p-2 text-(--text-primary-dashboard) hover:cursor-pointer " title="Search">
+          <button
+            type="button"
+            className="rounded-lg p-2 text-(--text-primary-dashboard) hover:cursor-pointer "
+            title="Search"
+          >
             {" "}
-            <Search className="h-5 w-5 hover:cursor-pointer"/>
+            <Search className="h-5 w-5 hover:cursor-pointer" />
           </button>
         </form>
 
