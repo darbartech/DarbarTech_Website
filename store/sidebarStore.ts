@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface SidebarStore {
-  mobileOpen: boolean;
+  mobileSidebar: boolean;
   collapsed: boolean;
 
   toggleMobileSidebar: () => void;
@@ -13,17 +13,17 @@ interface SidebarStore {
 export const useSidebarStore = create<SidebarStore>()(
   persist(
     (set) => ({
-      mobileOpen: false,
+      mobileSidebar: false,
       collapsed: false,
 
       toggleMobileSidebar: () =>
         set((state) => ({
-          mobileOpen: !state.mobileOpen,
+          mobileSidebar: !state.mobileSidebar,
         })),
 
       closeMobileSidebar: () =>
         set({
-          mobileOpen: false,
+          mobileSidebar: false,
         }),
 
       toggleCollapsed: () =>
