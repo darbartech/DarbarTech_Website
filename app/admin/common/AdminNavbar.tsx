@@ -114,7 +114,7 @@ const menuItems = [
 ];
 
 export default function AdminNavbar() {
-  const { mobileOpen, toggleMobileSidebar } = useSidebarStore();
+  const { mobileSidebar, toggleMobileSidebar } = useSidebarStore();
   const { collapsed, toggleCollapsed } = useSidebarStore();
 
   const pathname = usePathname();
@@ -142,11 +142,11 @@ export default function AdminNavbar() {
     <div
       className={`
         fixed left-0 top-0 h-screen
-        ${mobileOpen ? "z-100" : ""}
+        ${mobileSidebar ? "z-100" : ""}
       `}
     >
       {/* Mobile overlay */}
-      {mobileOpen && (
+      {mobileSidebar && (
         <div
           className="
             fixed inset-0 -z-10
@@ -171,7 +171,7 @@ export default function AdminNavbar() {
           ${collapsed ? "lg:w-20" : "lg:w-64"}
 
           ${
-            mobileOpen
+            mobileSidebar
               ? "fixed inset-y-0 left-0 z-100 w-64"
               : "hidden"
           }
@@ -207,6 +207,7 @@ export default function AdminNavbar() {
             {/* Full logo */}
             <Image
               src={logo}
+              loading="lazy"
               alt="Darbar Tech"
               className={`
                 w-25 lg:w-30
