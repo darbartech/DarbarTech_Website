@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {
+  useReducer,
+  useState,
+} from "react";
 
 import { useSidebarStore } from "@/store/sidebarStore";
 
@@ -13,6 +16,7 @@ import {
   Trash2,
   X,
   Plus,
+  ChevronDown,
 } from "lucide-react";
 
 const initialProductData = [
@@ -20,20 +24,110 @@ const initialProductData = [
     id: 1,
     name: "heading",
     content: "Create, impact and apply synthetic",
+    link: "",
+    status: "active",
   },
   {
     id: 2,
     name: "subheading",
     content: "Build meaningful digital experiences for everyone.",
+    link: "",
+    status: "active",
   },
   {
     id: 3,
     name: "button",
     content: "Explore our services",
+    link: "/services",
+    status: "inactive",
   },
 ];
 
-type ProductItem = (typeof initialProductData)[number];
+type ProductItem = (typeof initialProductData)[number] & {
+  image?: string;
+};
+
+type Status = "active" | "inactive";
+
+// ================= FORM STATE / REDUCER =================
+
+type FormState = {
+  selectedItem: ProductItem | null;
+  isModalOpen: boolean;
+  isAddMode: boolean;
+  editName: string;
+  editContent: string;
+  editLink: string;
+  editImage: string;
+};
+
+type FormAction =
+  | { type: "OPEN_EDIT"; item: ProductItem }
+  | { type: "OPEN_ADD" }
+  | { type: "CLOSE" }
+  | { type: "UPDATE_NAME"; value: string }
+  | { type: "UPDATE_CONTENT"; value: string }
+  | { type: "UPDATE_LINK"; value: string }
+  | { type: "UPDATE_IMAGE"; value: string };
+
+const initialFormState: FormState = {
+  selectedItem: null,
+  isModalOpen: false,
+  isAddMode: false,
+  editName: "",
+  editContent: "",
+  editLink: "",
+  editImage: "",
+};
+
+const formReducer = (
+  state: FormState,
+  action: FormAction,
+): FormState => {
+  switch (action.type) {
+    case "OPEN_EDIT":
+      return {
+        ...state,
+        selectedItem: action.item,
+        isModalOpen: true,
+        isAddMode: false,
+        editName: action.item.name,
+        editContent: action.item.content,
+        editLink: action.item.link,
+        editImage: action.item.image ?? "",
+      };
+
+    case "OPEN_ADD":
+      return {
+        ...state,
+        selectedItem: null,
+        isModalOpen: true,
+        isAddMode: true,
+        editName: "",
+        editContent: "",
+        editLink: "",
+        editImage: "",
+      };
+
+    case "CLOSE":
+      return initialFormState;
+
+    case "UPDATE_NAME":
+      return { ...state, editName: action.value };
+
+    case "UPDATE_CONTENT":
+      return { ...state, editContent: action.value };
+
+    case "UPDATE_LINK":
+      return { ...state, editLink: action.value };
+
+    case "UPDATE_IMAGE":
+      return { ...state, editImage: action.value };
+
+    default:
+      return state;
+  }
+};
 
 const Page = () => {
   const { collapsed } = useSidebarStore();
@@ -43,47 +137,56 @@ const Page = () => {
   const [productData, setProductData] =
     useState<ProductItem[]>(initialProductData);
 
-  // ================= MODAL STATE =================
+  // ================= FORM / MODAL REDUCER =================
 
-  const [selectedItem, setSelectedItem] =
-    useState<ProductItem | null>(null);
+  const [formState, dispatch] = useReducer(
+    formReducer,
+    initialFormState,
+  );
 
-  const [isModalOpen, setIsModalOpen] =
-    useState(false);
+  const {
+    selectedItem,
+    isModalOpen,
+    isAddMode,
+    editName,
+    editContent,
+    editLink,
+    editImage,
+  } = formState;
 
-  const [isAddMode, setIsAddMode] =
-    useState(false);
+  // ================= STATUS DROPDOWN STATE =================
 
-  // ================= FORM STATE =================
+  const [openDropdownId, setOpenDropdownId] =
+    useState<number | null>(null);
 
-  const [editName, setEditName] =
-    useState("");
+  const handleStatusChange = (
+    id: number,
+    status: Status,
+  ) => {
+    setProductData((previousData) =>
+      previousData.map((item) =>
+        item.id === id
+          ? { ...item, status }
+          : item,
+      ),
+    );
 
-  const [editContent, setEditContent] =
-    useState("");
+    setOpenDropdownId(null);
+  };
 
   // ================= EDIT =================
 
   const handleEdit = (item: ProductItem) => {
-    setSelectedItem(item);
-
-    setEditName(item.name);
-    setEditContent(item.content);
-
-    setIsAddMode(false);
-    setIsModalOpen(true);
+    dispatch({
+      type: "OPEN_EDIT",
+      item,
+    });
   };
 
   // ================= ADD =================
 
   const handleAdd = () => {
-    setSelectedItem(null);
-
-    setEditName("");
-    setEditContent("");
-
-    setIsAddMode(true);
-    setIsModalOpen(true);
+    dispatch({ type: "OPEN_ADD" });
   };
 
   // ================= DELETE =================
@@ -99,13 +202,24 @@ const Page = () => {
   // ================= CLOSE MODAL =================
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    dispatch({ type: "CLOSE" });
+  };
 
-    setSelectedItem(null);
-    setIsAddMode(false);
+  // ================= IMAGE SELECT =================
 
-    setEditName("");
-    setEditContent("");
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    const objectUrl = URL.createObjectURL(file);
+
+    dispatch({
+      type: "UPDATE_IMAGE",
+      value: objectUrl,
+    });
   };
 
   // ================= SAVE =================
@@ -131,6 +245,9 @@ const Page = () => {
         id: newId,
         name: editName,
         content: editContent,
+        link: editLink,
+        status: "active",
+        image: editImage,
       };
 
       setProductData((previousData) => [
@@ -154,6 +271,8 @@ const Page = () => {
               ...item,
               name: editName,
               content: editContent,
+              link: editLink,
+              image: editImage,
             }
           : item,
       ),
@@ -301,6 +420,34 @@ const Page = () => {
                       text-(--text-primary-dashboard)
                     "
                   >
+                    Link
+                  </th>
+
+                  <th
+                    className="
+                      bg-(--bg-lightblue)
+                      px-5
+                      py-4
+                      text-left
+                      text-sm
+                      font-semibold
+                      text-(--text-primary-dashboard)
+                    "
+                  >
+                    Status
+                  </th>
+
+                  <th
+                    className="
+                      bg-(--bg-lightblue)
+                      px-5
+                      py-4
+                      text-left
+                      text-sm
+                      font-semibold
+                      text-(--text-primary-dashboard)
+                    "
+                  >
                     Actions
                   </th>
 
@@ -359,6 +506,133 @@ const Page = () => {
                       "
                     >
                       {item.content}
+                    </td>
+
+                    {/* LINK */}
+
+                    <td
+                      className="
+                        px-5
+                        py-4
+                        text-sm
+                        text-(--bg-lightblue)
+                      "
+                    >
+                      {item.link || "-"}
+                    </td>
+
+                    {/* STATUS */}
+
+                    <td className="px-5 py-4">
+                      <div className="relative inline-block">
+                        {/* TRIGGER */}
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenDropdownId(
+                              openDropdownId ===
+                                item.id
+                                ? null
+                                : item.id,
+                            )
+                          }
+                          className={`
+                            flex
+                            items-center
+                            gap-2
+                            rounded-full
+                            border
+                            px-3
+                            py-1.5
+                            text-xs
+                            font-medium
+                            capitalize
+                            transition
+                            hover:cursor-pointer
+                            ${
+                              item.status ===
+                              "active"
+                                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
+                                : "border-red-500/30 bg-red-500/10 text-red-600"
+                            }
+                          `}
+                        >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              item.status ===
+                              "active"
+                                ? "bg-emerald-500"
+                                : "bg-red-500"
+                            }`}
+                          />
+
+                          {item.status}
+
+                          <ChevronDown
+                            size={14}
+                            className={`transition-transform ${
+                              openDropdownId ===
+                              item.id
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                          />
+                        </button>
+
+                        {/* DROPDOWN MENU */}
+
+                        {openDropdownId ===
+                          item.id && (
+                          <div className="absolute right-0 top-full z-10 mt-1 w-32 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
+                            {(["active", "inactive"] as Status[]).map(
+                              (statusOption) => (
+                                <button
+                                  key={statusOption}
+                                  type="button"
+                                  onClick={() =>
+                                    handleStatusChange(
+                                      item.id,
+                                      statusOption,
+                                    )
+                                  }
+                                  className={`
+                                    flex
+                                    w-full
+                                    items-center
+                                    gap-2
+                                    px-3
+                                    py-2
+                                    text-left
+                                    text-sm
+                                    capitalize
+                                    transition
+                                    hover:bg-(--secondary-bg-dashboard)
+                                    hover:cursor-pointer
+                                    ${
+                                      item.status ===
+                                      statusOption
+                                        ? "font-medium text-(--background)"
+                                        : "text-(--text-primary-dashboard)"
+                                    }
+                                  `}
+                                >
+                                  <span
+                                    className={`h-2 w-2 rounded-full ${
+                                      statusOption ===
+                                      "active"
+                                        ? "bg-emerald-500"
+                                        : "bg-red-500"
+                                    }`}
+                                  />
+
+                                  {statusOption}
+                                </button>
+                              ),
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </td>
 
                     {/* ACTIONS */}
@@ -493,8 +767,8 @@ const Page = () => {
                   "
                 >
                   {isAddMode
-                    ? "Add Product Content"
-                    : "Edit Product Content"}
+                    ? "Add Product"
+                    : "Edit Product"}
                 </h2>
 
                 <p
@@ -505,8 +779,8 @@ const Page = () => {
                   "
                 >
                   {isAddMode
-                    ? "Add new content to the product section."
-                    : "Update the selected product content."}
+                    ? "Add new product"
+                    : "Update product"}
                 </p>
 
               </div>
@@ -614,9 +888,10 @@ const Page = () => {
                   type="text"
                   value={editName}
                   onChange={(event) =>
-                    setEditName(
-                      event.target.value,
-                    )
+                    dispatch({
+                      type: "UPDATE_NAME",
+                      value: event.target.value,
+                    })
                   }
                   required
                   placeholder="Enter product name"
@@ -661,9 +936,10 @@ const Page = () => {
                   id="product-content"
                   value={editContent}
                   onChange={(event) =>
-                    setEditContent(
-                      event.target.value,
-                    )
+                    dispatch({
+                      type: "UPDATE_CONTENT",
+                      value: event.target.value,
+                    })
                   }
                   required
                   rows={5}
@@ -681,6 +957,125 @@ const Page = () => {
                     text-(--text-primary-dashboard)
                     outline-none
                     transition
+                    focus:border-(--bg-lightblue)
+                    focus:ring-2
+                    focus:ring-(--bg-lightblue)/20
+                  "
+                />
+
+              </div>
+
+              {/* ================= LINK ================= */}
+
+              <div>
+
+                <label
+                  htmlFor="product-link"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Link
+                </label>
+
+                <input
+                  id="product-link"
+                  type="text"
+                  value={editLink}
+                  onChange={(event) =>
+                    dispatch({
+                      type: "UPDATE_LINK",
+                      value: event.target.value,
+                    })
+                  }
+                  placeholder="Enter product link"
+                  className="
+                    w-full
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    bg-(--bg-primary-dashboard)
+                    px-4
+                    py-2.5
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    outline-none
+                    transition
+                    focus:border-(--bg-lightblue)
+                    focus:ring-2
+                    focus:ring-(--bg-lightblue)/20
+                  "
+                />
+
+              </div>
+
+              {/* ================= IMAGE UPLOAD ================= */}
+
+              <div>
+
+                <label
+                  htmlFor="product-image"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Image
+                </label>
+
+                {editImage && (
+                  <div
+                    className="
+                      mb-3
+                      overflow-hidden
+                      rounded-lg
+                      border
+                      border-(--border-primary-dashboard)
+                    "
+                  >
+                    <img
+                      src={editImage}
+                      alt="Preview"
+                      className="h-32 w-full object-cover"
+                    />
+                  </div>
+                )}
+
+                <input
+                  id="product-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="
+                    w-full
+                    cursor-pointer
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    bg-(--bg-primary-dashboard)
+                    px-4
+                    py-2.5
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    outline-none
+                    transition
+                    file:mr-3
+                    file:rounded-md
+                    file:border-0
+                    file:bg-(--bg-lightblue)
+                    file:px-3
+                    file:py-1.5
+                    file:text-sm
+                    file:font-medium
+                    file:text-(--text-primary-dashboard)
+                    file:hover:cursor-pointer
                     focus:border-(--bg-lightblue)
                     focus:ring-2
                     focus:ring-(--bg-lightblue)/20
