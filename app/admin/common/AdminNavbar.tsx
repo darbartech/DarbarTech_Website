@@ -45,6 +45,11 @@ const menuItems = [
     href: "/admin/career",
   },
   {
+    label: "Courses",
+    icon: LayoutDashboard,
+    href: "/admin/courses",
+  },
+  {
     label: "Analytics",
     icon: BarChart3,
     href: "/admin/analytics",
@@ -56,12 +61,12 @@ const menuItems = [
       {
         label: "Hero Management",
         icon: Sparkles,
-        href: "/admin/cms/hero",
+        href: "/admin/cms/hero-management",
       },
       {
         label: "Product Management",
         icon: Package,
-        href: "/admin/cms/products",
+        href: "/admin/cms/product-management",
       },
     ],
   },
@@ -133,7 +138,7 @@ export default function AdminNavbar() {
   };
 
   const activeStyles =
-    "border-l-2 border-(--bg-lightblue) bg-(--secondary-bg-dashboard) text-(--secondary-text-dashboard)";
+    "border-l-2 border-(--bg-lightblue) bg-(--secondary-bg-dashboard) text-(--text-primary-dashboard)";
 
   const defaultStyles =
     "text-(--text-primary-dashboard) hover:bg-(--secondary-bg-dashboard) hover:text-(--bg-dashboard-hero)";
