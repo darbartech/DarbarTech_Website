@@ -12,6 +12,7 @@ import {
   BarChart3,
   Bell,
   Bot,
+  Briefcase,
   ChevronDown,
   ChevronRight,
   FileText,
@@ -45,6 +46,11 @@ const menuItems = [
     href: "/admin/career",
   },
   {
+    label: "Jobs",
+    icon: Briefcase,
+    href: "/admin/jobs",
+  },
+  {
     label: "Courses",
     icon: LayoutDashboard,
     href: "/admin/courses",
@@ -73,43 +79,28 @@ const menuItems = [
   {
     label: "Users",
     icon: Users,
-    children: [
-      {
-        label: "SuperAdmin",
-        icon: UserCog,
-        href: "/admin/users/superadmin",
-      },
-      {
-        label: "Admin",
-        icon: UserCog,
-        href: "/admin/users/admin",
-      },
-      {
-        label: "User",
-        icon: User,
-        href: "/admin/users",
-      },
-    ],
-  },
-  {
-    label: "Notifications",
-    icon: Bell,
-    href: "/admin/notifications",
-  },
-  {
-    label: "Themes",
-    icon: Palette,
-    href: "/admin/themes",
-  },
-  {
-    label: "Security",
-    icon: Shield,
-    href: "/admin/security",
+    href: "/admin/users",
   },
   {
     label: "Settings",
     icon: Settings,
-    href: "/admin/settings",
+    children: [
+      {
+        label: "Notifications",
+        icon: Bell,
+        href: "/admin/notifications",
+      },
+      {
+        label: "Themes",
+        icon: Palette,
+        href: "/admin/themes",
+      },
+      {
+        label: "Security",
+        icon: Shield,
+        href: "/admin/security",
+      },
+    ],
   },
   {
     label: "AI & CHAT",
@@ -124,10 +115,7 @@ export default function AdminNavbar() {
 
   const pathname = usePathname();
 
-  const [openMenus, setOpenMenus] = useState<string[]>([
-    "CMS",
-    "Users",
-  ]);
+  const [openMenus, setOpenMenus] = useState<string[]>(["CMS", "Users"]);
 
   const toggleMenu = (label: string) => {
     setOpenMenus((prev) =>
@@ -175,11 +163,7 @@ export default function AdminNavbar() {
 
           ${collapsed ? "lg:w-20" : "lg:w-64"}
 
-          ${
-            mobileSidebar
-              ? "fixed inset-y-0 left-0 z-100 w-64"
-              : "hidden"
-          }
+          ${mobileSidebar ? "fixed inset-y-0 left-0 z-100 w-64" : "hidden"}
 
           lg:relative
           lg:flex
@@ -193,21 +177,13 @@ export default function AdminNavbar() {
             justify-between
             px-5
 
-            ${
-              collapsed
-                ? "lg:flex-col lg:justify-center lg:py-5"
-                : "px-6"
-            }
+            ${collapsed ? "lg:flex-col lg:justify-center lg:py-5" : "px-6"}
           `}
         >
           {/* Logo */}
           <div className="flex items-center">
             {/* Small logo */}
-            <Image
-              src={smallLogo}
-              alt="Darbar Tech"
-              className="w-6 lg:w-8"
-            />
+            <Image src={smallLogo} alt="Darbar Tech" className="w-6 lg:w-8" />
 
             {/* Full logo */}
             <Image
@@ -264,16 +240,8 @@ export default function AdminNavbar() {
 
               lg:block
             "
-            aria-label={
-              collapsed
-                ? "Expand sidebar"
-                : "Collapse sidebar"
-            }
-            title={
-              collapsed
-                ? "Expand sidebar"
-                : "Collapse sidebar"
-            }
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
               <Menu className="h-5 w-5" />
@@ -302,22 +270,15 @@ export default function AdminNavbar() {
             {menuItems.map((item) => {
               const Icon = item.icon;
 
-              const hasChildren = Boolean(
-                item.children?.length,
+              const hasChildren = Boolean(item.children?.length);
+
+              const isOpen = openMenus.includes(item.label);
+
+              const isActive = item.href === pathname;
+
+              const hasActiveChild = item.children?.some(
+                (child) => pathname === child.href,
               );
-
-              const isOpen = openMenus.includes(
-                item.label,
-              );
-
-              const isActive =
-                item.href === pathname;
-
-              const hasActiveChild =
-                item.children?.some(
-                  (child) =>
-                    pathname === child.href,
-                );
 
               return (
                 <li key={item.label}>
@@ -326,14 +287,8 @@ export default function AdminNavbar() {
                       {/* ================= PARENT MENU ================= */}
                       <button
                         type="button"
-                        onClick={() =>
-                          toggleMenu(item.label)
-                        }
-                        title={
-                          collapsed
-                            ? item.label
-                            : undefined
-                        }
+                        onClick={() => toggleMenu(item.label)}
+                        title={collapsed ? item.label : undefined}
                         className={`
                           flex
                           w-full
@@ -363,11 +318,7 @@ export default function AdminNavbar() {
                               `
                           }
 
-                          ${
-                            hasActiveChild
-                              ? activeStyles
-                              : defaultStyles
-                          }
+                          ${hasActiveChild ? activeStyles : defaultStyles}
                         `}
                       >
                         {/* Icon + Label */}
@@ -394,11 +345,7 @@ export default function AdminNavbar() {
                             className={`
                               whitespace-nowrap
 
-                              ${
-                                collapsed
-                                  ? "lg:hidden"
-                                  : ""
-                              }
+                              ${collapsed ? "lg:hidden" : ""}
                             `}
                           >
                             {item.label}
@@ -406,13 +353,7 @@ export default function AdminNavbar() {
                         </span>
 
                         {/* Chevron */}
-                        <span
-                          className={
-                            collapsed
-                              ? "lg:hidden"
-                              : ""
-                          }
-                        >
+                        <span className={collapsed ? "lg:hidden" : ""}>
                           {isOpen ? (
                             <ChevronDown className="h-4 w-4 shrink-0" />
                           ) : (
@@ -442,34 +383,18 @@ export default function AdminNavbar() {
                             }
                           `}
                         >
-                          {item.children?.map(
-                            (child) => {
-                              const ChildIcon =
-                                child.icon;
+                          {item.children?.map((child) => {
+                            const ChildIcon = child.icon;
 
-                              const isChildActive =
-                                pathname ===
-                                child.href;
+                            const isChildActive = pathname === child.href;
 
-                              return (
-                                <li
-                                  key={
-                                    child.label
-                                  }
-                                >
-                                  <Link
-                                    href={
-                                      child.href
-                                    }
-                                    title={
-                                      collapsed
-                                        ? child.label
-                                        : undefined
-                                    }
-                                    onClick={
-                                      toggleMobileSidebar
-                                    }
-                                    className={`
+                            return (
+                              <li key={child.label}>
+                                <Link
+                                  href={child.href}
+                                  title={collapsed ? child.label : undefined}
+                                  onClick={toggleMobileSidebar}
+                                  className={`
                                       flex
                                       items-center
                                       rounded-lg
@@ -503,30 +428,23 @@ export default function AdminNavbar() {
                                           `
                                       }
                                     `}
-                                  >
-                                    <ChildIcon className="h-4 w-4 shrink-0" />
+                                >
+                                  <ChildIcon className="h-4 w-4 shrink-0" />
 
-                                    {/* Child label */}
-                                    <span
-                                      className={`
+                                  {/* Child label */}
+                                  <span
+                                    className={`
                                         whitespace-nowrap
 
-                                        ${
-                                          collapsed
-                                            ? "lg:hidden"
-                                            : ""
-                                        }
+                                        ${collapsed ? "lg:hidden" : ""}
                                       `}
-                                    >
-                                      {
-                                        child.label
-                                      }
-                                    </span>
-                                  </Link>
-                                </li>
-                              );
-                            },
-                          )}
+                                  >
+                                    {child.label}
+                                  </span>
+                                </Link>
+                              </li>
+                            );
+                          })}
                         </ul>
                       )}
                     </>
@@ -534,14 +452,8 @@ export default function AdminNavbar() {
                     /* ================= NORMAL MENU ITEM ================= */
                     <Link
                       href={item.href}
-                      title={
-                        collapsed
-                          ? item.label
-                          : undefined
-                      }
-                      onClick={
-                        toggleMobileSidebar
-                      }
+                      title={collapsed ? item.label : undefined}
+                      onClick={toggleMobileSidebar}
                       className={`
                         flex
                         items-center
@@ -556,11 +468,7 @@ export default function AdminNavbar() {
 
                         hover:cursor-pointer
 
-                        ${
-                          isActive
-                            ? activeStyles
-                            : defaultStyles
-                        }
+                        ${isActive ? activeStyles : defaultStyles}
 
                         ${
                           collapsed
@@ -585,11 +493,7 @@ export default function AdminNavbar() {
                         className={`
                           whitespace-nowrap
 
-                          ${
-                            collapsed
-                              ? "lg:hidden"
-                              : ""
-                          }
+                          ${collapsed ? "lg:hidden" : ""}
                         `}
                       >
                         {item.label}
@@ -614,11 +518,7 @@ export default function AdminNavbar() {
           {/* Profile */}
           <Link
             href="/admin/profile"
-            title={
-              collapsed
-                ? "Profile"
-                : undefined
-            }
+            title={collapsed ? "Profile" : undefined}
             onClick={toggleMobileSidebar}
             className={`
               flex
@@ -634,11 +534,7 @@ export default function AdminNavbar() {
 
               hover:cursor-pointer
 
-              ${
-                pathname === "/admin/profile"
-                  ? activeStyles
-                  : defaultStyles
-              }
+              ${pathname === "/admin/profile" ? activeStyles : defaultStyles}
 
               ${
                 collapsed
@@ -663,11 +559,7 @@ export default function AdminNavbar() {
               className={`
                 whitespace-nowrap
 
-                ${
-                  collapsed
-                    ? "lg:hidden"
-                    : ""
-                }
+                ${collapsed ? "lg:hidden" : ""}
               `}
             >
               Profile
@@ -677,11 +569,7 @@ export default function AdminNavbar() {
           {/* Logout */}
           <button
             type="button"
-            title={
-              collapsed
-                ? "Logout"
-                : undefined
-            }
+            title={collapsed ? "Logout" : undefined}
             className={`
               flex
               w-full
@@ -725,11 +613,7 @@ export default function AdminNavbar() {
               className={`
                 whitespace-nowrap
 
-                ${
-                  collapsed
-                    ? "lg:hidden"
-                    : ""
-                }
+                ${collapsed ? "lg:hidden" : ""}
               `}
             >
               Logout
