@@ -8,6 +8,8 @@ import serviceImage4 from "@/public/services/image 24.png";
 import IllustrationAndContent from "../components/IllustrationAndContent";
 import { ServicesBox } from "../components/ServiceBox";
 import HeroSectionForPages from "../components/HeroSectionForPages";
+import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 
 const contents = [
@@ -116,6 +118,8 @@ const servicesBoxContents = [
 
 const page = () => {
   return (
+    <>
+    <Navbar/>
     <main className="font-bold">
       {/* IT services section */}
       <HeroSectionForPages title="IT Services" />
@@ -150,6 +154,7 @@ const page = () => {
         </div>
       </section>
     </main>
+    <Footer/></>
   );
 };
 
