@@ -18,6 +18,8 @@ import {
   X,
   Plus,
   ChevronDown,
+  MoreHorizontal,
+  Eye,
 } from "lucide-react";
 
 const initialHeroData = [
@@ -110,6 +112,7 @@ const initialHeroData = [
 
 type HeroItem = (typeof initialHeroData)[number] & {
   image?: string;
+  imageName?: string;
 };
 
 type Status = "active" | "inactive";
@@ -124,6 +127,7 @@ type FormState = {
   editContent: string;
   editLink: string;
   editImage: string;
+  editImageName: string;
 };
 
 type FormAction =
@@ -133,7 +137,8 @@ type FormAction =
   | { type: "UPDATE_NAME"; value: string }
   | { type: "UPDATE_CONTENT"; value: string }
   | { type: "UPDATE_LINK"; value: string }
-  | { type: "UPDATE_IMAGE"; value: string };
+  | { type: "UPDATE_IMAGE"; value: string }
+  | { type: "UPDATE_IMAGE_NAME"; value: string };
 
 const initialFormState: FormState = {
   selectedItem: null,
@@ -143,6 +148,7 @@ const initialFormState: FormState = {
   editContent: "",
   editLink: "",
   editImage: "",
+  editImageName: "",
 };
 
 const formReducer = (
@@ -160,6 +166,7 @@ const formReducer = (
         editContent: action.item.content,
         editLink: action.item.link,
         editImage: action.item.image ?? "",
+        editImageName: action.item.imageName ?? "",
       };
 
     case "OPEN_ADD":
@@ -172,6 +179,7 @@ const formReducer = (
         editContent: "",
         editLink: "",
         editImage: "",
+        editImageName: "",
       };
 
     case "CLOSE":
@@ -188,6 +196,9 @@ const formReducer = (
 
     case "UPDATE_IMAGE":
       return { ...state, editImage: action.value };
+
+    case "UPDATE_IMAGE_NAME":
+      return { ...state, editImageName: action.value };
 
     default:
       return state;
@@ -217,6 +228,7 @@ const Page = () => {
     editContent,
     editLink,
     editImage,
+    editImageName,
   } = formState;
 
   // ================= STATUS DROPDOWN STATE =================
@@ -237,6 +249,26 @@ const Page = () => {
     );
 
     setOpenDropdownId(null);
+  };
+
+  // ================= ACTIONS DROPDOWN STATE =================
+
+  const [openActionsId, setOpenActionsId] =
+    useState<number | null>(null);
+
+  // ================= VIEW MODAL =================
+
+  const [viewItem, setViewItem] =
+    useState<HeroItem | null>(null);
+
+  const handleView = (item: HeroItem) => {
+    setOpenActionsId(null);
+
+    setViewItem(item);
+  };
+
+  const handleCloseViewModal = () => {
+    setViewItem(null);
   };
 
   // ================= EDIT =================
@@ -285,6 +317,11 @@ const Page = () => {
       type: "UPDATE_IMAGE",
       value: objectUrl,
     });
+
+    dispatch({
+      type: "UPDATE_IMAGE_NAME",
+      value: file.name,
+    });
   };
 
   // ================= SAVE =================
@@ -313,6 +350,7 @@ const Page = () => {
         link: editLink,
         status: "active",
         image: editImage,
+        imageName: editImageName,
       };
 
       setHeroData((previousData) => [
@@ -338,6 +376,7 @@ const Page = () => {
               content: editContent,
               link: editLink,
               image: editImage,
+              imageName: editImageName,
             }
           : item,
       ),
@@ -430,7 +469,7 @@ const Page = () => {
                 <tr>
                   <th
                     className="
-                      bg-(--bg-lightblue)
+                      bg-(--bg-table)
                       px-5
                       py-4
                       text-left
@@ -444,7 +483,7 @@ const Page = () => {
 
                   <th
                     className="
-                      bg-(--bg-lightblue)
+                      bg-(--bg-table)
                       px-5
                       py-4
                       text-left
@@ -458,7 +497,7 @@ const Page = () => {
 
                   <th
                     className="
-                      bg-(--bg-lightblue)
+                      bg-(--bg-table)
                       px-5
                       py-4
                       text-left
@@ -472,7 +511,7 @@ const Page = () => {
 
                   <th
                     className="
-                      bg-(--bg-lightblue)
+                      bg-(--bg-table)
                       px-5
                       py-4
                       text-left
@@ -486,7 +525,7 @@ const Page = () => {
 
                   <th
                     className="
-                      bg-(--bg-lightblue)
+                      bg-(--bg-table)
                       px-5
                       py-4
                       text-left
@@ -500,7 +539,7 @@ const Page = () => {
 
                   <th
                     className="
-                      bg-(--bg-lightblue)
+                      bg-(--bg-table)
                       px-5
                       py-4
                       text-left
@@ -524,6 +563,7 @@ const Page = () => {
                       border-t
                       border-(--border-primary-dashboard)
                       transition
+                      hover:cursor-pointer
                       hover:bg-(--secondary-bg-dashboard)
                     "
                   >
@@ -697,62 +737,131 @@ const Page = () => {
                     {/* ACTIONS */}
 
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        {/* EDIT */}
+                      <div className="relative inline-block text-left">
+                        {/* TRIGGER */}
 
                         <button
                           type="button"
                           onClick={() =>
-                            handleEdit(item)
+                            setOpenActionsId(
+                              openActionsId ===
+                                item.id
+                                ? null
+                                : item.id,
+                            )
                           }
+                          aria-label="Actions"
                           className="
                             flex
+                            h-8
+                            w-8
                             items-center
-                            gap-1.5
+                            justify-center
                             rounded-lg
-                            bg-(--surface)
-                            px-3
-                            py-2
-                            text-sm
-                            font-medium
                             text-(--text-primary-dashboard)
                             transition
-                            hover:opacity-80
+                            hover:bg-(--secondary-bg-dashboard)
                             hover:cursor-pointer
                           "
                         >
-                          <Pencil size={15} />
-
-                          Edit
+                          <MoreHorizontal size={18} />
                         </button>
 
-                        {/* DELETE */}
+                        {/* DROPDOWN MENU */}
 
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDelete(item.id)
-                          }
-                          className="
-                            flex
-                            items-center
-                            gap-1.5
-                            rounded-lg
-                            bg-(--secondary-dark-bg-color)
-                            px-3
-                            py-2
-                            text-sm
-                            font-medium
-                            text-(--bg-primary-dashboard)
-                            transition
-                            hover:opacity-80
-                            hover:cursor-pointer
-                          "
-                        >
-                          <Trash2 size={15} />
+                        {openActionsId ===
+                          item.id && (
+                          <div className="absolute right-0 top-full z-10 mt-1 w-36 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
+                            {/* VIEW */}
 
-                          Delete
-                        </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleView(item)
+                              }
+                              className="
+                                flex
+                                w-full
+                                items-center
+                                gap-2
+                                px-3
+                                py-2
+                                text-left
+                                text-sm
+                                text-(--text-primary-dashboard)
+                                transition
+                                hover:bg-(--secondary-bg-dashboard)
+                                hover:cursor-pointer
+                              "
+                            >
+                              <Eye size={15} />
+
+                              View
+                            </button>
+
+                            {/* EDIT */}
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setOpenActionsId(
+                                  null,
+                                );
+
+                                handleEdit(item);
+                              }}
+                              className="
+                                flex
+                                w-full
+                                items-center
+                                gap-2
+                                px-3
+                                py-2
+                                text-left
+                                text-sm
+                                text-(--text-primary-dashboard)
+                                transition
+                                hover:bg-(--secondary-bg-dashboard)
+                                hover:cursor-pointer
+                              "
+                            >
+                              <Pencil size={15} />
+
+                              Edit
+                            </button>
+
+                            {/* DELETE */}
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setOpenActionsId(
+                                  null,
+                                );
+
+                                handleDelete(item.id);
+                              }}
+                              className="
+                                flex
+                                w-full
+                                items-center
+                                gap-2
+                                px-3
+                                py-2
+                                text-left
+                                text-sm
+                                text-red-500
+                                transition
+                                hover:bg-red-500/10
+                                hover:cursor-pointer
+                              "
+                            >
+                              <Trash2 size={15} />
+
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -864,11 +973,11 @@ const Page = () => {
 
             <form
               onSubmit={handleSave}
-              className="space-y-5"
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2"
             >
               {/* ID */}
 
-              <div>
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="hero-id"
                   className="
@@ -915,7 +1024,7 @@ const Page = () => {
 
               {/* NAME */}
 
-              <div>
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="hero-name"
                   className="
@@ -962,7 +1071,7 @@ const Page = () => {
 
               {/* CONTENT */}
 
-              <div>
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="hero-content"
                   className="
@@ -1123,6 +1232,7 @@ const Page = () => {
                   justify-end
                   gap-3
                   pt-2
+                  sm:col-span-2
                 "
               >
                 {/* CANCEL */}
@@ -1170,6 +1280,236 @@ const Page = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================= */}
+      {/* VIEW DETAILS MODAL */}
+      {/* ================================================= */}
+
+      {viewItem && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-200
+            flex
+            items-center
+            justify-center
+            bg-black/40
+            px-4
+            backdrop-blur-sm
+          "
+          onClick={handleCloseViewModal}
+        >
+          {/* ================= MODAL ================= */}
+
+          <div
+            className="
+              w-full
+              max-w-lg
+              rounded-2xl
+              border
+              border-(--border-primary-dashboard)
+              bg-(--bg-primary-dashboard)
+              p-6
+              shadow-xl
+            "
+            onClick={(event) =>
+              event.stopPropagation()
+            }
+          >
+            {/* ================= MODAL HEADER ================= */}
+
+            <div
+              className="
+                mb-6
+                flex
+                items-start
+                justify-between
+                gap-4
+              "
+            >
+              <div>
+                <h2
+                  className="
+                    text-xl
+                    font-semibold
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Hero Content Details
+                </h2>
+
+                <p
+                  className="
+                    mt-1
+                    text-sm
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Details of the selected hero content.
+                </p>
+              </div>
+
+              {/* CLOSE */}
+
+              <button
+                type="button"
+                onClick={handleCloseViewModal}
+                aria-label="Close modal"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-lg
+                  text-(--text-primary-dashboard)
+                  transition
+                  hover:bg-(--secondary-bg-dashboard)
+                  hover:cursor-pointer
+                "
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* ================= DETAILS ================= */}
+
+            <dl className="space-y-4">
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  ID
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {viewItem.id}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Name
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {viewItem.name}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Content
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {viewItem.content}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Link
+                </dt>
+
+                <dd className="text-sm text-(--bg-lightblue)">
+                  {viewItem.link || "-"}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Status
+                </dt>
+
+                <dd
+                  className={`
+                    text-sm
+                    capitalize
+                    ${
+                      viewItem.status ===
+                      "active"
+                        ? "text-emerald-600"
+                        : "text-red-600"
+                    }
+                  `}
+                >
+                  {viewItem.status}
+                </dd>
+              </div>
+            </dl>
+
+            {/* ================= MODAL FOOTER ================= */}
+
+            <div
+              className="
+                flex
+                justify-end
+                pt-6
+              "
+            >
+              <button
+                type="button"
+                onClick={handleCloseViewModal}
+                className="
+                  rounded-lg
+                  bg-(--bg-lightblue)
+                  px-5
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-(--text-primary-dashboard)
+                  transition
+                  hover:opacity-90
+                  hover:cursor-pointer
+                "
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
