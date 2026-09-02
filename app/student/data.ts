@@ -1,0 +1,515 @@
+export const student = {
+  name: "Roban Ghimire",
+  id: "DST-2024-0123",
+  email: "roban.ghimire@darbartech.com",
+  phone: "+977 98XXXXXXXX",
+  address: "Kathmandu, Nepal",
+  dob: "12 Jan 2004",
+  gender: "Male",
+  enrolledDate: "15 Jul 2024",
+  program: "Full Stack Web Development",
+  batch: "Batch 12",
+  section: "A",
+  academicStatus: "Active",
+};
+
+export const courses = [
+  {
+    id: 1,
+    code: "FSWD-101",
+    title: "Full Stack Web Development",
+    instructor: "Sarah M.",
+    batch: "Batch 12",
+    startDate: "15 Jul 2024",
+    endDate: "30 Jun 2025",
+    progress: 72,
+    attendance: 88,
+    lessonsTotal: 25,
+    lessonsCompleted: 18,
+    pendingAssignments: 2,
+    nextClass: "Mon, 4:00 PM",
+    status: "Active",
+    nextModule: "Module 4: React Context API",
+    description:
+      "A complete web development program covering HTML, CSS, JavaScript, React, Node.js and databases.",
+  },
+  {
+    id: 2,
+    code: "UIUX-101",
+    title: "UI/UX Design",
+    instructor: "Anna K.",
+    batch: "Batch 12",
+    startDate: "15 Jul 2024",
+    endDate: "28 Feb 2025",
+    progress: 60,
+    attendance: 78,
+    lessonsTotal: 20,
+    lessonsCompleted: 12,
+    pendingAssignments: 1,
+    nextClass: "Wed, 4:00 PM",
+    status: "Active",
+    nextModule: "Module 3: Prototyping",
+    description:
+      "Learn user research, wireframing, visual design and prototyping using Figma.",
+  },
+  {
+    id: 3,
+    code: "DB-201",
+    title: "Database Design",
+    instructor: "David R.",
+    batch: "Batch 10",
+    startDate: "01 Nov 2023",
+    endDate: "30 Apr 2024",
+    progress: 100,
+    attendance: 92,
+    lessonsTotal: 18,
+    lessonsCompleted: 18,
+    pendingAssignments: 0,
+    nextClass: "—",
+    status: "Completed",
+    nextModule: "Completed",
+    description:
+      "MySQL, data modelling, normalization and query optimization.",
+  },
+  {
+    id: 4,
+    code: "PHP-301",
+    title: "PHP & Laravel",
+    instructor: "Sarah M.",
+    batch: "Batch 13",
+    startDate: "01 Sep 2025",
+    endDate: "30 Mar 2026",
+    progress: 0,
+    attendance: 0,
+    lessonsTotal: 24,
+    lessonsCompleted: 0,
+    pendingAssignments: 0,
+    nextClass: "Starts soon",
+    status: "Upcoming",
+    nextModule: "—",
+    description:
+      "Server side scripting with PHP and the Laravel framework.",
+  },
+  {
+    id: 5,
+    code: "CERT-101",
+    title: "JavaScript Certification",
+    instructor: "Anna K.",
+    batch: "Batch 11",
+    startDate: "10 Jan 2024",
+    endDate: "30 Jun 2024",
+    progress: 40,
+    attendance: 55,
+    lessonsTotal: 15,
+    lessonsCompleted: 6,
+    pendingAssignments: 3,
+    nextClass: "TBA",
+    status: "On Hold",
+    nextModule: "Module 2: ES6+",
+    description: "Advanced JavaScript and ES6 module certification prep.",
+  },
+];
+
+export const todaySchedule = [
+  {
+    time: "10:00 AM",
+    title: "UI/UX Basics Review",
+    detail: "Self-paced learning",
+    instructor: "Anna K.",
+    mode: "Online",
+    live: false,
+  },
+  {
+    time: "4:00 PM",
+    title: "React.js Live Session",
+    detail: "Join class",
+    instructor: "Sarah M.",
+    mode: "Online",
+    live: true,
+  },
+  {
+    time: "7:00 PM",
+    title: "Submit Assignment",
+    detail: "Module 3 Project",
+    instructor: "—",
+    mode: "—",
+    live: false,
+  },
+];
+
+export const upcomingClasses = [
+  {
+    date: "Mon 08 Sep",
+    time: "4:00 PM — 5:30 PM",
+    course: "Full Stack Web Development",
+    instructor: "Sarah M.",
+    topic: "React Context API",
+    mode: "Online",
+  },
+  {
+    date: "Wed 10 Sep",
+    time: "4:00 PM — 5:30 PM",
+    course: "UI/UX Design",
+    instructor: "Anna K.",
+    topic: "Prototyping Basics",
+    mode: "Online",
+  },
+  {
+    date: "Fri 12 Sep",
+    time: "11:00 AM — 12:00 PM",
+    course: "Full Stack Web Development",
+    instructor: "Sarah M.",
+    topic: "Node.js Intro",
+    mode: "Physical",
+  },
+  {
+    date: "Mon 15 Sep",
+    time: "4:00 PM — 5:30 PM",
+    course: "Full Stack Web Development",
+    instructor: "Sarah M.",
+    topic: "REST APIs",
+    mode: "Online",
+  },
+  {
+    date: "Wed 17 Sep",
+    time: "4:00 PM — 5:30 PM",
+    course: "UI/UX Design",
+    instructor: "Anna K.",
+    topic: "Design Systems",
+    mode: "Physical",
+  },
+];
+
+export const assignments = [
+  {
+    id: 1,
+    title: "Module 3 Project",
+    course: "Full Stack Web Development",
+    module: "Module 3",
+    instructor: "Sarah M.",
+    assignedDate: "01 Sep 2026",
+    dueDate: "05 Sep 2026",
+    marks: "15 / 20",
+    totalMarks: 20,
+    status: "Pending",
+    instructions:
+      "Build a responsive landing page using React and publish it. Submit the repository link and a short description of your approach.",
+  },
+  {
+    id: 2,
+    title: "Wireframe Exercise",
+    course: "UI/UX Design",
+    module: "Module 2",
+    instructor: "Anna K.",
+    assignedDate: "29 Aug 2026",
+    dueDate: "03 Sep 2026",
+    marks: "—",
+    totalMarks: 10,
+    status: "Draft",
+    instructions:
+      "Create a low fidelity wireframe for a mobile banking app covering at least 5 screens.",
+  },
+  {
+    id: 3,
+    title: "SQL Assignment 4",
+    course: "Database Design",
+    module: "Module 4",
+    instructor: "David R.",
+    assignedDate: "10 Mar 2024",
+    dueDate: "17 Mar 2024",
+    marks: "18 / 20",
+    totalMarks: 20,
+    status: "Reviewed",
+    instructions: "Write normalized schema and optimize the given queries.",
+    feedback:
+      "Great normalization. Try to add indexes for the frequently queried columns.",
+  },
+];
+
+export const notices = [
+  {
+    id: 1,
+    title: "Mid-term Examination Schedule Released",
+    description:
+      "The mid-term exam schedule has been published. Check the calendar for your exam slots.",
+    date: "02 Sep 2026",
+    category: "Exam Notice",
+    priority: "Important",
+    author: "Office of Academic Affairs",
+    status: "New",
+  },
+  {
+    id: 2,
+    title: "Holiday: Dashain Break",
+    description:
+      "DarbarTech will remain closed from 5 Oct to 10 Oct. Online classes resume after the break.",
+    date: "30 Aug 2026",
+    category: "Holiday Notice",
+    priority: "Normal",
+    author: "Administration",
+    status: "Read",
+  },
+  {
+    id: 3,
+    title: "Second Installment Deadline",
+    description:
+      "The second installment of course fees is due by 15 Sep. Pay via the office or online.",
+    date: "28 Aug 2026",
+    category: "Payment Notice",
+    priority: "Important",
+    author: "Accounts Office",
+    status: "Read",
+  },
+];
+
+export const messages = [
+  {
+    id: 1,
+    from: "Sarah M.",
+    role: "Instructor",
+    text: "Great progress on the module! Let's discuss your project tomorrow.",
+    time: "09:42 AM",
+    unread: 2,
+  },
+  {
+    id: 2,
+    from: "DarbarTech Office",
+    role: "Office",
+    text: "Your certificate has been issued. Download it from the portal.",
+    time: "Yesterday",
+    unread: 0,
+  },
+  {
+    id: 3,
+    from: "Anna K.",
+    role: "Instructor",
+    text: "Please submit the wireframe exercise before Friday.",
+    time: "Yesterday",
+    unread: 0,
+  },
+];
+
+export const attendanceSummary = [
+  { course: "Full Stack Web Development", percent: 88, present: 22, absent: 2, late: 1 },
+  { course: "UI/UX Design", percent: 78, present: 19, absent: 4, late: 2 },
+  { course: "Database Design", percent: 92, present: 18, absent: 1, late: 1 },
+];
+
+export const results = [
+  {
+    name: "HTML Quiz 1",
+    course: "Full Stack Web Development",
+    date: "12 Aug 2026",
+    obtained: 18,
+    total: 20,
+    grade: "A",
+    feedback: "Excellent understanding of semantic HTML.",
+  },
+  {
+    name: "CSS Assignment",
+    course: "Full Stack Web Development",
+    date: "20 Aug 2026",
+    obtained: 16,
+    total: 20,
+    grade: "B+",
+    feedback: "Good layout; improve responsiveness on mobile.",
+  },
+  {
+    name: "UI/UX Mock Test",
+    course: "UI/UX Design",
+    date: "25 Aug 2026",
+    obtained: 14,
+    total: 20,
+    grade: "B",
+    feedback: "Nice user flows. Add more annotation in wireframes.",
+  },
+];
+
+export const certificates = [
+  {
+    id: "DTC-2024-0001",
+    title: "Database Design",
+    issuedDate: "10 May 2024",
+    completedDate: "30 Apr 2024",
+    status: "Issued",
+  },
+  {
+    id: "DTC-2024-0058",
+    title: "UI/UX Design",
+    issuedDate: "—",
+    completedDate: "—",
+    status: "In Progress",
+  },
+];
+
+export const notifications = [
+  {
+    id: 1,
+    type: "New assignment",
+    text: "New assignment 'Final Project' added in UI/UX Design.",
+    time: "2 hours ago",
+    read: false,
+  },
+  {
+    id: 2,
+    type: "Class reminder",
+    text: "React.js Live Session starts today at 4:00 PM.",
+    time: "5 hours ago",
+    read: false,
+  },
+  {
+    id: 3,
+    type: "Assignment deadline",
+    text: "'Module 3 Project' is due tomorrow at 11:59 PM.",
+    time: "1 day ago",
+    read: true,
+  },
+  {
+    id: 4,
+    type: "Attendance warning",
+    text: "Your attendance in JavaScript Certification is below 60%.",
+    time: "2 days ago",
+    read: true,
+  },
+];
+
+export const activity = [
+  {
+    date: "Today",
+    items: [
+      "Completed HTML Lesson 5",
+      "Submitted CSS Assignment",
+      "Joined Web Development Class",
+    ],
+  },
+  {
+    date: "Yesterday",
+    items: [
+      "Downloaded Database Notes",
+      "Viewed instructor announcement",
+      "Completed Quiz 3",
+    ],
+  },
+  {
+    date: "02 Sep 2026",
+    items: ["Started Module 4: React Context API", "Pinned 2 notes"],
+  },
+];
+
+export const materials = [
+  {
+    type: "PDF",
+    name: "React Context API Notes",
+    course: "Full Stack Web Development",
+    module: "Module 4",
+    added: "01 Sep 2026",
+  },
+  {
+    type: "Video",
+    name: "Prototyping Walkthrough",
+    course: "UI/UX Design",
+    module: "Module 3",
+    added: "29 Aug 2026",
+  },
+  {
+    type: "PPT",
+    name: "SQL Query Optimization",
+    course: "Database Design",
+    module: "Module 4",
+    added: "15 Mar 2024",
+  },
+  {
+    type: "ZIP",
+    name: "Starter Project Files",
+    course: "Full Stack Web Development",
+    module: "Module 3",
+    added: "25 Aug 2026",
+  },
+];
+
+export const onlineClasses = [
+  {
+    id: 1,
+    course: "Full Stack Web Development",
+    topic: "React Context API",
+    instructor: "Sarah M.",
+    date: "08 Sep 2026",
+    time: "4:00 PM — 5:30 PM",
+    platform: "Google Meet",
+    status: "Upcoming",
+  },
+  {
+    id: 2,
+    course: "UI/UX Design",
+    topic: "Prototyping Basics",
+    instructor: "Anna K.",
+    date: "10 Sep 2026",
+    time: "4:00 PM — 5:30 PM",
+    platform: "Zoom",
+    status: "Upcoming",
+  },
+  {
+    id: 3,
+    course: "Full Stack Web Development",
+    topic: "React Hooks Deep Dive",
+    instructor: "Sarah M.",
+    date: "02 Sep 2026",
+    time: "4:00 PM — 5:30 PM",
+    platform: "Google Meet",
+    status: "Live",
+  },
+  {
+    id: 4,
+    course: "UI/UX Design",
+    topic: "Color Theory",
+    instructor: "Anna K.",
+    date: "27 Aug 2026",
+    time: "4:00 PM — 5:30 PM",
+    platform: "Zoom",
+    status: "Completed",
+    recording: true,
+  },
+];
+
+export const notes = [
+  {
+    id: 1,
+    title: "React Context vs Redux",
+    course: "Full Stack Web Development",
+    module: "Module 4",
+    lesson: "Lesson 1",
+    tags: ["React", "State"],
+    content:
+      "Context is built into React and great for simple shared state. Redux is better for complex state logic with middleware.",
+    pinned: true,
+    archived: false,
+    created: "01 Sep 2026",
+    updated: "01 Sep 2026",
+  },
+  {
+    id: 2,
+    title: "Figma Shortcuts",
+    course: "UI/UX Design",
+    module: "Module 3",
+    lesson: "Lesson 2",
+    tags: ["Figma", "UI"],
+    content: "F = frame, R = rectangle, T = text, hold Alt to duplicate.",
+    pinned: false,
+    archived: false,
+    created: "29 Aug 2026",
+    updated: "30 Aug 2026",
+  },
+  {
+    id: 3,
+    title: "Normalization Rules",
+    course: "Database Design",
+    module: "Module 4",
+    lesson: "Lesson 3",
+    tags: ["SQL"],
+    content: "1NF: atomic values. 2NF: no partial dependency. 3NF: no transitive dependency.",
+    pinned: false,
+    archived: true,
+    created: "12 Mar 2024",
+    updated: "12 Mar 2024",
+  },
+];
