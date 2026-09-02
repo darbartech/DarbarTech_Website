@@ -42,5 +42,11 @@ html{
 
   --tertiary-text-dashboard: #44474D;
 
+  --success-dashboard: #007f02;
+  --warning-dashboard: #F59E0B;
+  --danger-dashboard: #FF3B30;
+  --info-dashboard: #2563EB;
+  --violet-dashboard: #7C3AED;
+
   
 }

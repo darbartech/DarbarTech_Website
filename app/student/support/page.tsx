@@ -170,7 +170,7 @@ export default function SupportPage() {
       )}
 
       {submitted && (
-        <div className="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">
+        <div className="rounded-xl bg-(--success-dashboard) px-4 py-3 text-sm font-medium text-(--bg-primary-dashboard)">
           Your support ticket has been submitted. We&apos;ll get back to you soon.
         </div>
       )}

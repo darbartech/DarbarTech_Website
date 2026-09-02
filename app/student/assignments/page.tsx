@@ -166,8 +166,8 @@ export default function AssignmentsPage() {
 
       {toast && (
         <div
-          className={`fixed bottom-20 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg lg:bottom-6 ${
-            toast.ok ? "bg-emerald-600" : "bg-rose-600"
+          className={`fixed bottom-20 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium text-(--bg-primary-dashboard) shadow-lg lg:bottom-6 ${
+            toast.ok ? "bg-(--success-dashboard)" : "bg-(--danger-dashboard)"
           }`}
         >
           {toast.text}

@@ -347,15 +347,15 @@ export default function StudentDashboard() {
               </div>
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-xl px-2 py-3" style={{ background: "var(--secondary-bg-dashboard)" }}>
-                  <p className="text-lg font-bold text-emerald-600">{activeCourses.length}</p>
+                  <p className="text-lg font-bold text-(--success-dashboard)">{activeCourses.length}</p>
                   <p className="text-[11px] font-medium text-(--tertiary-text-dashboard)">Active</p>
                 </div>
                 <div className="rounded-xl px-2 py-3" style={{ background: "var(--secondary-bg-dashboard)" }}>
-                  <p className="text-lg font-bold text-violet-600">{completedCount}</p>
+                  <p className="text-lg font-bold text-(--violet-dashboard)">{completedCount}</p>
                   <p className="text-[11px] font-medium text-(--tertiary-text-dashboard)">Completed</p>
                 </div>
                 <div className="rounded-xl px-2 py-3" style={{ background: "var(--secondary-bg-dashboard)" }}>
-                  <p className="text-lg font-bold text-blue-600">{upcomingCount}</p>
+                  <p className="text-lg font-bold text-(--info-dashboard)">{upcomingCount}</p>
                   <p className="text-[11px] font-medium text-(--tertiary-text-dashboard)">Upcoming</p>
                 </div>
               </div>
@@ -375,20 +375,20 @@ export default function StudentDashboard() {
             />
             <div className="mb-4 flex items-center justify-between rounded-xl px-4 py-3" style={{ background: "var(--secondary-bg-dashboard)" }}>
               <p className="text-sm font-medium text-(--text-primary-dashboard)">Overall attendance</p>
-              <p className="text-xl font-bold text-emerald-600">{overallAttendance}%</p>
+              <p className="text-xl font-bold text-(--success-dashboard)">{overallAttendance}%</p>
             </div>
 
             <div className="mb-4 grid grid-cols-3 gap-2 text-center">
               <div className="rounded-xl px-2 py-2.5" style={{ background: "var(--secondary-bg-dashboard)" }}>
-                <p className="text-sm font-bold text-emerald-600">{presentTotal}</p>
+                <p className="text-sm font-bold text-(--success-dashboard)">{presentTotal}</p>
                 <p className="text-[11px] font-medium text-(--tertiary-text-dashboard)">Present</p>
               </div>
               <div className="rounded-xl px-2 py-2.5" style={{ background: "var(--secondary-bg-dashboard)" }}>
-                <p className="text-sm font-bold text-red-500">{absentTotal}</p>
+                <p className="text-sm font-bold text-(--danger-dashboard)">{absentTotal}</p>
                 <p className="text-[11px] font-medium text-(--tertiary-text-dashboard)">Absent</p>
               </div>
               <div className="rounded-xl px-2 py-2.5" style={{ background: "var(--secondary-bg-dashboard)" }}>
-                <p className="text-sm font-bold text-amber-500">{lateTotal}</p>
+                <p className="text-sm font-bold text-(--warning-dashboard)">{lateTotal}</p>
                 <p className="text-[11px] font-medium text-(--tertiary-text-dashboard)">Late</p>
               </div>
             </div>
@@ -437,8 +437,8 @@ export default function StudentDashboard() {
                       <p className="text-sm font-semibold text-(--text-primary-dashboard)">
                         {notice.title}
                       </p>
-                      {notice.status === "New" && <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">New</span>}
-                      {notice.priority === "Important" && <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-700">Important</span>}
+                      {notice.status === "New" && <span className="rounded-full bg-(--info-dashboard)/10 px-2 py-0.5 text-[10px] font-semibold text-(--info-dashboard)">New</span>}
+                      {notice.priority === "Important" && <span className="rounded-full bg-(--danger-dashboard)/10 px-2 py-0.5 text-[10px] font-semibold text-(--danger-dashboard)">Important</span>}
                     </div>
                     <p className="mt-0.5 text-xs text-(--tertiary-text-dashboard)">
                       {notice.date} • {notice.category}

@@ -684,11 +684,11 @@ const Page = () => {
                             ${
                               user.role ===
                               "superadmin"
-                                ? "border-purple-500/30 bg-purple-500/10 text-purple-600"
+                                ? "border-(--violet-dashboard)/30 bg-(--violet-dashboard)/10 text-(--violet-dashboard)"
                                 : user.role ===
                                     "teacher"
-                                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
-                                  : "border-blue-500/30 bg-blue-500/10 text-blue-600"
+                                  ? "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)"
+                                  : "border-(--info-dashboard)/30 bg-(--info-dashboard)/10 text-(--info-dashboard)"
                             }
                           `}
                         >
@@ -696,11 +696,11 @@ const Page = () => {
                             className={`h-1.5 w-1.5 rounded-full ${
                               user.role ===
                               "superadmin"
-                                ? "bg-purple-500"
+                                ? "bg-(--violet-dashboard)"
                                 : user.role ===
                                     "teacher"
-                                  ? "bg-emerald-500"
-                                  : "bg-blue-500"
+                                  ? "bg-(--success-dashboard)"
+                                  : "bg-(--info-dashboard)"
                             }`}
                           />
 
@@ -758,11 +758,11 @@ const Page = () => {
                                     className={`h-2 w-2 rounded-full ${
                                       roleOption ===
                                       "superadmin"
-                                        ? "bg-purple-500"
+                                        ? "bg-(--violet-dashboard)"
                                         : roleOption ===
                                             "teacher"
-                                          ? "bg-emerald-500"
-                                          : "bg-blue-500"
+                                          ? "bg-(--success-dashboard)"
+                                          : "bg-(--info-dashboard)"
                                     }`}
                                   />
 
@@ -923,9 +923,9 @@ const Page = () => {
                                 py-2
                                 text-left
                                 text-sm
-                                text-red-500
+                                text-(--danger-dashboard)
                                 transition
-                                hover:bg-red-500/10
+                                hover:bg-(--danger-dashboard)/10
                                 hover:cursor-pointer
                               "
                             >
@@ -975,7 +975,7 @@ const Page = () => {
             flex
             items-center
             justify-center
-            bg-black/40
+            bg-(--bg-dashboard-hero)/40
             px-4
             backdrop-blur-sm
           "
@@ -1422,7 +1422,7 @@ const Page = () => {
             flex
             items-center
             justify-center
-            bg-black/40
+            bg-(--bg-dashboard-hero)/40
             px-4
             backdrop-blur-sm
           "
@@ -1597,11 +1597,11 @@ const Page = () => {
                     ${
                       viewUser.role ===
                       "superadmin"
-                        ? "text-purple-600"
+                        ? "text-(--violet-dashboard)"
                         : viewUser.role ===
                             "teacher"
-                          ? "text-emerald-600"
-                          : "text-blue-600"
+                          ? "text-(--success-dashboard)"
+                          : "text-(--info-dashboard)"
                     }
                   `}
                 >

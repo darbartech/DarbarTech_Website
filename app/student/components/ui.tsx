@@ -63,40 +63,40 @@ export function CardHeader({
 
 const statusColors: Record<string, string> = {
   // course
-  Active: "bg-emerald-100 text-emerald-700",
-  Upcoming: "bg-blue-100 text-blue-700",
-  Completed: "bg-violet-100 text-violet-700",
-  "On Hold": "bg-amber-100 text-amber-700",
-  Expired: "bg-red-100 text-red-700",
+  Active: "bg-(--success-dashboard)/10 text-(--success-dashboard)",
+  Upcoming: "bg-(--info-dashboard)/10 text-(--info-dashboard)",
+  Completed: "bg-(--violet-dashboard)/10 text-(--violet-dashboard)",
+  "On Hold": "bg-(--warning-dashboard)/10 text-(--warning-dashboard)",
+  Expired: "bg-(--danger-dashboard)/10 text-(--danger-dashboard)",
 
   // assignment
-  Pending: "bg-amber-100 text-amber-700",
-  Draft: "bg-gray-200 text-gray-600",
-  Submitted: "bg-blue-100 text-blue-700",
-  Late: "bg-red-100 text-red-700",
-  Reviewed: "bg-emerald-100 text-emerald-700",
-  "Revision Required": "bg-orange-100 text-orange-700",
+  Pending: "bg-(--warning-dashboard)/10 text-(--warning-dashboard)",
+  Draft: "bg-(--secondary-bg-dashboard) text-(--tertiary-text-dashboard)",
+  Submitted: "bg-(--info-dashboard)/10 text-(--info-dashboard)",
+  Late: "bg-(--danger-dashboard)/10 text-(--danger-dashboard)",
+  Reviewed: "bg-(--success-dashboard)/10 text-(--success-dashboard)",
+  "Revision Required": "bg-(--warning-dashboard)/10 text-(--warning-dashboard)",
 
   // class
-  Live: "bg-red-100 text-red-700",
-  Cancelled: "bg-gray-200 text-gray-600",
-  Rescheduled: "bg-amber-100 text-amber-700",
+  Live: "bg-(--danger-dashboard)/10 text-(--danger-dashboard)",
+  Cancelled: "bg-(--secondary-bg-dashboard) text-(--tertiary-text-dashboard)",
+  Rescheduled: "bg-(--warning-dashboard)/10 text-(--warning-dashboard)",
 
   // support
-  Open: "bg-blue-100 text-blue-700",
-  "In Progress": "bg-amber-100 text-amber-700",
-  Waiting: "bg-violet-100 text-violet-700",
-  Resolved: "bg-emerald-100 text-emerald-700",
-  Closed: "bg-gray-200 text-gray-600",
+  Open: "bg-(--info-dashboard)/10 text-(--info-dashboard)",
+  "In Progress": "bg-(--warning-dashboard)/10 text-(--warning-dashboard)",
+  Waiting: "bg-(--violet-dashboard)/10 text-(--violet-dashboard)",
+  Resolved: "bg-(--success-dashboard)/10 text-(--success-dashboard)",
+  Closed: "bg-(--secondary-bg-dashboard) text-(--tertiary-text-dashboard)",
 
   // notice
-  New: "bg-blue-100 text-blue-700",
-  Read: "bg-gray-200 text-gray-600",
-  Important: "bg-red-100 text-red-700",
-  Archived: "bg-gray-200 text-gray-600",
+  New: "bg-(--info-dashboard)/10 text-(--info-dashboard)",
+  Read: "bg-(--secondary-bg-dashboard) text-(--tertiary-text-dashboard)",
+  Important: "bg-(--danger-dashboard)/10 text-(--danger-dashboard)",
+  Archived: "bg-(--secondary-bg-dashboard) text-(--tertiary-text-dashboard)",
 
   // certificate
-  Issued: "bg-emerald-100 text-emerald-700",
+  Issued: "bg-(--success-dashboard)/10 text-(--success-dashboard)",
 };
 
 export function StatusBadge({
@@ -104,7 +104,7 @@ export function StatusBadge({
 }: {
   status: string;
 }) {
-  const color = statusColors[status] ?? "bg-gray-200 text-gray-600";
+  const color = statusColors[status] ?? "bg-(--secondary-bg-dashboard) text-(--tertiary-text-dashboard)";
 
   return (
     <span

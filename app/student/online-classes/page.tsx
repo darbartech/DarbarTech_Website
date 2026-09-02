@@ -114,7 +114,7 @@ export default function OnlineClassesPage() {
 
       {/* ================= DETAILS MODAL ================= */}
       {details && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--bg-dashboard-hero)/40 p-4">
           <div className="w-full max-w-md rounded-2xl border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) p-6 shadow-xl">
             <div className="mb-4 flex items-start justify-between gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "var(--secondary-bg-dashboard)" }}>
@@ -156,7 +156,7 @@ export default function OnlineClassesPage() {
 
       {/* ================= TOAST ================= */}
       {toast && (
-        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white shadow-lg lg:bottom-6">
+        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-(--success-dashboard) px-4 py-3 text-sm font-medium text-(--bg-primary-dashboard) shadow-lg lg:bottom-6">
           {toast}
         </div>
       )}

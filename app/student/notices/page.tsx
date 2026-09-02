@@ -103,7 +103,7 @@ export default function NoticesPage() {
                       </h3>
                       <StatusBadge status={notice.status} />
                       {notice.priority === "Important" && (
-                        <span className="rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-semibold text-red-700">
+                        <span className="rounded-full bg-(--danger-dashboard)/10 px-2.5 py-1 text-[11px] font-semibold text-(--danger-dashboard)">
                           {notice.priority}
                         </span>
                       )}
@@ -159,7 +159,7 @@ export default function NoticesPage() {
       )}
 
       {toast && (
-        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white shadow-lg lg:bottom-6">
+        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-(--success-dashboard) px-4 py-3 text-sm font-medium text-(--bg-primary-dashboard) shadow-lg lg:bottom-6">
           {toast}
         </div>
       )}

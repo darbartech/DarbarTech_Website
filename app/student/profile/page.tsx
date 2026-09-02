@@ -146,7 +146,7 @@ export default function ProfilePage() {
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               <StatusBadge status={student.academicStatus === "Active" ? "Active" : "Upcoming"} />
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-[11px] font-medium">
+              <span className="inline-flex items-center gap-1 rounded-full bg-(--bg-primary-dashboard)/10 px-3 py-1 text-[11px] font-medium">
                 <ShieldCheck size={12} />
                 {student.id}
               </span>
@@ -409,7 +409,7 @@ export default function ProfilePage() {
 
       {/* ================= TOAST ================= */}
       {toast && (
-        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white shadow-lg lg:bottom-6">
+        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-(--success-dashboard) px-4 py-3 text-sm font-medium text-(--bg-primary-dashboard) shadow-lg lg:bottom-6">
           {toast}
         </div>
       )}
@@ -430,7 +430,7 @@ function Modal({
   children: React.ReactNode;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--bg-dashboard-hero)/40 p-4">
       <div className="w-full max-w-lg rounded-2xl border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) p-6 shadow-xl">
         <div className="mb-5 flex items-center justify-between">
           <h3 className="text-base font-semibold text-(--text-primary-dashboard)">

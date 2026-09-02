@@ -593,8 +593,8 @@ const Page = () => {
                             ${
                               item.status ===
                               "active"
-                                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
-                                : "border-red-500/30 bg-red-500/10 text-red-600"
+                                ? "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)"
+                                : "border-(--danger-dashboard)/30 bg-(--danger-dashboard)/10 text-(--danger-dashboard)"
                             }
                           `}
                         >
@@ -602,8 +602,8 @@ const Page = () => {
                             className={`h-1.5 w-1.5 rounded-full ${
                               item.status ===
                               "active"
-                                ? "bg-emerald-500"
-                                : "bg-red-500"
+                                ? "bg-(--success-dashboard)"
+                                : "bg-(--danger-dashboard)"
                             }`}
                           />
 
@@ -661,8 +661,8 @@ const Page = () => {
                                     className={`h-2 w-2 rounded-full ${
                                       statusOption ===
                                       "active"
-                                        ? "bg-emerald-500"
-                                        : "bg-red-500"
+                                        ? "bg-(--success-dashboard)"
+                                        : "bg-(--danger-dashboard)"
                                     }`}
                                   />
 
@@ -790,9 +790,9 @@ const Page = () => {
                                 py-2
                                 text-left
                                 text-sm
-                                text-red-500
+                                text-(--danger-dashboard)
                                 transition
-                                hover:bg-red-500/10
+                                hover:bg-(--danger-dashboard)/10
                                 hover:cursor-pointer
                               "
                             >
@@ -826,7 +826,7 @@ const Page = () => {
             flex
             items-center
             justify-center
-            bg-black/40
+            bg-(--bg-dashboard-hero)/40
             px-4
             backdrop-blur-sm
           "
@@ -1266,7 +1266,7 @@ const Page = () => {
             flex
             items-center
             justify-center
-            bg-black/40
+            bg-(--bg-dashboard-hero)/40
             px-4
             backdrop-blur-sm
           "
@@ -1441,8 +1441,8 @@ const Page = () => {
                     ${
                       viewItem.status ===
                       "active"
-                        ? "text-emerald-600"
-                        : "text-red-600"
+                        ? "text-(--success-dashboard)"
+                        : "text-(--danger-dashboard)"
                     }
                   `}
                 >

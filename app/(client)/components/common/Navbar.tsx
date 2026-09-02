@@ -18,34 +18,34 @@ const navLinks = [
     href: "/about",
   },
   {
-    label: "Product",
+    label: "Service",
     hasDropdown: true,
   },
   {
-    label: "Services",
-    href: "/services",
+    label: "Case Study",
+    href: "/case-study",
   },
 ];
 
-const productLinks = [
+const servicesLinks = [
   {
-    label: "Product One",
-    href: "/products/product-one",
+    label: "Service One",
+    href: "/services/service-one",
   },
   {
-    label: "Product Two",
-    href: "/products/product-two",
+    label: "Service Two",
+    href: "/services/service-two",
   },
   {
-    label: "Product Three",
-    href: "/products/product-three",
+    label: "Service Three",
+    href: "/services/service-three",
   },
 ];
 
 const linkClasses =
   "flex items-center py-2 hover:cursor-pointer relative w-full overflow-hidden transition-all duration-200 ease-in-out after:content-[''] after:w-full after:h-1 after:absolute after:-left-full after:bottom-0 after:bg-(--accent-color) hover:after:left-0 after:transition-all after:duration-300 after:ease-in-out";
 
-const desktopProductButtonClasses = `
+const desktopserviceButtonClasses = `
   w-full
   rounded-lg
   px-3
@@ -77,7 +77,7 @@ const mobileLinkClasses = `
   sm:text-base
 `;
 
-const mobileProductLinkClasses = `
+const mobileserviceLinkClasses = `
   block
   rounded-lg
   px-4
@@ -93,19 +93,19 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProductOpen, setIsProductOpen] = useState(false);
+  const [isserviceOpen, setIsserviceOpen] = useState(false);
 
   const closeMenu = () => {
     setIsMenuOpen(false);
-    setIsProductOpen(false);
+    setIsserviceOpen(false);
   };
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
-  const toggleProduct = () => {
-    setIsProductOpen((prev) => !prev);
+  const toggleservice = () => {
+    setIsserviceOpen((prev) => !prev);
   };
 
   // Check whether a normal navigation link is active
@@ -123,8 +123,8 @@ const Navbar = () => {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  // Product dropdown is active for any /products/... route
-  const isProductActive = pathname.startsWith("/products");
+  // service dropdown is active for any /services/... route
+  const isserviceActive = pathname.startsWith("/services");
 
   return (
     <header className="sticky top-0 z-50 font-semibold bg-(--primary-bg-color) text-(--primary-text-color)">
@@ -147,7 +147,7 @@ const Navbar = () => {
             <ul className="flex items-center gap-6">
               {navLinks.map((link) => {
                 const active = link.hasDropdown
-                  ? isProductActive
+                  ? isserviceActive
                   : isActive(link.href);
 
                 return (
@@ -158,8 +158,8 @@ const Navbar = () => {
                     {link.hasDropdown ? (
                       <button
                         type="button"
-                        aria-expanded={isProductOpen}
-                        onClick={toggleProduct}
+                        aria-expanded={isserviceOpen}
+                        onClick={toggleservice}
                         className={`
                           ${linkClasses}
                           ${active ? "text-(--accent-color)" : ""}
@@ -210,7 +210,7 @@ const Navbar = () => {
                       </Link>
                     )}
 
-                    {/* Product dropdown */}
+                    {/* service dropdown */}
                     {link.hasDropdown && (
                       <div
                         className="
@@ -238,21 +238,21 @@ const Navbar = () => {
                           sm:w-52
                         "
                       >
-                        {productLinks.map((product) => (
+                        {servicesLinks.map((service) => (
                           <Link
-                            key={product.href}
-                            href={product.href}
+                            key={service.href}
+                            href={service.href}
                             onClick={closeMenu}
                             className={`
-                              ${desktopProductButtonClasses}
+                              ${desktopserviceButtonClasses}
                               ${
-                                pathname === product.href
+                                pathname === service.href
                                   ? "bg-(--secondary-bg-color) text-(--primary-bg-color)"
                                   : ""
                               }
                             `}
                           >
-                            {product.label}
+                            {service.label}
                           </Link>
                         ))}
                       </div>
@@ -362,18 +362,18 @@ const Navbar = () => {
           <ul className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const active = link.hasDropdown
-                ? isProductActive
+                ? isserviceActive
                 : isActive(link.href);
 
               return (
                 <li key={link.label}>
                   {link.hasDropdown ? (
                     <>
-                      {/* Product button */}
+                      {/* service button */}
                       <button
                         type="button"
-                        onClick={toggleProduct}
-                        aria-expanded={isProductOpen}
+                        onClick={toggleservice}
+                        aria-expanded={isserviceOpen}
                         className={`
                           ${mobileLinkClasses}
                           ${
@@ -392,40 +392,40 @@ const Navbar = () => {
                           className={`
                             transition-transform
                             duration-200
-                            ${isProductOpen ? "rotate-180" : "rotate-0"}
+                            ${isserviceOpen ? "rotate-180" : "rotate-0"}
                           `}
                         />
                       </button>
 
-                      {/* Mobile Product dropdown */}
+                      {/* Mobile service dropdown */}
                       <div
                         className={`
                           overflow-hidden
                           transition-all
                           duration-300
                           ${
-                            isProductOpen
+                            isserviceOpen
                               ? "max-h-40 opacity-100"
                               : "max-h-0 opacity-0"
                           }
                         `}
                       >
                         <div className="ml-3 mt-1 space-y-1 border-l border-(--border) pl-3">
-                          {productLinks.map((product) => (
+                          {servicesLinks.map((service) => (
                             <Link
-                              key={product.href}
-                              href={product.href}
+                              key={service.href}
+                              href={service.href}
                               onClick={closeMenu}
                               className={`
-                                  ${mobileProductLinkClasses}
+                                  ${mobileserviceLinkClasses}
                                   ${
-                                    pathname === product.href
+                                    pathname === service.href
                                       ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
                                       : ""
                                   }
                                 `}
                             >
-                              {product.label}
+                              {service.label}
                             </Link>
                           ))}
                         </div>

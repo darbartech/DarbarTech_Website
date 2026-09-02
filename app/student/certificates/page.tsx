@@ -111,7 +111,7 @@ export default function CertificatesPage() {
         if (!cert) return null;
         return (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-(--bg-dashboard-hero)/50 p-4"
             onClick={() => setSelectedId(null)}
           >
             <div
@@ -179,7 +179,7 @@ export default function CertificatesPage() {
       )}
 
       {toast && (
-        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white shadow-lg lg:bottom-6">
+        <div className="fixed bottom-20 right-4 z-50 rounded-xl bg-(--success-dashboard) px-4 py-3 text-sm font-medium text-(--bg-primary-dashboard) shadow-lg lg:bottom-6">
           {toast}
         </div>
       )}

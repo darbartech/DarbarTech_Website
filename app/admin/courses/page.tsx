@@ -195,8 +195,8 @@ const Page = () => {
                           hover:cursor-pointer
                           ${
                             isFavourite
-                              ? "text-red-500"
-                              : "text-(--text-primary-dashboard) hover:text-red-500"
+                              ? "text-(--danger-dashboard)"
+                              : "text-(--text-primary-dashboard) hover:text-(--danger-dashboard)"
                           }
                         `}
                       >

@@ -183,7 +183,7 @@ export default function StudentSidebar() {
         <div
           className="
             fixed inset-0 -z-10
-            bg-black/40
+            bg-(--bg-dashboard-hero)/40
             hover:cursor-pointer
             lg:hidden
           "

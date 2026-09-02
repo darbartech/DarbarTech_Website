@@ -304,30 +304,30 @@ const Page = () => {
   const getStatusClasses = (status: string) => {
     switch (status) {
       case "Shortlisted":
-        return "border-emerald-500/30 bg-emerald-500/10 text-emerald-600";
+        return "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)";
       case "Interview":
-        return "border-violet-500/30 bg-violet-500/10 text-violet-600";
+        return "border-(--violet-dashboard)/30 bg-(--violet-dashboard)/10 text-(--violet-dashboard)";
       case "Under Review":
-        return "border-blue-500/30 bg-blue-500/10 text-blue-600";
+        return "border-(--info-dashboard)/30 bg-(--info-dashboard)/10 text-(--info-dashboard)";
       case "Rejected":
-        return "border-red-500/30 bg-red-500/10 text-red-600";
+        return "border-(--danger-dashboard)/30 bg-(--danger-dashboard)/10 text-(--danger-dashboard)";
       default:
-        return "border-slate-500/30 bg-slate-500/10 text-slate-600";
+        return "border-(--tertiary-text-dashboard)/30 bg-(--tertiary-text-dashboard)/10 text-(--tertiary-text-dashboard)";
     }
   };
 
   const getStatusDot = (status: string) => {
     switch (status) {
       case "Shortlisted":
-        return "bg-emerald-500";
+        return "bg-(--success-dashboard)";
       case "Interview":
-        return "bg-violet-500";
+        return "bg-(--violet-dashboard)";
       case "Under Review":
-        return "bg-blue-500";
+        return "bg-(--info-dashboard)";
       case "Rejected":
-        return "bg-red-500";
+        return "bg-(--danger-dashboard)";
       default:
-        return "bg-slate-500";
+        return "bg-(--tertiary-text-dashboard)";
     }
   };
 
@@ -978,9 +978,9 @@ const Page = () => {
                                         py-2
                                         text-left
                                         text-sm
-                                        text-red-500
+                                        text-(--danger-dashboard)
                                         transition
-                                        hover:bg-red-500/10
+                                        hover:bg-(--danger-dashboard)/10
                                         hover:cursor-pointer
                                       "
                                     >
@@ -1013,7 +1013,7 @@ const Page = () => {
                 flex
                 items-center
                 justify-center
-                bg-black/40
+                bg-(--bg-dashboard-hero)/40
                 px-4
                 backdrop-blur-sm
               "
@@ -1466,7 +1466,7 @@ const Page = () => {
                 flex
                 items-center
                 justify-center
-                bg-black/40
+                bg-(--bg-dashboard-hero)/40
                 px-4
                 backdrop-blur-sm
               "
@@ -1672,7 +1672,7 @@ const Page = () => {
                 flex
                 items-center
                 justify-center
-                bg-black/40
+                bg-(--bg-dashboard-hero)/40
                 px-4
                 backdrop-blur-sm
               "

@@ -128,7 +128,7 @@ const Page = () => {
 
       {isEditing && (
         <div
-          className="fixed inset-0 z-200 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-200 flex items-center justify-center bg-(--bg-dashboard-hero)/40 px-4 backdrop-blur-sm"
           onClick={() => setIsEditing(false)}
         >
           <div

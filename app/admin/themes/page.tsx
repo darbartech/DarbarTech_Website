@@ -101,7 +101,7 @@ const Page = () => {
                     {theme.colors.map((color) => (
                       <span
                         key={color}
-                        className="h-10 w-10 rounded-full border border-black/10"
+                        className="h-10 w-10 rounded-full border border-(--text-primary-dashboard)/10"
                         style={{ background: color }}
                       />
                     ))}
