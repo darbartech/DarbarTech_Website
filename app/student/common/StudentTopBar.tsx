@@ -26,7 +26,6 @@ const searchIndex = [
   { label: "Notifications", href: "/student/notifications" },
   { label: "Support", href: "/student/support" },
   { label: "Activity", href: "/student/activity" },
-  { label: "Settings", href: "/student/settings" },
 ];
 
 const StudentTopBar = () => {

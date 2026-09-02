@@ -1,8 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
-  Bell,
   CalendarDays,
   Camera,
   KeyRound,
@@ -45,7 +43,6 @@ const emptyForm: ProfileForm = {
 };
 
 export default function ProfilePage() {
-  const router = useRouter();
   const [openTab, setOpenTab] = useState<"personal" | "academic">("personal");
   const [form, setForm] = useState<ProfileForm>(emptyForm);
   const [editOpen, setEditOpen] = useState(false);
@@ -251,9 +248,6 @@ export default function ProfilePage() {
               </button>
               <button onClick={() => setContactOpen(true)} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer">
                 <Mail size={16} /> Update Contact Information
-              </button>
-              <button onClick={() => router.push("/student/settings")} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer">
-                <Bell size={16} /> Manage Notification Preferences
               </button>
             </div>
           </Card>
