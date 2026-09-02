@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import HeroSectionForPages from "../components/HeroSectionForPages";
+import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 interface FormErrors {
   fullName?: string;
@@ -143,7 +145,10 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
   //   };
 
   return (
-    <main className="space-y-3 w-full mx-auto px-4 py-5 sm:px-6 sm:py-14 md:space-y-5 md:px-10 md:py-10 lg:w-full lg:flex lg:items-center lg:justify-around lg:px-20 xl:px-30">
+    <>
+      <Navbar />
+
+      <main className="space-y-3 w-full mx-auto px-4 py-5 sm:px-6 sm:py-14 md:space-y-5 md:px-10 md:py-10 lg:w-full lg:flex lg:items-center lg:justify-around lg:px-20 xl:px-30">
       
 
       <HeroSectionForPages title="Register" />
@@ -319,6 +324,8 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
           </p>
         </div>
       </section>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }
