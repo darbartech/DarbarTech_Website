@@ -1,541 +1,479 @@
 "use client";
 
-import {
-  Flame,
-  Flag,
-  BookOpen,
-  CheckCircle2,
-  TrendingUp,
-  Award,
-  MoreHorizontal,
-  Circle,
-  Rocket,
-  ArrowRight,
-} from "lucide-react";
+import React, { useState } from "react";
+import Link from "next/link";
 import AdminNavbar from "./common/AdminNavbar";
 import Topbar from "./TopBar";
 import { useSidebarStore } from "@/store/sidebarStore";
 
-export default function Dashboard() {
-  const { mobileSidebar, toggleMobileSidebar } = useSidebarStore();
-  const { collapsed, toggleCollapsed } = useSidebarStore();
+import {
+  Wallet,
+  Users,
+  GraduationCap,
+  BookOpen,
+  MoreHorizontal,
+} from "lucide-react";
+
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Filler,
+} from "chart.js";
+
+import type {
+  ChartData,
+  ChartOptions,
+} from "chart.js";
+
+import { Pie, Bar, Line } from "react-chartjs-2";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Filler,
+);
+
+const Page = () => {
+  const { collapsed } = useSidebarStore();
+
+  // ================= REVENUE FILTER =================
+
+  type RevenuePeriod =
+    | "yearly"
+    | "semiyearly"
+    | "quarterly"
+    | "monthly";
+
+  const [revenuePeriod, setRevenuePeriod] =
+    useState<RevenuePeriod>("yearly");
+
+  const revenueByPeriod: Record<
+    RevenuePeriod,
+    { labels: string[]; data: number[] }
+  > = {
+    yearly: {
+      labels: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      data: [
+        32000, 28000, 41000, 38000,
+        45000, 52000, 48000, 56000,
+        61000, 58000, 67000, 72000,
+      ],
+    },
+    semiyearly: {
+      labels: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+      ],
+      data: [
+        32000, 28000, 41000, 38000,
+        45000, 52000,
+      ],
+    },
+    quarterly: {
+      labels: ["Q1", "Q2", "Q3", "Q4"],
+      data: [101000, 135000, 165000, 197000],
+    },
+    monthly: {
+      labels: [
+        "Week 1",
+        "Week 2",
+        "Week 3",
+        "Week 4",
+      ],
+      data: [9000, 12000, 14500, 11000],
+    },
+  };
+
+  const periods: {
+    key: RevenuePeriod;
+    label: string;
+  }[] = [
+    { key: "yearly", label: "Yearly" },
+    {
+      key: "semiyearly",
+      label: "Semiyearly",
+    },
+    { key: "quarterly", label: "Quarterly" },
+    { key: "monthly", label: "Monthly" },
+  ];
+
+  const revenue = revenueByPeriod[revenuePeriod];
+
+  // ================= CHART DATA =================
+
+  const pieData: ChartData<"pie"> = {
+    labels: ["Teachers", "Students", "Superadmins"],
+    datasets: [
+      {
+        data: [18, 96, 3],
+        backgroundColor: [
+          "#10b981",
+          "#3b82f6",
+          "#a855f7",
+        ],
+        borderColor: "#ffffff",
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  const barData: ChartData<"bar"> = {
+    labels: [
+      "Web Design & Development",
+      "UI/UX",
+      "Video Editing",
+    ],
+    datasets: [
+      {
+        label: "Courses",
+        data: [25, 18, 12],
+        backgroundColor: [
+          "#3b82f6",
+          "#8b5cf6",
+          "#f59e0b",
+        ],
+        borderRadius: 8,
+        maxBarThickness: 48,
+      },
+    ],
+  };
+
+  const lineData: ChartData<"line"> = {
+    labels: revenue.labels,
+    datasets: [
+      {
+        label: "Revenue",
+        data: revenue.data,
+        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59, 130, 246, 0.12)",
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: "#3b82f6",
+        pointBorderColor: "#ffffff",
+        pointRadius: 4,
+      },
+    ],
+  };
+
+  // ================= CHART OPTIONS =================
+
+  const pieOptions: ChartOptions<"pie"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: "#94a3b8",
+          usePointStyle: true,
+          boxWidth: 8,
+          padding: 16,
+        },
+      },
+    },
+  };
+
+  const barOptions: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: {
+          color: "#94a3b8",
+          font: { size: 11 },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: "rgba(148, 163, 184, 0.15)",
+        },
+        ticks: {
+          color: "#94a3b8",
+          font: { size: 11 },
+        },
+      },
+    },
+  };
+
+  const lineOptions: ChartOptions<"line"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: {
+          color: "#94a3b8",
+          font: { size: 11 },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: "rgba(148, 163, 184, 0.15)",
+        },
+        ticks: {
+          color: "#94a3b8",
+          font: { size: 11 },
+        },
+      },
+    },
+  };
+
+  // ================= STAT CARDS =================
+
+  const stats: {
+    title: string;
+    value: string;
+    icon: React.ReactNode;
+    href?: string;
+  }[] = [
+    {
+      title: "Revenue",
+      value: "$1,250,000",
+      icon: <Wallet size={18} />,
+    },
+    {
+      title: "Staffs",
+      value: "12",
+      icon: <Users size={18} />,
+      href: "/admin/users",
+    },
+    {
+      title: "Students",
+      value: "248",
+      icon: <GraduationCap size={18} />,
+      href: "/admin/users",
+    },
+    {
+      title: "Courses",
+      value: "6",
+      icon: <BookOpen size={18} />,
+      href: "/admin/courses",
+    },
+  ];
+
   return (
     <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
+      {/* Sidebar */}
       <AdminNavbar />
+
+      {/* Main Content */}
       <main
-        className={`min-h-screen min-w-0 flex-1 ${!collapsed ? "lg:ml-64" : "lg:ml-20"} `}
+        className={`min-h-screen min-w-0 flex-1 ${
+          !collapsed ? "lg:ml-64" : "lg:ml-20"
+        }`}
       >
+        {/* ================= TOPBAR ================= */}
+
         <Topbar />
 
-        {/* main */}
-        <div className="w-full p-3 gap-3 md:flex md:items-start md:flex-row md:p-5 md:gap-5">
-          {/* left side */}
-          <div className="space-y-3 md:flex-2 md:space-y-5">
-            {/* HERO */}
-            <div
-              className="hidden md:relative md:flex md:items-end md:p-8 md:rounded-lg md:overflow-hidden text-(--bg-primary-dashboard)"
-              style={{ background: "var(--bg-dashboard-hero)" }}
-            >
-              {/* welcome part */}
-              <div>
-                <div
-                  className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full opacity-20 blur-2xl"
-                  style={{ background: "var(--color-shape)" }}
-                />
-                <span
-                  className="inline-block rounded-full px-4 py-1 text-xs font-medium text-(--bg-primary-dashboard))/90"
-                  style={{ background: "rgba(255,255,255,0.08)" }}
-                >
-                  Learning Journey
-                </span>
+        {/* ================= CONTENT SECTION ================= */}
 
-                <h1 className="mt-5 text-4xl font-bold leading-tight text-(--bg-primary-dashboard)) sm:text-5xl">
-                  Welcome
-                  <br />
-                  back,
-                  <br />
-                  <span style={{ color: "var(--bg-lightblue)" }}>Roban!</span>
-                </h1>
+        <section className="px-4 py-6 sm:px-6 lg:px-8">
+          {/* ================= HEADER ================= */}
 
-                <p className="mt-4 max-w-sm text-sm text-(--bg-primary-dashboard))/70">
-                  Keep learning. Keep building. Keep growing. Your tech journey
-                  awaits.
-                </p>
-              </div>
+          <div className="mb-6">
+            <h1 className="text-2xl font-semibold text-(--text-primary-dashboard)">
+              Analytics
+            </h1>
 
-              {/* buttons part */}
-              <div className="mt-6 flex gap-3">
-                <button
-                  className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
-                  style={{
-                    background: "var(--bg-lightblue)",
-                    color: "var(--bg-dashboard-hero)",
-                  }}
-                >
-                  Continue Learning <ArrowRight size={16} />
-                </button>
-                <button className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-(--bg-primary-dashboard))">
-                  Browse Courses
-                </button>
-              </div>
-            </div>
-
-            {/* STAT CARDS */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:col-span-1">
-              <StatCard
-                icon={<BookOpen size={16} />}
-                label="Courses Enrolled"
-                value="06"
-                progress={30}
-              />
-              <StatCard
-                icon={<CheckCircle2 size={16} />}
-                label="Courses Completed"
-                value="03"
-                progress={50}
-              />
-              <StatCard
-                icon={<TrendingUp size={16} />}
-                label="Learning Progress"
-                value="72%"
-                progress={72}
-              />
-              <StatCard
-                icon={<Award size={16} />}
-                label="Certificates"
-                value="02"
-                tags={["JS", "UI"]}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5">
-              {/* CONTINUE LEARNING */}
-              <div className="rounded-lg bg-(--primary-dashboard) p-6 shadow-sm lg:col-span-1">
-                <div className="mb-4 flex items-center justify-between">
-                  <p
-                    className="text-sm font-semibold"
-                    style={{ color: "var(--text-primary-dashboard)" }}
-                  >
-                    Continue Learning
-                  </p>
-                  <MoreHorizontal
-                    size={18}
-                    style={{ color: "var(--tertiary-text-dashboard)" }}
-                  />
-                </div>
-
-                <div
-                  className="mb-4 flex h-36 items-center justify-center rounded-2xl"
-                  style={{ background: "var(--bg-dashboard-hero)" }}
-                >
-                  <span className="text-2xl font-extrabold tracking-wide text-(--bg-primary-dashboard))">
-                    FULL{" "}
-                    <span style={{ color: "var(--bg-lightblue)" }}>STACK</span>
-                  </span>
-                </div>
-
-                <p
-                  className="text-base font-semibold"
-                  style={{ color: "var(--text-primary-dashboard)" }}
-                >
-                  Full Stack Web Development
-                </p>
-                <p
-                  className="mt-1 text-xs"
-                  style={{ color: "var(--tertiary-text-dashboard)" }}
-                >
-                  Module 4: React Context API
-                </p>
-
-                <div className="mt-4">
-                  <div className="mb-1 flex justify-between text-xs">
-                    <span style={{ color: "var(--tertiary-text-dashboard)" }}>
-                      Progress
-                    </span>
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--text-primary-dashboard)" }}
-                    >
-                      18/25 Lessons (72%)
-                    </span>
-                  </div>
-                  <ProgressBar percent={72} />
-                </div>
-              </div>
-
-              {/* MIDDLE COLUMN: Weekly Activity + Upcoming Class */}
-              <div className="flex flex-col gap-5">
-                <div className="rounded-lg bg-(--primary-dashboard) p-6 shadow-sm">
-                  <div className="mb-6 flex items-center justify-between">
-                    <p
-                      className="text-sm font-semibold"
-                      style={{ color: "var(--text-primary-dashboard)" }}
-                    >
-                      Weekly Activity
-                    </p>
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-medium"
-                      style={{
-                        background: "var(--secondary-bg-dashboard)",
-                        color: "var(--secondary-text-dashboard)",
-                      }}
-                    >
-                      Hours
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-xs font-medium">
-                    {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
-                      <span
-                        key={i}
-                        className={`flex h-6 w-6 items-center justify-center rounded-full ${
-                          d === "W" ? "font-bold" : ""
-                        }`}
-                        style={{
-                          color:
-                            i === 2
-                              ? "var(--text-primary-dashboard)"
-                              : "var(--tertiary-text-dashboard)",
-                        }}
-                      >
-                        {d}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-lg  p-6 shadow-sm">
-                  <p
-                    className="mb-4 text-sm font-semibold"
-                    style={{ color: "var(--text-primary-dashboard)" }}
-                  >
-                    Upcoming Class
-                  </p>
-                  <div className="flex items-center justify-between text-(--bg-primary-dashboard)">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex flex-col items-center justify-center rounded-xl px-3 py-2 text-center"
-                        style={{ background: "var(--secondary-bg-dashboard)" }}
-                      >
-                        <span
-                          className="text-[10px] font-semibold"
-                          style={{ color: "var(--secondary-text-dashboard)" }}
-                        >
-                          TODAY
-                        </span>
-                        <span
-                          className="text-sm font-bold"
-                          style={{ color: "var(--text-primary-dashboard)" }}
-                        >
-                          4:00
-                        </span>
-                      </div>
-                      <div>
-                        <p
-                          className="text-sm font-semibold"
-                          style={{ color: "var(--text-primary-dashboard)" }}
-                        >
-                          Advanced
-                        </p>
-                        <p
-                          className="text-xs"
-                          style={{ color: "var(--tertiary-text-dashboard)" }}
-                        >
-                          Live Session
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      className="rounded-lg px-4 py-2 text-xs font-semibold text-(--bg-primary-dashboard)"
-                      style={{ background: "var(--bg-dashboard-hero)" }}
-                    >
-                      Join Class
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p className="mt-2 text-sm text-(--text-primary-dashboard)/70">
+              Overview of revenue, users, and course analytics.
+            </p>
           </div>
 
-          {/* right side */}
-          <div className="hidden md:block md:flex-1 md:space-y-5">
-            {/* STREAK */}
-            <div className="flex flex-col items-center justify-center rounded-lg bg-(--primary-dashboard) p-8 text-center shadow-sm">
-              <div
-                className="mb-3 flex h-14 w-14 items-center justify-center rounded-full"
-                style={{ background: "var(--secondary-bg-dashboard)" }}
-              >
-                <Flame style={{ color: "var(--secondary-text-dashboard)" }} />
-              </div>
-              <p
-                className="text-lg font-bold"
-                style={{ color: "var(--text-primary-dashboard)" }}
-              >
-                12 Day Streak!
-              </p>
-              <p
-                className="mt-1 text-xs"
-                style={{ color: "var(--tertiary-text-dashboard)" }}
-              >
-                You&apos;re on fire, Roban. Keep it up!
-              </p>
-            </div>
+          {/* ================= STAT CARDS ================= */}
 
-            {/* WEEKLY GOAL */}
-            <div className="rounded-lg bg-(--primary-dashboard) p-6 shadow-sm">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat) => (
+              <StatCard
+                key={stat.title}
+                title={stat.title}
+                value={stat.value}
+                icon={stat.icon}
+                href={stat.href}
+              />
+            ))}
+          </div>
+
+          {/* ================= CHARTS GRID ================= */}
+
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* ================= PIE CHART ================= */}
+
+            <div className="rounded-2xl bg-(--primary-dashboard) p-5 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
-                <p
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--text-primary-dashboard)" }}
-                >
-                  Weekly Goal
+                <p className="text-sm font-semibold text-(--text-primary-dashboard)">
+                  Users by Role
                 </p>
-                <Flag
-                  size={16}
-                  style={{ color: "var(--tertiary-text-dashboard)" }}
+
+                <MoreHorizontal
+                  size={18}
+                  className="text-(--tertiary-text-dashboard)"
                 />
               </div>
-              <div className="flex flex-col items-center">
-                <RadialProgress percent={72} />
-                <p
-                  className="mt-4 text-xs"
-                  style={{ color: "var(--tertiary-text-dashboard)" }}
-                >
-                  14 of 20 hours completed
-                </p>
+
+              <div className="h-72">
+                <Pie data={pieData} options={pieOptions} />
               </div>
             </div>
 
-            {/* TODAY'S SCHEDULE */}
-            <div className="rounded-lg bg-(--primary-dashboard) p-6 shadow-sm">
-              <p
-                className="mb-5 text-sm font-semibold"
-                style={{ color: "var(--text-primary-dashboard)" }}
-              >
-                Today&apos;s Schedule
-              </p>
-              <div className="flex flex-col gap-5">
-                <ScheduleItem
-                  time="10:00 AM"
-                  title="UI/UX Basics Review"
-                  subtitle="Self-paced learning"
-                  active={false}
-                />
-                <ScheduleItem
-                  time="4:00 PM"
-                  title="React.js Live Session"
-                  subtitle="Instructor: Sarah M."
-                  active
-                />
-                <ScheduleItem
-                  time="7:00 PM"
-                  title="Submit Assignment"
-                  subtitle="Module 3 Project"
-                  active={false}
+            {/* ================= BAR CHART ================= */}
+
+            <div className="rounded-2xl bg-(--primary-dashboard) p-5 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm font-semibold text-(--text-primary-dashboard)">
+                  Courses by Category
+                </p>
+
+                <MoreHorizontal
+                  size={18}
+                  className="text-(--tertiary-text-dashboard)"
                 />
               </div>
-            </div>
 
-            {/* CAREER BANNER */}
-            <div
-              className="relative overflow-hidden rounded-lg p-6"
-              style={{ background: "var(--bg-dashboard-hero)" }}
-            >
-              <Rocket size={20} style={{ color: "var(--bg-lightblue)" }} />
-              <p className="mt-3 text-lg font-bold text-(--bg-primary-dashboard)">
-                Build Your Career With DarbarTech
-              </p>
-              <p className="mt-2 text-xs text-(--bg-primary-dashboard)/60">
-                Access job boards, portfolio reviews, and mentorship.
-              </p>
-              <button
-                className="mt-4 flex items-center gap-2 text-sm font-semibold"
-                style={{ color: "var(--bg-lightblue)" }}
-              >
-                Explore Careers <ArrowRight size={16} />
-              </button>
+              <div className="h-72">
+                <Bar data={barData} options={barOptions} />
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* ================= LINE CHART (REVENUE) ================= */}
+
+          <div className="mt-6 rounded-2xl bg-(--primary-dashboard) p-5 shadow-sm">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+              <p className="text-sm font-semibold text-(--text-primary-dashboard)">
+                Revenue
+              </p>
+
+              {/* ================= PERIOD FILTERS ================= */}
+
+              <div className="flex flex-wrap items-center gap-2">
+                {periods.map((period) => (
+                  <button
+                    key={period.key}
+                    type="button"
+                    onClick={() =>
+                      setRevenuePeriod(period.key)
+                    }
+                    className={`
+                      rounded-lg
+                      px-4
+                      py-2
+                      text-sm
+                      font-medium
+                      transition
+                      hover:cursor-pointer
+                      ${
+                        revenuePeriod ===
+                        period.key
+                          ? "bg-(--bg-lightblue) text-(--text-primary-dashboard)"
+                          : "text-(--text-primary-dashboard)/70 hover:bg-(--secondary-bg-dashboard)"
+                      }
+                    `}
+                  >
+                    {period.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="h-80">
+              <Line data={lineData} options={lineOptions} />
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
-}
+};
 
 /* ---------- Sub-components ---------- */
 
 function StatCard({
-  icon,
-  label,
+  title,
   value,
-  progress,
-  tags,
+  icon,
+  href,
 }: {
-  icon: React.ReactNode;
-  label: string;
+  title: string;
   value: string;
-  progress?: number;
-  tags?: string[];
+  icon: React.ReactNode;
+  href?: string;
 }) {
-  return (
-    <div className="rounded-2xl bg-(--primary-dashboard) p-4 shadow-sm">
+  const cardClasses = `
+    block
+    rounded-2xl
+    bg-(--primary-dashboard)
+    p-4
+    shadow-sm
+    transition
+    ${href ? "hover:shadow-md hover:cursor-pointer" : ""}
+  `;
+
+  const content = (
+    <>
       <div className="mb-4 flex items-center justify-between">
-        <span
-          className="text-[11px] font-medium leading-tight"
-          style={{ color: "var(--tertiary-text-dashboard)" }}
-        >
-          {label}
+        <span className="text-[11px] font-medium leading-tight text-(--tertiary-text-dashboard)">
+          {title}
         </span>
-        <span style={{ color: "var(--secondary-text-dashboard)" }}>{icon}</span>
+
+        <span className="text-(--secondary-text-dashboard)">
+          {icon}
+        </span>
       </div>
-      <p
-        className="text-2xl font-bold"
-        style={{ color: "var(--text-primary-dashboard)" }}
-      >
+
+      <p className="text-2xl font-bold text-(--text-primary-dashboard)">
         {value}
       </p>
-      {progress !== undefined && (
-        <div className="mt-3">
-          <ProgressBar percent={progress} thin />
-        </div>
-      )}
-      {tags && (
-        <div className="mt-3 flex gap-1">
-          {tags.map((t) => (
-            <span
-              key={t}
-              className="rounded-md px-2 py-0.5 text-[10px] font-semibold"
-              style={{
-                background: "var(--secondary-bg-dashboard)",
-                color: "var(--secondary-text-dashboard)",
-              }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
+  );
+
+  return href ? (
+    <Link href={href} className={cardClasses}>
+      {content}
+    </Link>
+  ) : (
+    <div className={cardClasses}>{content}</div>
   );
 }
 
-function ProgressBar({
-  percent,
-  thin = false,
-}: {
-  percent: number;
-  thin?: boolean;
-}) {
-  return (
-    <div
-      className={`w-full overflow-hidden rounded-full ${
-        thin ? "h-1.5" : "h-2"
-      }`}
-      style={{ background: "var(--secondary-bg-dashboard)" }}
-    >
-      <div
-        className="h-full rounded-full"
-        style={{ width: `${percent}%`, background: "var(--bg-lightblue)" }}
-      />
-    </div>
-  );
-}
-
-function RadialProgress({ percent }: { percent: number }) {
-  const radius = 46;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (percent / 100) * circumference;
-
-  return (
-    <div className="relative flex h-32 w-32 items-center justify-center">
-      <svg className="h-32 w-32 -rotate-90">
-        <circle
-          cx="64"
-          cy="64"
-          r={radius}
-          fill="none"
-          stroke="var(--secondary-bg-dashboard)"
-          strokeWidth="10"
-        />
-        <circle
-          cx="64"
-          cy="64"
-          r={radius}
-          fill="none"
-          stroke="var(--bg-lightblue)"
-          strokeWidth="10"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-        />
-      </svg>
-      <div className="absolute flex flex-col items-center">
-        <span
-          className="text-xl font-bold"
-          style={{ color: "var(--text-primary-dashboard)" }}
-        >
-          {percent}%
-        </span>
-        <span
-          className="text-[10px]"
-          style={{ color: "var(--tertiary-text-dashboard)" }}
-        >
-          Achieved
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function ScheduleItem({
-  time,
-  title,
-  subtitle,
-  active,
-}: {
-  time: string;
-  title: string;
-  subtitle: string;
-  active: boolean;
-}) {
-  return (
-    <div className="flex gap-3">
-      <div className="flex flex-col items-center pt-1">
-        {active ? (
-          <span
-            className="h-3 w-3 rounded-full"
-            style={{ background: "var(--bg-lightblue)" }}
-          />
-        ) : (
-          <Circle
-            size={12}
-            style={{ color: "var(--border-primary-dashboard)" }}
-          />
-        )}
-        <span
-          className="mt-1 w-px flex-1"
-          style={{ background: "var(--border-primary-dashboard)" }}
-        />
-      </div>
-      <div>
-        <p
-          className="text-xs font-medium"
-          style={{ color: "var(--secondary-text-dashboard)" }}
-        >
-          {time}
-        </p>
-        <p
-          className="text-sm font-semibold"
-          style={{ color: "var(--text-primary-dashboard)" }}
-        >
-          {title}
-        </p>
-        <p
-          className="text-xs"
-          style={{ color: "var(--tertiary-text-dashboard)" }}
-        >
-          {subtitle}
-        </p>
-      </div>
-    </div>
-  );
-}
+export default Page;
