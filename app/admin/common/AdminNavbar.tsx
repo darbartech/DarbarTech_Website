@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import logo from "@/public/logos/dark_logo.png";
@@ -23,27 +23,19 @@ import {
   Settings,
   Shield,
   Sparkles,
-  User,
   User2Icon,
-  UserCog,
   Users,
   Menu,
   X,
-  CircleArrowOutUpLeft,
 } from "lucide-react";
 
 import { useSidebarStore } from "@/store/sidebarStore";
 
 const menuItems = [
   {
-    label: "Dashboard",
-    icon: LayoutDashboard,
+    label: "Analytics",
+    icon: BarChart3,
     href: "/admin",
-  },
-  {
-    label: "Career",
-    icon: CircleArrowOutUpLeft,
-    href: "/admin/career",
   },
   {
     label: "Jobs",
@@ -54,11 +46,6 @@ const menuItems = [
     label: "Courses",
     icon: LayoutDashboard,
     href: "/admin/courses",
-  },
-  {
-    label: "Analytics",
-    icon: BarChart3,
-    href: "/admin/analytics",
   },
   {
     label: "CMS",
@@ -114,6 +101,8 @@ export default function AdminNavbar() {
   const { collapsed, toggleCollapsed } = useSidebarStore();
 
   const pathname = usePathname();
+
+  const router = useRouter();
 
   const [openMenus, setOpenMenus] = useState<string[]>(["CMS", "Users"]);
 
@@ -451,7 +440,7 @@ export default function AdminNavbar() {
                   ) : (
                     /* ================= NORMAL MENU ITEM ================= */
                     <Link
-                      href={item.href}
+                      href={item.href!}
                       title={collapsed ? item.label : undefined}
                       onClick={toggleMobileSidebar}
                       className={`
@@ -570,6 +559,7 @@ export default function AdminNavbar() {
           <button
             type="button"
             title={collapsed ? "Logout" : undefined}
+            onClick={() => router.push("/login")}
             className={`
               flex
               w-full
