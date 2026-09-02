@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import AdminNavbar from "../common/AdminNavbar";
 import Topbar from "../TopBar";
 import { useSidebarStore } from "@/store/sidebarStore";
@@ -8,6 +8,8 @@ import courseImage from "@/public/services/image 21.png";
 import Image from "next/image";
 
 import { Heart, UserRound, ArrowRight, Plus } from "lucide-react";
+
+type CourseFilter = "all" | "in-progress" | "completed" | "favourites";
 
 const courses = [
   {
@@ -47,6 +49,69 @@ const courses = [
 const Page = () => {
   const { collapsed } = useSidebarStore();
 
+  // ================= FILTER STATE =================
+
+  const [activeFilter, setActiveFilter] =
+    useState<CourseFilter>("all");
+
+  // ================= FAVOURITES STATE =================
+
+  const [favouriteIds, setFavouriteIds] = useState<number[]>([]);
+
+  // ================= TOAST STATE =================
+
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  // ================= HANDLERS =================
+
+  const handleToggleFavourite = (id: number) => {
+    setFavouriteIds((previousIds) =>
+      previousIds.includes(id)
+        ? previousIds.filter((itemId) => itemId !== id)
+        : [...previousIds, id],
+    );
+  };
+
+  const handleContinue = (courseTitle: string) => {
+    showToast(`Opening "${courseTitle}"...`);
+  };
+
+  const handleAddRecommended = (courseTitle: string) => {
+    showToast(`"${courseTitle}" added to your courses.`);
+  };
+
+  const tags: {
+    key: CourseFilter;
+    label: string;
+  }[] = [
+    { key: "all", label: "All Courses" },
+    { key: "in-progress", label: "In Progress" },
+    { key: "completed", label: "Completed" },
+    { key: "favourites", label: "Favourites" },
+  ];
+
+  const filteredCourses = courses.filter((course) => {
+    if (activeFilter === "in-progress") {
+      return course.status === "In Progress";
+    }
+
+    if (activeFilter === "completed") {
+      return course.status === "Completed";
+    }
+
+    if (activeFilter === "favourites") {
+      return favouriteIds.includes(course.id);
+    }
+
+    return true;
+  });
+
   return (
     <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
       {/* Sidebar */}
@@ -76,62 +141,37 @@ const Page = () => {
 
           {/* Course Tags */}
           <div className="mb-8 flex gap-2 overflow-x-auto border-b border-(--border-primary-dashboard) pb-3">
-            <button
-              className="
-                shrink-0 rounded-full
-                bg-(--bg-lightblue)
-                px-5 py-2
-                text-sm font-medium
-                text-(--text-primary-dashboard)
-              "
-            >
-              All Courses
-            </button>
-
-            <button
-              className="
-                shrink-0 rounded-full
-                px-5 py-2
-                text-sm font-medium
-                text-(--tertiary-text-dashboard)
-                transition
-                hover:bg-(--secondary-bg-dashboard)
-              "
-            >
-              In Progress
-            </button>
-
-            <button
-              className="
-                shrink-0 rounded-full
-                px-5 py-2
-                text-sm font-medium
-                text-(--tertiary-text-dashboard)
-                transition
-                hover:bg-(--secondary-bg-dashboard)
-              "
-            >
-              Completed
-            </button>
-
-            <button
-              className="
-                shrink-0 rounded-full
-                px-5 py-2
-                text-sm font-medium
-                text-(--tertiary-text-dashboard)
-                transition
-                hover:bg-(--secondary-bg-dashboard)
-              "
-            >
-              Favourites
-            </button>
+            {tags.map((tag) => (
+              <button
+                key={tag.key}
+                type="button"
+                onClick={() => setActiveFilter(tag.key)}
+                className={`
+                  shrink-0 rounded-full
+                  px-5 py-2
+                  text-sm font-medium
+                  transition
+                  hover:cursor-pointer
+                  ${
+                    activeFilter === tag.key
+                      ? "bg-(--bg-lightblue) text-(--text-primary-dashboard)"
+                      : "text-(--tertiary-text-dashboard) hover:bg-(--secondary-bg-dashboard)"
+                  }
+                `}
+              >
+                {tag.label}
+              </button>
+            ))}
           </div>
 
           {/* Course Cards */}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {courses.map((course) => (
-              <article
+            {filteredCourses.length > 0 ? (
+              filteredCourses.map((course) => {
+                const isFavourite = favouriteIds.includes(course.id);
+
+                return (
+                  <article
                 key={course.id}
                 className="
                   overflow-hidden
@@ -173,21 +213,29 @@ const Page = () => {
                   <button
                     type="button"
                     aria-label="Add to favourites"
-                    className="
+                    onClick={() => handleToggleFavourite(course.id)}
+                    className={`
                       absolute right-3 top-3
                       flex h-9 w-9
                       items-center justify-center
                       rounded-full
                       bg-(--primary-bg-dashboard)/90
-                      text-(--text-primary-dashboard)
                       shadow-sm
                       backdrop-blur-sm
                       transition
-                      hover:bg-(--primary-bg-dashboard)
-                      hover:text-red-500
-                    "
+                      hover:cursor-pointer
+                      ${
+                        isFavourite
+                          ? "text-red-500"
+                          : "text-(--text-primary-dashboard) hover:text-red-500"
+                      }
+                    `}
                   >
-                    <Heart size={18} strokeWidth={2} />
+                    <Heart
+                      size={18}
+                      strokeWidth={2}
+                      fill={isFavourite ? "currentColor" : "none"}
+                    />
                   </button>
                 </div>
 
@@ -251,6 +299,7 @@ const Page = () => {
                   {/* Continue Button */}
                   <button
                     type="button"
+                    onClick={() => handleContinue(course.title)}
                     className="
                       mt-5
                       flex w-full
@@ -263,6 +312,7 @@ const Page = () => {
                       text-(--text-primary-dashboard)
                       transition
                       hover:opacity-90
+                      hover:cursor-pointer
                     "
                   >
                     Continue Learning
@@ -270,7 +320,13 @@ const Page = () => {
                   </button>
                 </div>
               </article>
-            ))}
+                );
+              })
+            ) : (
+              <p className="col-span-full rounded-2xl border border-(--border-primary-dashboard) bg-(--primary-bg-dashboard) px-6 py-10 text-center text-sm text-(--tertiary-text-dashboard)">
+                No courses match this filter.
+              </p>
+            )}
           </div>
         </section>
 
@@ -338,6 +394,9 @@ const Page = () => {
                   <button
                     type="button"
                     aria-label="Add course"
+                    onClick={() =>
+                      handleAddRecommended("Advanced React Development")
+                    }
                     className="
               flex h-9 w-9
               shrink-0
@@ -402,6 +461,9 @@ const Page = () => {
                   <button
                     type="button"
                     aria-label="Add course"
+                    onClick={() =>
+                      handleAddRecommended("Full Stack Development")
+                    }
                     className="
               flex h-9 w-9
               shrink-0
@@ -466,6 +528,9 @@ const Page = () => {
                   <button
                     type="button"
                     aria-label="Add course"
+                    onClick={() =>
+                      handleAddRecommended("UI/UX Design Masterclass")
+                    }
                     className="
               flex h-9 w-9
               shrink-0
@@ -485,6 +550,14 @@ const Page = () => {
           </div>
         </section>
       </main>
+
+      {/* ================= TOAST ================= */}
+
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-100 rounded-xl border border-(--border-primary-dashboard) bg-(--text-primary-dashboard) px-5 py-3 text-sm font-medium text-(--bg-primary-dashboard) shadow-lg">
+          {toast}
+        </div>
+      )}
     </div>
   );
 };

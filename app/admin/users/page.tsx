@@ -71,6 +71,61 @@ const Page = () => {
   const [usersData, setUsersData] =
     useState<UserItem[]>(initialUsersData);
 
+  // ================= FILTER STATE =================
+
+  const [roleFilter, setRoleFilter] =
+    useState<"all" | Role>("all");
+
+  const [courseFilter, setCourseFilter] =
+    useState<"all" | "none" | "low" | "high">("all");
+
+  const roleFilterOptions: {
+    key: "all" | Role;
+    label: string;
+  }[] = [
+    { key: "all", label: "All" },
+    { key: "superadmin", label: "Superadmin" },
+    { key: "teacher", label: "Teacher" },
+    { key: "student", label: "Student" },
+  ];
+
+  const courseFilterOptions: {
+    key: "all" | "none" | "low" | "high";
+    label: string;
+  }[] = [
+    { key: "all", label: "All Courses" },
+    { key: "none", label: "0 Courses" },
+    { key: "low", label: "1–3 Courses" },
+    { key: "high", label: "4+ Courses" },
+  ];
+
+  const filteredUsers = usersData.filter((user) => {
+    const matchesRole =
+      roleFilter === "all" || user.role === roleFilter;
+
+    let matchesCourses = true;
+
+    if (courseFilter === "none") {
+      matchesCourses = user.enrolledCourses === 0;
+    } else if (courseFilter === "low") {
+      matchesCourses =
+        user.enrolledCourses >= 1 &&
+        user.enrolledCourses <= 3;
+    } else if (courseFilter === "high") {
+      matchesCourses = user.enrolledCourses >= 4;
+    }
+
+    return matchesRole && matchesCourses;
+  });
+
+  const hasActiveFilters =
+    roleFilter !== "all" || courseFilter !== "all";
+
+  const clearFilters = () => {
+    setRoleFilter("all");
+    setCourseFilter("all");
+  };
+
   // ================= MODAL STATE =================
 
   const [selectedUser, setSelectedUser] =
@@ -317,6 +372,103 @@ const Page = () => {
             </button>
           </div>
 
+          {/* ================= FILTERS ================= */}
+
+          <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-(--border-primary-dashboard) bg-(--primary-dashboard) p-4 shadow-sm">
+            {/* ================= ROLE FILTER ================= */}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium uppercase tracking-wide text-(--secondary-text-dashboard)">
+                Role
+              </span>
+
+              <div className="flex flex-wrap gap-1.5">
+                {roleFilterOptions.map((option) => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setRoleFilter(option.key)}
+                    className={`
+                      shrink-0
+                      rounded-full
+                      border
+                      px-3
+                      py-1.5
+                      text-xs
+                      font-medium
+                      capitalize
+                      transition
+                      hover:cursor-pointer
+                      ${
+                        roleFilter === option.key
+                          ? "border-(--bg-lightblue) bg-(--bg-lightblue) text-(--text-primary-dashboard)"
+                          : "border-(--border-primary-dashboard) text-(--tertiary-text-dashboard) hover:bg-(--secondary-bg-dashboard)"
+                      }
+                    `}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ================= ENROLLED COURSES FILTER ================= */}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium uppercase tracking-wide text-(--secondary-text-dashboard)">
+                Courses
+              </span>
+
+              <div className="flex flex-wrap gap-1.5">
+                {courseFilterOptions.map((option) => (
+                  <button
+                    key={option.key}
+                    type="button"
+                    onClick={() => setCourseFilter(option.key)}
+                    className={`
+                      shrink-0
+                      rounded-full
+                      border
+                      px-3
+                      py-1.5
+                      text-xs
+                      font-medium
+                      capitalize
+                      transition
+                      hover:cursor-pointer
+                      ${
+                        courseFilter === option.key
+                          ? "border-(--bg-lightblue) bg-(--bg-lightblue) text-(--text-primary-dashboard)"
+                          : "border-(--border-primary-dashboard) text-(--tertiary-text-dashboard) hover:bg-(--secondary-bg-dashboard)"
+                      }
+                    `}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ================= RESULTS COUNT ================= */}
+
+            <span className="text-xs text-(--secondary-text-dashboard)">
+              Showing {filteredUsers.length} of{" "}
+              {usersData.length} users
+            </span>
+
+            {/* ================= CLEAR FILTERS ================= */}
+
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="ml-auto rounded-full px-3 py-1.5 text-xs font-medium text-(--bg-lightblue) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
+              >
+                Clear Filters
+              </button>
+            )}
+          </div>
+
           {/* ================= TABLE ================= */}
 
           <div
@@ -436,7 +588,7 @@ const Page = () => {
               {/* ================= TABLE BODY ================= */}
 
               <tbody>
-                {usersData.map((user) => (
+                {filteredUsers.map((user) => (
                   <tr
                     key={user.id}
                     className="
@@ -787,6 +939,23 @@ const Page = () => {
                     </td>
                   </tr>
                 ))}
+
+                {filteredUsers.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="
+                        px-5
+                        py-12
+                        text-center
+                        text-sm
+                        text-(--tertiary-text-dashboard)
+                      "
+                    >
+                      No users match the selected filters.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
