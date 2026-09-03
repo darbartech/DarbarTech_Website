@@ -25,7 +25,6 @@ import {
   Menu,
   MessageSquare,
   StickyNote,
-  UserRound,
   UserCheck,
   Video,
   X,
@@ -34,6 +33,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { useSidebarStore } from "@/store/sidebarStore";
+import { useAuthStore } from "@/lib/auth/auth-store";
 
 interface ChildItem {
   label: string;
@@ -53,11 +53,6 @@ const menuItems: MenuItem[] = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/student",
-  },
-  {
-    label: "My Profile",
-    icon: UserRound,
-    href: "/student/profile",
   },
   {
     label: "My Courses",
@@ -155,6 +150,8 @@ export default function StudentSidebar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeStatus = searchParams.get("status");
+
+  const logout = useAuthStore((s) => s.logout);
 
   const [openMenus, setOpenMenus] = useState<string[]>(["My Courses"]);
 
@@ -548,7 +545,10 @@ const isChildActive =
         >
           <button
             type="button"
-            onClick={() => router.push("/login")}
+            onClick={() => {
+              logout();
+              router.push("/login");
+            }}
             title={collapsed ? "Logout" : undefined}
             className={`
               flex
