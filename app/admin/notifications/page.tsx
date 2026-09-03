@@ -2,9 +2,6 @@
 
 import React, { useState } from "react";
 import { Bell, Check } from "lucide-react";
-import AdminNavbar from "../common/AdminNavbar";
-import Topbar from "../TopBar";
-import { useSidebarStore } from "@/store/sidebarStore";
 
 const initialNotifications = [
   {
@@ -40,8 +37,6 @@ const initialNotifications = [
 type NotificationItem = (typeof initialNotifications)[number];
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   const [notifications, setNotifications] =
     useState<NotificationItem[]>(initialNotifications);
 
@@ -65,17 +60,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      <AdminNavbar />
-
-      <main
-        className={`min-h-screen min-w-0 flex-1 ${
-          !collapsed ? "lg:ml-64" : "lg:ml-20"
-        }`}
-      >
-        <Topbar />
-
-        <section className="px-4 py-6 sm:px-6 lg:px-8">
+    <section className="px-4 py-2">
           <div className="mb-6 flex items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold text-(--text-primary-dashboard)">
@@ -151,9 +136,7 @@ const Page = () => {
               </button>
             ))}
           </div>
-        </section>
-      </main>
-    </div>
+    </section>
   );
 };
 

@@ -2,12 +2,6 @@
 
 import React, { useState } from "react";
 
-import { useSidebarStore } from "@/store/sidebarStore";
-
-import AdminNavbar from "../common/AdminNavbar";
-
-import Topbar from "../TopBar";
-
 import {
   Pencil,
   Trash2,
@@ -17,6 +11,8 @@ import {
   MoreHorizontal,
   Eye,
 } from "lucide-react";
+
+import Can from "@/components/common/Can";
 
 const initialUsersData = [
   {
@@ -64,8 +60,6 @@ const roleOptions: Role[] = [
 ];
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   // ================= TABLE DATA =================
 
   const [usersData, setUsersData] =
@@ -124,6 +118,74 @@ const Page = () => {
   const clearFilters = () => {
     setRoleFilter("all");
     setCourseFilter("all");
+  };
+
+  // ================= PAGINATION STATE =================
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 10;
+
+  const totalFilteredUsers = filteredUsers.length;
+
+  const totalPages = Math.max(1, Math.ceil(totalFilteredUsers / pageSize));
+
+  const safePage = Math.min(currentPage, totalPages);
+
+  const paginatedUsers = filteredUsers.slice(
+    (safePage - 1) * pageSize,
+    safePage * pageSize,
+  );
+
+  const showingFrom =
+    totalFilteredUsers === 0 ? 0 : (safePage - 1) * pageSize + 1;
+
+  const showingTo = Math.min(safePage * pageSize, totalFilteredUsers);
+
+  // ================= SELECTION STATE =================
+
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [showBulkConfirm, setShowBulkConfirm] = useState(false);
+  const [bulkAction, setBulkAction] = useState<"delete" | "role" | null>(null);
+  const [bulkRole, setBulkRole] = useState<Role>("student");
+
+  const allPageSelected =
+    paginatedUsers.length > 0 &&
+    paginatedUsers.every((u) => selectedIds.has(u.id));
+
+  const toggleSelectAll = () => {
+    if (allPageSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(paginatedUsers.map((u) => u.id)));
+    }
+  };
+
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleBulkDelete = () => {
+    setUsersData((prev) => prev.filter((u) => !selectedIds.has(u.id)));
+    setSelectedIds(new Set());
+    setShowBulkConfirm(false);
+    setBulkAction(null);
+  };
+
+  const handleBulkRoleChange = () => {
+    setUsersData((prev) =>
+      prev.map((u) =>
+        selectedIds.has(u.id) ? { ...u, role: bulkRole } : u,
+      ),
+    );
+    setSelectedIds(new Set());
+    setShowBulkConfirm(false);
+    setBulkAction(null);
   };
 
   // ================= MODAL STATE =================
@@ -308,27 +370,8 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      {/* ================= SIDEBAR ================= */}
-
-      <AdminNavbar />
-
-      {/* ================= MAIN CONTENT ================= */}
-
-      <main
-        className={`min-h-screen min-w-0 flex-1 ${
-          !collapsed
-            ? "lg:ml-64"
-            : "lg:ml-20"
-        }`}
-      >
-        {/* ================= TOPBAR ================= */}
-
-        <Topbar />
-
-        {/* ================= CONTENT SECTION ================= */}
-
-        <section className="px-4 py-6 sm:px-6 lg:px-8">
+    <>
+      <section className="px-4 py-2">
           {/* ================= HEADER ================= */}
 
           <div className="mb-6 flex items-center justify-between gap-4">
@@ -346,30 +389,32 @@ const Page = () => {
 
             {/* ================= ADD BUTTON ================= */}
 
-            <button
-              type="button"
-              onClick={handleAdd}
-              className="
-                flex
-                shrink-0
-                items-center
-                gap-1.5
-                rounded-lg
-                bg-(--bg-lightblue)
-                px-4
-                py-2.5
-                text-sm
-                font-semibold
-                text-(--text-primary-dashboard)
-                transition
-                hover:opacity-90
-                hover:cursor-pointer
-              "
-            >
-              <Plus size={17} />
+            <Can permission="users.create">
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="
+                  flex
+                  shrink-0
+                  items-center
+                  gap-1.5
+                  rounded-lg
+                  bg-(--bg-lightblue)
+                  px-4
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-(--text-primary-dashboard)
+                  transition
+                  hover:opacity-90
+                  hover:cursor-pointer
+                "
+              >
+                <Plus size={17} />
 
-              Add User
-            </button>
+                Add User
+              </button>
+            </Can>
           </div>
 
           {/* ================= FILTERS ================= */}
@@ -469,6 +514,117 @@ const Page = () => {
             )}
           </div>
 
+          {/* ================= BULK ACTIONS BAR ================= */}
+
+          {selectedIds.size > 0 && (
+            <div
+              className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-(--secondary-bg-dashboard) bg-(--secondary-bg-dashboard)/10 p-3"
+              role="toolbar"
+              aria-label="Bulk actions"
+            >
+              <span className="text-sm font-medium text-(--text-primary-dashboard)">
+                {selectedIds.size} user{selectedIds.size !== 1 ? "s" : ""}{" "}
+                selected
+              </span>
+
+              <Can permission="users.manage_roles">
+                <div className="flex items-center gap-2">
+                  <select
+                    value={bulkRole}
+                    onChange={(e) => setBulkRole(e.target.value as Role)}
+                    className="rounded-lg border border-(--border-primary-dashboard) bg-white px-3 py-1.5 text-sm text-(--text-primary-dashboard)"
+                    aria-label="Bulk role change"
+                  >
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Admin</option>
+                    <option value="superadmin">Superadmin</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBulkAction("role");
+                      setShowBulkConfirm(true);
+                    }}
+                    className="rounded-lg bg-(--secondary-text-dashboard) px-3 py-1.5 text-sm font-medium text-white transition hover:bg-(--secondary-text-dashboard)/90 hover:cursor-pointer"
+                  >
+                    Change Role
+                  </button>
+                </div>
+              </Can>
+
+              <Can permission="users.delete">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBulkAction("delete");
+                    setShowBulkConfirm(true);
+                  }}
+                  className="rounded-lg border border-(--danger-dashboard) px-3 py-1.5 text-sm font-medium text-(--danger-dashboard) transition hover:bg-(--danger-dashboard)/10 hover:cursor-pointer"
+                >
+                  Delete Selected
+                </button>
+              </Can>
+
+              <button
+                type="button"
+                onClick={() => setSelectedIds(new Set())}
+                className="ml-auto text-sm text-(--tertiary-text-dashboard) hover:text-(--text-primary-dashboard) hover:cursor-pointer"
+              >
+                Clear Selection
+              </button>
+            </div>
+          )}
+
+          {/* ================= BULK CONFIRM MODAL ================= */}
+
+          {showBulkConfirm && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Confirm bulk action"
+            >
+              <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+                <h3 className="mb-2 text-lg font-semibold text-(--text-primary-dashboard)">
+                  Confirm {bulkAction === "delete" ? "Deletion" : "Role Change"}
+                </h3>
+                <p className="mb-6 text-sm text-(--tertiary-text-dashboard)">
+                  {bulkAction === "delete"
+                    ? `Are you sure you want to delete ${selectedIds.size} user${selectedIds.size !== 1 ? "s" : ""}? This action cannot be undone.`
+                    : `Change role of ${selectedIds.size} user${selectedIds.size !== 1 ? "s" : ""} to "${bulkRole}"?`}
+                </p>
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowBulkConfirm(false);
+                      setBulkAction(null);
+                    }}
+                    className="rounded-lg border border-(--border-primary-dashboard) px-4 py-2 text-sm font-medium text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={
+                      bulkAction === "delete"
+                        ? handleBulkDelete
+                        : handleBulkRoleChange
+                    }
+                    className={`rounded-lg px-4 py-2 text-sm font-medium text-white transition hover:cursor-pointer ${
+                      bulkAction === "delete"
+                        ? "bg-(--danger-dashboard) hover:bg-(--danger-dashboard)/90"
+                        : "bg-(--secondary-text-dashboard) hover:bg-(--secondary-text-dashboard)/90"
+                    }`}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* ================= TABLE ================= */}
 
           <div
@@ -485,6 +641,26 @@ const Page = () => {
 
               <thead>
                 <tr>
+                  <th
+                    className="
+                      bg-(--bg-table)
+                      px-5
+                      py-4
+                      text-left
+                      text-sm
+                      font-semibold
+                      text-(--text-primary-dashboard)
+                    "
+                  >
+                    <input
+                      type="checkbox"
+                      checked={allPageSelected}
+                      onChange={toggleSelectAll}
+                      className="h-4 w-4 cursor-pointer accent-(--bg-lightblue)"
+                      aria-label="Select all users on this page"
+                    />
+                  </th>
+
                   <th
                     className="
                       bg-(--bg-table)
@@ -588,7 +764,7 @@ const Page = () => {
               {/* ================= TABLE BODY ================= */}
 
               <tbody>
-                {filteredUsers.map((user) => (
+                {paginatedUsers.map((user) => (
                   <tr
                     key={user.id}
                     className="
@@ -599,6 +775,26 @@ const Page = () => {
                       hover:bg-(--secondary-bg-dashboard)
                     "
                   >
+                    {/* Checkbox */}
+
+                    <td
+                      className="
+                        px-5
+                        py-4
+                        text-sm
+                        text-(--text-primary-dashboard)
+                      "
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(user.id)}
+                        onChange={() => toggleSelect(user.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="h-4 w-4 cursor-pointer accent-(--bg-lightblue)"
+                        aria-label={`Select ${user.name}`}
+                      />
+                    </td>
+
                     {/* ID */}
 
                     <td
@@ -655,124 +851,126 @@ const Page = () => {
                     {/* ROLE */}
 
                     <td className="px-5 py-4">
-                      <div className="relative inline-block">
-                        {/* TRIGGER */}
+                      <Can permission="users.manage_roles">
+                        <div className="relative inline-block">
+                          {/* TRIGGER */}
 
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenDropdownId(
-                              openDropdownId ===
-                                user.id
-                                ? null
-                                : user.id,
-                            )
-                          }
-                          className={`
-                            flex
-                            items-center
-                            gap-2
-                            rounded-full
-                            border
-                            px-3
-                            py-1.5
-                            text-xs
-                            font-medium
-                            capitalize
-                            transition
-                            hover:cursor-pointer
-                            ${
-                              user.role ===
-                              "superadmin"
-                                ? "border-(--violet-dashboard)/30 bg-(--violet-dashboard)/10 text-(--violet-dashboard)"
-                                : user.role ===
-                                    "teacher"
-                                  ? "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)"
-                                  : "border-(--info-dashboard)/30 bg-(--info-dashboard)/10 text-(--info-dashboard)"
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setOpenDropdownId(
+                                openDropdownId ===
+                                  user.id
+                                  ? null
+                                  : user.id,
+                              )
                             }
-                          `}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              user.role ===
-                              "superadmin"
-                                ? "bg-(--violet-dashboard)"
-                                : user.role ===
-                                    "teacher"
-                                  ? "bg-(--success-dashboard)"
-                                  : "bg-(--info-dashboard)"
-                            }`}
-                          />
+                            className={`
+                              flex
+                              items-center
+                              gap-2
+                              rounded-full
+                              border
+                              px-3
+                              py-1.5
+                              text-xs
+                              font-medium
+                              capitalize
+                              transition
+                              hover:cursor-pointer
+                              ${
+                                user.role ===
+                                "superadmin"
+                                  ? "border-(--violet-dashboard)/30 bg-(--violet-dashboard)/10 text-(--violet-dashboard)"
+                                  : user.role ===
+                                      "teacher"
+                                    ? "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)"
+                                    : "border-(--info-dashboard)/30 bg-(--info-dashboard)/10 text-(--info-dashboard)"
+                              }
+                            `}
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                user.role ===
+                                "superadmin"
+                                  ? "bg-(--violet-dashboard)"
+                                  : user.role ===
+                                      "teacher"
+                                    ? "bg-(--success-dashboard)"
+                                    : "bg-(--info-dashboard)"
+                              }`}
+                            />
 
-                          {user.role}
+                            {user.role}
 
-                          <ChevronDown
-                            size={14}
-                            className={`transition-transform ${
-                              openDropdownId ===
-                              user.id
-                                ? "rotate-180"
-                                : ""
-                            }`}
-                          />
-                        </button>
+                            <ChevronDown
+                              size={14}
+                              className={`transition-transform ${
+                                openDropdownId ===
+                                user.id
+                                  ? "rotate-180"
+                                  : ""
+                              }`}
+                            />
+                          </button>
 
-                        {/* DROPDOWN MENU */}
+                          {/* DROPDOWN MENU */}
 
-                        {openDropdownId ===
-                          user.id && (
-                          <div className="absolute right-0 top-full z-10 mt-1 w-32 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
-                            {roleOptions.map(
-                              (roleOption) => (
-                                <button
-                                  key={roleOption}
-                                  type="button"
-                                  onClick={() =>
-                                    handleRoleChange(
-                                      user.id,
-                                      roleOption,
-                                    )
-                                  }
-                                  className={`
-                                    flex
-                                    w-full
-                                    items-center
-                                    gap-2
-                                    px-3
-                                    py-2
-                                    text-left
-                                    text-sm
-                                    capitalize
-                                    transition
-                                    hover:bg-(--secondary-bg-dashboard)
-                                    hover:cursor-pointer
-                                    ${
-                                      user.role ===
-                                      roleOption
-                                        ? "font-medium text-(--background)"
-                                        : "text-(--text-primary-dashboard)"
+                          {openDropdownId ===
+                            user.id && (
+                            <div className="absolute right-0 top-full z-10 mt-1 w-32 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
+                              {roleOptions.map(
+                                (roleOption) => (
+                                  <button
+                                    key={roleOption}
+                                    type="button"
+                                    onClick={() =>
+                                      handleRoleChange(
+                                        user.id,
+                                        roleOption,
+                                      )
                                     }
-                                  `}
-                                >
-                                  <span
-                                    className={`h-2 w-2 rounded-full ${
-                                      roleOption ===
-                                      "superadmin"
-                                        ? "bg-(--violet-dashboard)"
-                                        : roleOption ===
-                                            "teacher"
-                                          ? "bg-(--success-dashboard)"
-                                          : "bg-(--info-dashboard)"
-                                    }`}
-                                  />
+                                    className={`
+                                      flex
+                                      w-full
+                                      items-center
+                                      gap-2
+                                      px-3
+                                      py-2
+                                      text-left
+                                      text-sm
+                                      capitalize
+                                      transition
+                                      hover:bg-(--secondary-bg-dashboard)
+                                      hover:cursor-pointer
+                                      ${
+                                        user.role ===
+                                        roleOption
+                                          ? "font-medium text-(--background)"
+                                          : "text-(--text-primary-dashboard)"
+                                      }
+                                    `}
+                                  >
+                                    <span
+                                      className={`h-2 w-2 rounded-full ${
+                                        roleOption ===
+                                        "superadmin"
+                                          ? "bg-(--violet-dashboard)"
+                                          : roleOption ===
+                                              "teacher"
+                                            ? "bg-(--success-dashboard)"
+                                            : "bg-(--info-dashboard)"
+                                      }`}
+                                    />
 
-                                  {roleOption}
-                                </button>
-                              ),
-                            )}
-                          </div>
-                        )}
-                      </div>
+                                    {roleOption}
+                                  </button>
+                                ),
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </Can>
                     </td>
 
                     {/* ENROLLED COURSES */}
@@ -874,65 +1072,69 @@ const Page = () => {
 
                             {/* EDIT */}
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setOpenActionsId(
-                                  null,
-                                );
+                            <Can permission="users.edit">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenActionsId(
+                                    null,
+                                  );
 
-                                handleEdit(user);
-                              }}
-                              className="
-                                flex
-                                w-full
-                                items-center
-                                gap-2
-                                px-3
-                                py-2
-                                text-left
-                                text-sm
-                                text-(--text-primary-dashboard)
-                                transition
-                                hover:bg-(--secondary-bg-dashboard)
-                                hover:cursor-pointer
-                              "
-                            >
-                              <Pencil size={15} />
+                                  handleEdit(user);
+                                }}
+                                className="
+                                  flex
+                                  w-full
+                                  items-center
+                                  gap-2
+                                  px-3
+                                  py-2
+                                  text-left
+                                  text-sm
+                                  text-(--text-primary-dashboard)
+                                  transition
+                                  hover:bg-(--secondary-bg-dashboard)
+                                  hover:cursor-pointer
+                                "
+                              >
+                                <Pencil size={15} />
 
-                              Edit
-                            </button>
+                                Edit
+                              </button>
+                            </Can>
 
                             {/* DELETE */}
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setOpenActionsId(
-                                  null,
-                                );
+                            <Can permission="users.delete">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenActionsId(
+                                    null,
+                                  );
 
-                                handleDelete(user.id);
-                              }}
-                              className="
-                                flex
-                                w-full
-                                items-center
-                                gap-2
-                                px-3
-                                py-2
-                                text-left
-                                text-sm
-                                text-(--danger-dashboard)
-                                transition
-                                hover:bg-(--danger-dashboard)/10
-                                hover:cursor-pointer
-                              "
-                            >
-                              <Trash2 size={15} />
+                                  handleDelete(user.id);
+                                }}
+                                className="
+                                  flex
+                                  w-full
+                                  items-center
+                                  gap-2
+                                  px-3
+                                  py-2
+                                  text-left
+                                  text-sm
+                                  text-(--danger-dashboard)
+                                  transition
+                                  hover:bg-(--danger-dashboard)/10
+                                  hover:cursor-pointer
+                                "
+                              >
+                                <Trash2 size={15} />
 
-                              Delete
-                            </button>
+                                Delete
+                              </button>
+                            </Can>
                           </div>
                         )}
                       </div>
@@ -959,8 +1161,69 @@ const Page = () => {
               </tbody>
             </table>
           </div>
+
+          {/* ================= PAGINATION ================= */}
+
+          {totalFilteredUsers > 0 && (
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-sm text-(--secondary-text-dashboard)">
+                Showing {showingFrom} to {showingTo} of {totalFilteredUsers} users
+              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  disabled={safePage === 1}
+                  className="
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                    transition
+                    hover:cursor-pointer
+                    hover:bg-(--secondary-bg-dashboard)
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                  "
+                >
+                  Previous
+                </button>
+
+                <span className="px-2 text-sm text-(--secondary-text-dashboard)">
+                  Page {safePage} of {totalPages}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  disabled={safePage === totalPages}
+                  className="
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                    transition
+                    hover:cursor-pointer
+                    hover:bg-(--secondary-bg-dashboard)
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                  "
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </section>
-      </main>
 
       {/* ================================================= */}
       {/* ADD / EDIT MODAL */}
@@ -1660,7 +1923,7 @@ const Page = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
