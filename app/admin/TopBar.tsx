@@ -14,7 +14,6 @@ const searchIndex = [
   { label: "Product Management", path: "/admin/cms/product-management" },
   { label: "Users", path: "/admin/users" },
   { label: "Notifications", path: "/admin/notifications" },
-  { label: "Themes", path: "/admin/themes" },
   { label: "Security", path: "/admin/security" },
   { label: "AI & Chat", path: "/admin/ai-chat" },
   { label: "Profile", path: "/admin/profile" },
