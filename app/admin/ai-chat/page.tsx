@@ -2,9 +2,6 @@
 
 import React, { useState } from "react";
 import { Bot, Send } from "lucide-react";
-import AdminNavbar from "../common/AdminNavbar";
-import Topbar from "../TopBar";
-import { useSidebarStore } from "@/store/sidebarStore";
 
 type ChatMessage = {
   id: number;
@@ -21,8 +18,6 @@ const initialMessages: ChatMessage[] = [
 ];
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
   const [draft, setDraft] = useState("");
@@ -68,17 +63,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      <AdminNavbar />
-
-      <main
-        className={`flex min-h-screen min-w-0 flex-col flex-1 ${
-          !collapsed ? "lg:ml-64" : "lg:ml-20"
-        }`}
-      >
-        <Topbar />
-
-        <section className="flex flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8">
+    <section className="flex flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold text-(--text-primary-dashboard)">
               AI & Chat
@@ -164,9 +149,7 @@ const Page = () => {
               <Send size={18} />
             </button>
           </form>
-        </section>
-      </main>
-    </div>
+    </section>
   );
 };
 
