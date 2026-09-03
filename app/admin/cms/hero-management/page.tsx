@@ -6,12 +6,6 @@ import React, {
   useState,
 } from "react";
 
-import { useSidebarStore } from "@/store/sidebarStore";
-
-import AdminNavbar from "../../common/AdminNavbar";
-
-import Topbar from "../../TopBar";
-
 import {
   Pencil,
   Trash2,
@@ -206,8 +200,6 @@ const formReducer = (
 };
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   // ================= TABLE DATA =================
 
   const [heroData, setHeroData] =
@@ -386,27 +378,8 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      {/* ================= SIDEBAR ================= */}
-
-      <AdminNavbar />
-
-      {/* ================= MAIN CONTENT ================= */}
-
-      <main
-        className={`min-h-screen min-w-0 flex-1 ${
-          !collapsed
-            ? "lg:ml-64"
-            : "lg:ml-20"
-        }`}
-      >
-        {/* ================= TOPBAR ================= */}
-
-        <Topbar />
-
-        {/* ================= TABLE SECTION ================= */}
-
-        <section className="px-4 py-6 sm:px-6 lg:px-8">
+    <>
+      <section className="px-4 py-2">
           {/* ================= HEADER ================= */}
 
           <div className="mb-6 flex items-center justify-between gap-4">
@@ -870,7 +843,6 @@ const Page = () => {
             </table>
           </div>
         </section>
-      </main>
 
       {/* ================================================= */}
       {/* ADD / EDIT MODAL */}
@@ -1513,7 +1485,7 @@ const Page = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

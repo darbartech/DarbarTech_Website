@@ -2,9 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import AdminNavbar from "./common/AdminNavbar";
-import Topbar from "./TopBar";
-import { useSidebarStore } from "@/store/sidebarStore";
 
 import {
   Wallet,
@@ -47,8 +44,6 @@ ChartJS.register(
 );
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   // ================= REVENUE FILTER =================
 
   type RevenuePeriod =
@@ -291,23 +286,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      {/* Sidebar */}
-      <AdminNavbar />
-
-      {/* Main Content */}
-      <main
-        className={`min-h-screen min-w-0 flex-1 ${
-          !collapsed ? "lg:ml-64" : "lg:ml-20"
-        }`}
-      >
-        {/* ================= TOPBAR ================= */}
-
-        <Topbar />
-
-        {/* ================= CONTENT SECTION ================= */}
-
-        <section className="px-4 py-6 sm:px-6 lg:px-8">
+    <section className="px-4 py-2">
           {/* ================= HEADER ================= */}
 
           <div className="mb-6">
@@ -420,9 +399,7 @@ const Page = () => {
               <Line data={lineData} options={lineOptions} />
             </div>
           </div>
-        </section>
-      </main>
-    </div>
+    </section>
   );
 };
 

@@ -23,7 +23,7 @@ export default function AdminLayout({
           }`}
         >
           <Topbar />
-          <div className="p-4 sm:p-6">{children}</div>
+          <div className="px-4 py-2">{children}</div>
         </main>
       </div>
     </RouteGuard>
