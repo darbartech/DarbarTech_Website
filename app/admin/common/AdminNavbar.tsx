@@ -15,23 +15,38 @@ import {
   Briefcase,
   ChevronDown,
   ChevronRight,
+  FileSearch,
   FileText,
   LayoutDashboard,
   LogOut,
-  Palette,
   Package,
   Settings,
   Shield,
   Sparkles,
-  User2Icon,
   Users,
   Menu,
   X,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { useSidebarStore } from "@/store/sidebarStore";
+import { useAuthStore } from "@/lib/auth/auth-store";
+import { useAuth } from "@/lib/auth/use-auth";
+import type { Permission } from "@/lib/auth/permissions";
 
-const menuItems = [
+interface MenuItem {
+  label: string;
+  icon: LucideIcon;
+  href?: string;
+  children?: {
+    label: string;
+    icon: LucideIcon;
+    href: string;
+  }[];
+  permission?: Permission;
+}
+
+const menuItems: MenuItem[] = [
   {
     label: "Analytics",
     icon: BarChart3,
@@ -41,11 +56,13 @@ const menuItems = [
     label: "Jobs",
     icon: Briefcase,
     href: "/admin/jobs",
+    permission: "jobs.manage" as const,
   },
   {
     label: "Courses",
     icon: LayoutDashboard,
     href: "/admin/courses",
+    permission: "courses.view" as const,
   },
   {
     label: "CMS",
@@ -62,11 +79,19 @@ const menuItems = [
         href: "/admin/cms/product-management",
       },
     ],
+    permission: "cms.manage" as const,
   },
   {
     label: "Users",
     icon: Users,
     href: "/admin/users",
+    permission: "users.view" as const,
+  },
+  {
+    label: "Audit Logs",
+    icon: FileSearch,
+    href: "/admin/audit-logs",
+    permission: "audit.view" as const,
   },
   {
     label: "Settings",
@@ -78,16 +103,12 @@ const menuItems = [
         href: "/admin/notifications",
       },
       {
-        label: "Themes",
-        icon: Palette,
-        href: "/admin/themes",
-      },
-      {
         label: "Security",
         icon: Shield,
         href: "/admin/security",
       },
     ],
+    permission: "security.manage_self" as const,
   },
   {
     label: "AI & CHAT",
@@ -103,6 +124,13 @@ export default function AdminNavbar() {
   const pathname = usePathname();
 
   const router = useRouter();
+
+  const logout = useAuthStore((s) => s.logout);
+  const { can } = useAuth();
+
+  const visibleItems = menuItems.filter(
+    (item) => !item.permission || can(item.permission),
+  );
 
   const [openMenus, setOpenMenus] = useState<string[]>(["CMS", "Users"]);
 
@@ -256,7 +284,7 @@ export default function AdminNavbar() {
           "
         >
           <ul className="space-y-2">
-            {menuItems.map((item) => {
+            {visibleItems.map((item) => {
               const Icon = item.icon;
 
               const hasChildren = Boolean(item.children?.length);
@@ -504,62 +532,14 @@ export default function AdminNavbar() {
             p-3
           "
         >
-          {/* Profile */}
-          <Link
-            href="/admin/profile"
-            title={collapsed ? "Profile" : undefined}
-            onClick={toggleMobileSidebar}
-            className={`
-              flex
-              items-center
-              rounded-lg
-
-              py-3
-
-              text-sm
-              font-medium
-
-              transition
-
-              hover:cursor-pointer
-
-              ${pathname === "/admin/profile" ? activeStyles : defaultStyles}
-
-              ${
-                collapsed
-                  ? `
-                    gap-3
-                    px-4
-
-                    lg:justify-center
-                    lg:px-2
-                  `
-                  : `
-                    gap-3
-                    px-4
-                  `
-              }
-            `}
-          >
-            <User2Icon className="h-5 w-5 shrink-0" />
-
-            {/* Profile label */}
-            <span
-              className={`
-                whitespace-nowrap
-
-                ${collapsed ? "lg:hidden" : ""}
-              `}
-            >
-              Profile
-            </span>
-          </Link>
-
           {/* Logout */}
           <button
             type="button"
             title={collapsed ? "Logout" : undefined}
-            onClick={() => router.push("/login")}
+            onClick={() => {
+              logout();
+              router.push("/login");
+            }}
             className={`
               flex
               w-full

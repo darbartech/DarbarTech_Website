@@ -7,6 +7,7 @@ import {
   CircleDashed,
   ChessKnight,
 } from "lucide-react";
+import Link from "next/link";
 import logo from "@/public/file.svg";
 import illustration from "@/public/home/illustrator2.png";
 import illustration2 from "@/public/home/illustrator2.png";
@@ -70,15 +71,19 @@ export default function Home() {
               your pocket.
             </p>
 
-            <button
+            <Link href="/register"
               className="
+              
         mx-auto
+        inline-block
         rounded-4xl
         bg-(--secondary-bg-color)
         px-6
         py-3
         text-base
         text-(--primary-bg-color)
+
+        hover:cursor-pointer
 
         sm:px-7
         sm:py-3.5
@@ -90,7 +95,7 @@ export default function Home() {
       "
             >
               Start for free
-            </button>
+            </Link>
 
             <p
               className="
@@ -795,7 +800,7 @@ export default function Home() {
             <span className="text-base sm:text-lg">READY TO DO THIS</span>
 
             <h3 className="text-3xl sm:text-4xl md:text-5xl">
-              Let's Get To Work!
+              Let&apos;s Get To Work!
             </h3>
           </div>
 
