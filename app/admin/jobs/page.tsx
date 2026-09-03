@@ -1,9 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import AdminNavbar from "../common/AdminNavbar";
-import Topbar from "../TopBar";
-import { useSidebarStore } from "@/store/sidebarStore";
 
 import {
   Briefcase,
@@ -23,6 +20,8 @@ import {
   User2,
   X,
 } from "lucide-react";
+
+import Can from "@/components/common/Can";
 
 /* ==================================================== */
 /* TYPES & DATA                                          */
@@ -204,8 +203,6 @@ const statusOptions = [
 ];
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   // ================= JOBS STATE =================
 
   const [jobs, setJobs] =
@@ -216,6 +213,26 @@ const Page = () => {
 
   const [isModalOpen, setIsModalOpen] =
     useState(false);
+
+  // ================= PAGINATION STATE =================
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 10;
+
+  const totalJobs = jobs.length;
+
+  const totalPages = Math.max(1, Math.ceil(totalJobs / pageSize));
+
+  const paginatedJobs = jobs.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+
+  const showingFrom =
+    totalJobs === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+
+  const showingTo = Math.min(currentPage * pageSize, totalJobs);
 
   const selectedJob =
     jobs.find((job) => job.id === selectedJobId) ??
@@ -471,23 +488,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      {/* Sidebar */}
-      <AdminNavbar />
-
-      {/* Main Content */}
-      <main
-        className={`min-h-screen min-w-0 flex-1 ${
-          !collapsed ? "lg:ml-64" : "lg:ml-20"
-        }`}
-      >
-        {/* ================= TOPBAR ================= */}
-
-        <Topbar />
-
-        {/* ================= CONTENT SECTION ================= */}
-
-        <section className="px-4 py-6 sm:px-6 lg:px-8">
+    <section className="px-4 py-2">
           {/* ================= HEADER ================= */}
 
           <div className="mb-6 flex items-center justify-between gap-4">
@@ -540,7 +541,7 @@ const Page = () => {
               gap-3
             "
           >
-            {jobs.map((job) => {
+            {paginatedJobs.map((job) => {
               const Icon = job.icon;
 
               const isSelected =
@@ -579,6 +580,68 @@ const Page = () => {
               );
             })}
           </div>
+
+          {/* ================= JOB PAGINATION ================= */}
+
+          {totalJobs > 0 && (
+            <div className="mb-8 flex items-center justify-between">
+              <span className="text-sm text-(--secondary-text-dashboard)">
+                Showing {showingFrom} to {showingTo} of {totalJobs} jobs
+              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                    transition
+                    hover:cursor-pointer
+                    hover:bg-(--secondary-bg-dashboard)
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                  "
+                >
+                  Previous
+                </button>
+
+                <span className="px-2 text-sm text-(--secondary-text-dashboard)">
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                    transition
+                    hover:cursor-pointer
+                    hover:bg-(--secondary-bg-dashboard)
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                  "
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* ================= SELECTED JOB DETAILS ================= */}
 
@@ -933,6 +996,7 @@ const Page = () => {
 
                                     {/* EDIT */}
 
+                                    <Can permission="courses.edit">
                                     <button
                                       type="button"
                                       onClick={() =>
@@ -959,9 +1023,11 @@ const Page = () => {
 
                                       Edit
                                     </button>
+                                    </Can>
 
                                     {/* DELETE */}
 
+                                    <Can permission="courses.delete">
                                     <button
                                       type="button"
                                       onClick={() =>
@@ -988,6 +1054,7 @@ const Page = () => {
 
                                       Delete
                                     </button>
+                                    </Can>
                                   </div>
                                 )}
                               </div>
@@ -1933,9 +2000,7 @@ const Page = () => {
               </div>
             </div>
           )}
-        </section>
-      </main>
-    </div>
+    </section>
   );
 };
 

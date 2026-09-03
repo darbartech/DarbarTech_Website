@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AdminNavbar from "../common/AdminNavbar";
-import Topbar from "../TopBar";
-import { useSidebarStore } from "@/store/sidebarStore";
 import courseImage from "@/public/services/image 21.png";
 import Image from "next/image";
 
@@ -52,8 +49,6 @@ const categoryOptions = [
 ];
 
 const Page = () => {
-  const { collapsed } = useSidebarStore();
-
   // ================= CATEGORY FILTER STATE =================
 
   const [activeCategory, setActiveCategory] =
@@ -80,21 +75,7 @@ const Page = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-(--bg-primary-dashboard)">
-      {/* Sidebar */}
-      <AdminNavbar />
-
-      {/* Main Content */}
-      <main
-        className={`min-h-screen min-w-0 flex-1 ${
-          !collapsed ? "lg:ml-64" : "lg:ml-20"
-        }`}
-      >
-        {/* Navigation */}
-        <Topbar />
-
-        {/* Courses Section */}
-        <section className="px-4 py-6 sm:px-6 lg:px-8">
+    <section className="px-4 py-2">
           {/* Section Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-semibold text-(--text-primary-dashboard) sm:text-3xl">
@@ -254,9 +235,7 @@ const Page = () => {
               </p>
             )}
           </div>
-        </section>
-      </main>
-    </div>
+    </section>
   );
 };
 
