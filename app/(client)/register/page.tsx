@@ -6,6 +6,8 @@ import Link from "next/link";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+import { useAuthStore } from "@/lib/auth/auth-store";
+import { useToastStore } from "@/components/common/toast-store";
 
 interface FormErrors {
   fullName?: string;
@@ -29,9 +31,11 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+
+  const register = useAuthStore((s) => s.register);
+  const isLoadingStore = useAuthStore((s) => s.isLoading);
+  const addToast = useToastStore((s) => s.addToast);
 
   // Validation rules
   const validateForm = (): boolean => {
@@ -102,47 +106,29 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
     }
   };
 
-  //   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     if (validateForm()) {
-  //       setIsLoading(true);
-  //       try {
-  //         const result = await signup(formData);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (validateForm()) {
+      setIsLoading(true);
+      try {
+        const result = await register({ fullName: formData.fullName, email: formData.email, password: formData.password });
 
-  //         if (result.success) {
-  //           setSuccessMessage(result.message);
-  //           setIsSubmitted(true);
-  //           setTimeout(() => {
-  //             setFormData({
-  //               fullName: '',
-  //               email: '',
-  //               password: '',
-  //               confirmPassword: '',
-  //             });
-  //             setIsSubmitted(false);
-  //             setSuccessMessage('');
-  //             // Redirect to login form after success
-  //             onSwitchToLogin();
-  //           }, 2000);
-  //         } else {
-  //           if (result.errors) {
-  //             const errorMap: FormErrors = {};
-  //             result.errors.forEach((error) => {
-  //               errorMap[error.field as keyof FormErrors] = error.message;
-  //             });
-  //             setErrors(errorMap);
-  //           } else {
-  //             setErrors({ email: result.message || 'Signup failed' });
-  //           }
-  //         }
-  //       } catch (error) {
-  //         console.error('Signup error:', error);
-  //         setErrors({ email: 'An error occurred. Please try again.' });
-  //       } finally {
-  //         setIsLoading(false);
-  //       }
-  //     }
-  //   };
+        if (result.success) {
+          addToast(result.message, "success");
+          setTimeout(() => {
+            onSwitchToLogin();
+          }, 2000);
+        } else {
+          setErrors({ email: "An error occurred. Please try again." });
+        }
+      } catch {
+        setErrors({ email: "An error occurred. Please try again." });
+        addToast("An error occurred. Please try again.", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -162,15 +148,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
           Join us today to get started
         </p>
 
-        {isSubmitted && successMessage && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-700 text-sm font-medium">
-              {successMessage}
-            </p>
-          </div>
-        )}
-
-        <form className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Full Name Field */}
           <div>
             <label
@@ -303,7 +281,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoadingStore || isLoading}
             className="w-full bg-(--secondary-bg-color) text-(--primary-bg-color) font-semibold py-2 px-4 rounded-lg  focus:outline-none focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-150 hover:cursor-pointer"
           >
             {isLoading ? "Creating Account..." : "Create Account"}

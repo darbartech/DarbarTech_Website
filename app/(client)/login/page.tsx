@@ -1,32 +1,79 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+import { useAuthStore } from "@/lib/auth/auth-store";
+import { useToastStore } from "@/components/common/toast-store";
+import { useRouter } from "next/navigation";
 
 interface FormErrors {
   email?: string;
   password?: string;
 }
 
-interface LoginFormProps {
-  onSwitchToSignup: () => void;
+function LockoutTimer({ until }: { until: number }) {
+  const [now, setNow] = useState(() => Math.floor(Date.now() / 1000) * 1000);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setNow(Math.floor(Date.now() / 1000) * 1000);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const remaining = Math.max(0, Math.ceil((until - now) / 1000));
+
+  if (remaining <= 0) return null;
+
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
+
+  return (
+    <div
+      className="mb-4 rounded-lg border border-(--danger-dashboard)/30 bg-(--danger-dashboard)/10 p-3 text-center"
+      role="alert"
+    >
+      <p className="text-sm font-medium text-(--danger-dashboard)">
+        Too many failed attempts.
+      </p>
+      <p className="mt-1 text-xs text-(--danger-dashboard)">
+        Try again in {minutes}m {seconds.toString().padStart(2, "0")}s
+      </p>
+    </div>
+  );
 }
 
-export default function LoginForm({ onSwitchToSignup }: LoginFormProps) {
+export default function LoginForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const login = useAuthStore((s) => s.login);
+  const isLoadingStore = useAuthStore((s) => s.isLoading);
+  const failedAttempts = useAuthStore((s) => s.failedAttempts);
+  const lockoutUntil = useAuthStore((s) => s.lockoutUntil);
+  const router = useRouter();
+  const addToast = useToastStore((s) => s.addToast);
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [clock, setClock] = useState(() => Math.floor(Date.now() / 1000) * 1000);
+
+  useEffect(() => {
+    if (!lockoutUntil) return;
+    const id = setInterval(() => {
+      setClock(Math.floor(Date.now() / 1000) * 1000);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [lockoutUntil]);
+
+  const isLockedOut = lockoutUntil !== null && clock < lockoutUntil;
 
   // Validation rules
   const validateForm = (): boolean => {
@@ -66,43 +113,34 @@ export default function LoginForm({ onSwitchToSignup }: LoginFormProps) {
     }
   };
 
-  //   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     if (validateForm()) {
-  //       setIsLoading(true);
-  //       try {
-  //         const result = await login(formData);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isLockedOut) return;
+    if (validateForm()) {
+      setIsLoading(true);
+      try {
+        const result = await login(formData.email, formData.password);
 
-  //         if (result.success) {
-  //           setSuccessMessage(result.message);
-  //           setIsSubmitted(true);
-  //           setTimeout(() => {
-  //             setFormData({
-  //               email: '',
-  //               password: '',
-  //             });
-  //             setIsSubmitted(false);
-  //             setSuccessMessage('');
-  //           }, 2000);
-  //         } else {
-  //           if (result.errors) {
-  //             const errorMap: FormErrors = {};
-  //             result.errors.forEach((error) => {
-  //               errorMap[error.field as keyof FormErrors] = error.message;
-  //             });
-  //             setErrors(errorMap);
-  //           } else {
-  //             setErrors({ email: result.message || 'Login failed' });
-  //           }
-  //         }
-  //       } catch (error) {
-  //         console.error('Login error:', error);
-  //         setErrors({ email: 'An error occurred. Please try again.' });
-  //       } finally {
-  //         setIsLoading(false);
-  //       }
-  //     }
-  //   };
+        if (result.success && result.user) {
+          addToast(result.message, "success");
+          const roleRedirects: Record<string, string> = {
+            superadmin: "/admin",
+            admin: "/admin",
+            teacher: "/teacher",
+            student: "/student",
+          };
+          router.push(roleRedirects[result.user.role] || "/student");
+        } else {
+          setErrors({ email: result.message || "Invalid email or password." });
+        }
+      } catch {
+        setErrors({ email: "An error occurred. Please try again." });
+        addToast("An error occurred. Please try again.", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -127,7 +165,19 @@ export default function LoginForm({ onSwitchToSignup }: LoginFormProps) {
           </div>
         )} */}
 
-        <form className="space-y-5">
+        {lockoutUntil && <LockoutTimer until={lockoutUntil} />}
+
+        {!isLockedOut && failedAttempts > 0 && failedAttempts < 5 && (
+          <p
+            className="mb-4 text-center text-xs text-(--danger-dashboard)"
+            role="status"
+          >
+            {5 - failedAttempts} attempt{5 - failedAttempts !== 1 ? "s" : ""}{" "}
+            remaining before lockout.
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Email Field */}
           <div>
             <label
@@ -200,7 +250,7 @@ export default function LoginForm({ onSwitchToSignup }: LoginFormProps) {
               <span className="ml-2 text-sm text-(--primary-text-color)/70">Remember me</span>
             </label>
             <a
-              href="#"
+              href="/forgot-password"
               className="text-sm text-(--secondary-bg-color) hover:(--secondary-bg-color) hover:underline font-medium"
             >
               Forgot Password?
@@ -210,7 +260,7 @@ export default function LoginForm({ onSwitchToSignup }: LoginFormProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoadingStore || isLoading}
             className="w-full bg-(--secondary-bg-color) text-(--primary-bg-color) font-semibold py-2 px-4 rounded-lg hover:bg-(--secondary-bg-color) hover:scale-95 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing In..." : "Sign In"}
@@ -230,7 +280,6 @@ export default function LoginForm({ onSwitchToSignup }: LoginFormProps) {
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              onClick={onSwitchToSignup}
               className="text-(--secondary-bg-color) font-semibold hover:underline"
             >
               Sign Up

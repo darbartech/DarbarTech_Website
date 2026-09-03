@@ -4,8 +4,12 @@ import Image from "next/image";
 
 import illustration from "@/public/home/Illustrator.png";
 import Link from "next/link";
+import facebookImage from "@/public/social-medias/facebook.png"
+import instagramImage from "@/public/social-medias/instagram.png"
+import linkedinImage from "@/public/social-medias/linkedin.png"
 
 import {
+  CircleFadingPlus,
   MessageCircleIcon,
   MessageSquareCodeIcon,
   PhoneCall,
@@ -87,7 +91,7 @@ const Footer = () => {
             {/* Social media */}
             <div className="flex items-center justify-start gap-2">
               <span className="shrink-0">
-                <MessageCircleIcon className="text-(--secondary-bg-color)" />
+                <CircleFadingPlus className="text-(--secondary-bg-color)" />
               </span>
 
               <div className="text-xs">
@@ -95,24 +99,17 @@ const Footer = () => {
 
                 <div className="mt-1 flex items-center gap-2">
                   <span>
-                    <MessageCircleIcon size={14} />
+                    <Image src={facebookImage} alt="Facebook Image" className="h-5 w-5 hover:cursor-pointer"/>
                   </span>
 
                   <span>
-                    <MessageCircleIcon size={14} />
+                    <Image src={instagramImage} alt="Instagram Image" className="h-5 w-5 hover:cursor-pointer"/>
                   </span>
 
                   <span>
-                    <MessageCircleIcon size={14} />
+                    <Image src={linkedinImage} alt="LinkedIn Image" className="h-5 w-5 hover:cursor-pointer"/>
                   </span>
 
-                  <span>
-                    <MessageCircleIcon size={14} />
-                  </span>
-
-                  <span>
-                    <MessageCircleIcon size={14} />
-                  </span>
                 </div>
               </div>
             </div>
@@ -129,12 +126,7 @@ const Footer = () => {
             <Link className={linkClasses} href="/">Home</Link>
             <Link className={linkClasses} href="/about">About</Link>
             <Link className={linkClasses} href="">Contact</Link>
-            <Link className={linkClasses} href="/product">Product</Link>
             <Link className={linkClasses} href="/services">Services</Link>
-            <Link className={linkClasses} href="">Agency</Link>
-            <Link className={linkClasses} href="">Digital</Link>
-            <Link className={linkClasses} href="">Support</Link>
-            <Link className={linkClasses} href="">Shop</Link>
             <Link className={linkClasses} href="">Digital</Link>
             <Link className={linkClasses} href="">Support</Link>
           </div>
