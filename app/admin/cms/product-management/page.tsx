@@ -324,12 +324,12 @@ const Page = () => {
 
             <div>
               <h1 className="text-2xl font-semibold text-(--text-primary-dashboard)">
-                Product Management
+                Service Management
               </h1>
 
               <p className="mt-2 text-sm text-(--text-primary-dashboard)/70">
                 Manage the content displayed in the
-                product section.
+                service section.
               </p>
             </div>
 

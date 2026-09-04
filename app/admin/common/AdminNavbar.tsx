@@ -74,7 +74,7 @@ const menuItems: MenuItem[] = [
         href: "/admin/cms/hero-management",
       },
       {
-        label: "Product Management",
+        label: "Service Management",
         icon: Package,
         href: "/admin/cms/product-management",
       },
@@ -84,7 +84,28 @@ const menuItems: MenuItem[] = [
   {
     label: "Users",
     icon: Users,
-    href: "/admin/users",
+    children: [
+      {
+        label: "Superadmin and Staffs",
+        icon: Users,
+        href: "/admin/users?role=superadmin",
+      },
+      {
+        label: "Teachers",
+        icon: Users,
+        href: "/admin/teachers",
+      },
+      {
+        label: "Students",
+        icon: Users,
+        href: "/admin/students",
+      },
+      {
+        label: "Student Insights",
+        icon: Users,
+        href: "/admin/students/insights",
+      },
+    ],
     permission: "users.view" as const,
   },
   {
