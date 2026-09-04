@@ -461,9 +461,12 @@ export default function Home() {
                   Corporis, repudiandae?
                 </p>
 
-                <button className="text-sm text-(--accent-color) sm:text-md">
+                <Link
+                  href="/about"
+                  className="text-sm text-(--accent-color) sm:text-md"
+                >
                   Discover more
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -558,13 +561,19 @@ export default function Home() {
         sm:text-lg
       "
             >
-              <button className="rounded-3xl border border-(--secondary-bg-color) px-7 py-2 text-(--accent-color)">
+              <Link
+                href="/contact"
+                className="rounded-3xl border border-(--secondary-bg-color) px-7 py-2 text-(--accent-color)"
+              >
                 Contact Us
-              </button>
+              </Link>
 
-              <button className="rounded-3xl bg-(--secondary-bg-color) px-7 py-2 text-(--primary-bg-color)">
+              <Link
+                href="/about"
+                className="rounded-3xl bg-(--secondary-bg-color) px-7 py-2 text-(--primary-bg-color)"
+              >
                 Read More
-              </button>
+              </Link>
             </div>
           </div>
         </section>
@@ -620,9 +629,12 @@ export default function Home() {
               </div>
             ))}
 
-            <button className="rounded bg-(--secondary-bg-color) px-6 py-3 text-sm text-(--primary-bg-color) sm:px-8 sm:text-md">
+            <Link
+              href="/about"
+              className="rounded bg-(--secondary-bg-color) px-6 py-3 text-sm text-(--primary-bg-color) sm:px-8 sm:text-md"
+            >
               DISCOVER MORE
-            </button>
+            </Link>
           </div>
 
           <div className="w-full lg:w-[45%]">
@@ -805,9 +817,12 @@ export default function Home() {
           </div>
 
           <div className="flex items-center">
-            <button className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg">
-              CONTACT US
-            </button>
+                <Link
+                  href="/contact"
+                  className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg"
+                >
+                  CONTACT US
+                </Link>
           </div>
         </section>
 
