@@ -29,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
       sessionExpiry: null,
       failedAttempts: 0,
       lockoutUntil: null,
+      hasHydrated: false,
 
       login: async (email: string, password: string) => {
         const { lockoutUntil: lockout } = get();
@@ -103,9 +104,23 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user: User) => {
         set({ user });
       },
+
+      setProfilePicture: (picture: string) => {
+        const { user } = get();
+        if (user) {
+          set({ user: { ...user, profilePicture: picture } });
+        }
+      },
+
+      setHasHydrated: (value: boolean) => {
+        set({ hasHydrated: value });
+      },
     }),
     {
       name: "auth-storage",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,

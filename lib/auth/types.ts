@@ -5,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   role: Role;
+  profilePicture?: string;
 }
 
 export interface AuthState {
@@ -14,12 +15,15 @@ export interface AuthState {
   sessionExpiry: number | null;
   failedAttempts: number;
   lockoutUntil: number | null;
+  hasHydrated: boolean;
 
   login: (email: string, password: string) => Promise<AuthResponse>;
   register: (data: RegisterData) => Promise<AuthResponse>;
   logout: () => void;
   refreshSession: () => void;
   setUser: (user: User) => void;
+  setProfilePicture: (picture: string) => void;
+  setHasHydrated: (value: boolean) => void;
 }
 
 export interface RegisterData {
