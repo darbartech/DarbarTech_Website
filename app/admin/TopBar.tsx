@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, Search, User2, Menu, X, ChevronRight } from "lucide-react";
+import { Bell, Search, Menu, X, ChevronRight } from "lucide-react";
 import { useSidebarStore } from "@/store/sidebarStore";
+import ProfileAvatar from "@/components/common/ProfileAvatar";
+import { useAuthStore } from "@/lib/auth/auth-store";
 
 const searchIndex = [
   { label: "Analytics", path: "/admin" },
@@ -42,6 +44,7 @@ const notifications = [
 
 const Topbar = () => {
   const { mobileSidebar, toggleMobileSidebar } = useSidebarStore();
+  const user = useAuthStore((state) => state.user);
 
   const router = useRouter();
 
@@ -231,9 +234,12 @@ const Topbar = () => {
           aria-label="Profile"
           title="Profile"
           onClick={() => router.push("/admin/profile")}
-          className="rounded-lg p-2 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:text-(--bg-dashboard-hero) hover:cursor-pointer"
+          className="flex items-center gap-2 rounded-lg p-1 pl-1.5 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
         >
-          <User2 className="h-5 w-5" />
+          <ProfileAvatar name={user?.name || "Admin"} picture={user?.profilePicture} size="sm" />
+          <span className="hidden max-w-[10rem] truncate text-sm font-medium md:block">
+            {user?.name || "Admin"}
+          </span>
         </button>
       </div>
     </div>

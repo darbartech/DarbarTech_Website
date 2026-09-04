@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import {
-  Avatar,
   Card,
   CardHeader,
   PageHeader,
   ProgressBar,
   StatusBadge,
 } from "../components/ui";
+import ProfileAvatar from "@/components/common/ProfileAvatar";
+import { useAuthStore } from "@/lib/auth/auth-store";
 import { courses, student } from "../data";
 
 type ProfileForm = {
@@ -43,6 +44,9 @@ const emptyForm: ProfileForm = {
 };
 
 export default function ProfilePage() {
+  const user = useAuthStore((state) => state.user);
+  const setProfilePicture = useAuthStore((state) => state.setProfilePicture);
+
   const [openTab, setOpenTab] = useState<"personal" | "academic">("personal");
   const [form, setForm] = useState<ProfileForm>(emptyForm);
   const [editOpen, setEditOpen] = useState(false);
@@ -54,6 +58,21 @@ export default function ProfilePage() {
   const showToast = (message: string) => {
     setToast(message);
     setTimeout(() => setToast(null), 3000);
+  };
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setProfilePicture(reader.result);
+        showToast("Profile photo updated.");
+      }
+    };
+    reader.readAsDataURL(file);
+    event.target.value = "";
   };
 
   const saveEdit = () => {
@@ -120,7 +139,11 @@ export default function ProfilePage() {
       >
         <div className="flex flex-wrap items-center gap-6">
           <div className="relative">
-            <Avatar name={form.name} size="lg" />
+            <ProfileAvatar
+              name={user?.name || form.name}
+              picture={user?.profilePicture}
+              size="lg"
+            />
             <button
               type="button"
               title="Change profile photo"
@@ -135,7 +158,7 @@ export default function ProfilePage() {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={() => showToast("Profile photo updated.")}
+              onChange={handlePhotoChange}
             />
           </div>
 
@@ -275,6 +298,29 @@ export default function ProfilePage() {
       {/* ================= EDIT PROFILE MODAL ================= */}
       {editOpen && (
         <Modal title="Edit Profile" onClose={() => setEditOpen(false)}>
+          <div className="mb-5 flex items-center gap-4">
+            <ProfileAvatar
+              name={user?.name || form.name}
+              picture={user?.profilePicture}
+              size="lg"
+            />
+
+            <div className="flex flex-col gap-1.5">
+              <button
+                type="button"
+                onClick={() => photoRef.current?.click()}
+                className="flex w-fit items-center gap-2 rounded-lg bg-(--bg-lightblue) px-4 py-2 text-sm font-semibold text-(--text-primary-dashboard) transition hover:opacity-90 hover:cursor-pointer"
+              >
+                <Camera size={15} />
+                Change Photo
+              </button>
+
+              <span className="text-xs text-(--tertiary-text-dashboard)">
+                JPG, PNG or GIF.
+              </span>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Full Name">
               <input

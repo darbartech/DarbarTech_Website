@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Pencil, X } from "lucide-react";
+import { Pencil, Camera, X } from "lucide-react";
+import ProfileAvatar from "@/components/common/ProfileAvatar";
+import { useAuthStore } from "@/lib/auth/auth-store";
 
 const Page = () => {
-  const [name, setName] = useState("Roban Shrestha");
-  const [email, setEmail] = useState("roban@darbartech.com");
+  const user = useAuthStore((state) => state.user);
+  const setProfilePicture = useAuthStore((state) => state.setProfilePicture);
+  const photoRef = React.useRef<HTMLInputElement>(null);
+
+  const [name, setName] = useState(user?.name || "Admin");
+  const [email, setEmail] = useState(user?.email || "admin@darbartech.com");
   const [phone, setPhone] = useState("+977 9800000000");
 
   const [isEditing, setIsEditing] = useState(false);
@@ -19,6 +25,21 @@ const Page = () => {
     setToast(message);
 
     setTimeout(() => setToast(null), 2500);
+  };
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setProfilePicture(reader.result);
+        showToast("Profile photo updated.");
+      }
+    };
+    reader.readAsDataURL(file);
+    event.target.value = "";
   };
 
   const openEdit = () => {
@@ -55,12 +76,28 @@ const Page = () => {
           <div className="max-w-2xl rounded-2xl border border-(--border-primary-dashboard) bg-(--primary-dashboard) p-6 shadow-sm">
             <div className="mb-6 flex items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-(--bg-lightblue) text-xl font-bold text-(--text-primary-dashboard)">
-                  {name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")
-                    .slice(0, 2)}
+                <div className="relative">
+                  <ProfileAvatar
+                    name={user?.name || name}
+                    picture={user?.profilePicture}
+                    size="lg"
+                  />
+                  <button
+                    type="button"
+                    title="Change profile photo"
+                    onClick={() => photoRef.current?.click()}
+                    className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full text-(--bg-primary-dashboard) transition hover:opacity-80 hover:cursor-pointer"
+                    style={{ background: "var(--bg-lightblue)" }}
+                  >
+                    <Camera size={14} />
+                  </button>
+                  <input
+                    ref={photoRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handlePhotoChange}
+                  />
                 </div>
 
                 <div>
@@ -142,6 +179,35 @@ const Page = () => {
             </div>
 
             <form onSubmit={handleSave} className="space-y-5">
+              <div>
+                <span className="mb-2 block text-sm font-medium text-(--text-primary-dashboard)">
+                  Profile Picture
+                </span>
+
+                <div className="flex items-center gap-4">
+                  <ProfileAvatar
+                    name={user?.name || name}
+                    picture={user?.profilePicture}
+                    size="lg"
+                  />
+
+                  <div className="flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => photoRef.current?.click()}
+                      className="flex items-center gap-2 rounded-lg bg-(--bg-lightblue) px-4 py-2 text-sm font-semibold text-(--text-primary-dashboard) transition hover:opacity-90 hover:cursor-pointer"
+                    >
+                      <Camera size={15} />
+                      Change Photo
+                    </button>
+
+                    <span className="text-xs text-(--tertiary-text-dashboard)">
+                      JPG, PNG or GIF. Max 2MB.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label
                   htmlFor="profile-name"

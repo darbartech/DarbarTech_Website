@@ -5,7 +5,7 @@ import { Menu, Bell, Search } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { useAuthStore } from "@/lib/auth/auth-store";
-import { Avatar } from "@/app/student/components/ui";
+import ProfileAvatar from "@/components/common/ProfileAvatar";
 
 const searchIndex = [
   { label: "Dashboard", href: "/teacher" },
@@ -116,10 +116,13 @@ export default function TeacherTopBar() {
         <button
           type="button"
           onClick={() => router.push("/teacher/profile")}
-          className="rounded-lg p-1 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
+          className="flex items-center gap-2 rounded-lg p-1 pl-1.5 text-(--text-primary-dashboard) transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
           aria-label="Profile"
         >
-          <Avatar name={user?.name || "Teacher"} size="sm" />
+          <ProfileAvatar name={user?.name || "Teacher"} picture={user?.profilePicture} size="sm" />
+          <span className="hidden max-w-[10rem] truncate text-sm font-medium md:block">
+            {user?.name || "Teacher"}
+          </span>
         </button>
       </div>
     </div>

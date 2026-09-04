@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, Search, Menu } from "lucide-react";
 import { useSidebarStore } from "@/store/sidebarStore";
-import { Avatar } from "../components/ui";
 import { student } from "../data";
+import ProfileAvatar from "@/components/common/ProfileAvatar";
+import { useAuthStore } from "@/lib/auth/auth-store";
 
 const searchIndex = [
   { label: "Dashboard", href: "/student" },
@@ -31,6 +32,7 @@ const searchIndex = [
 const StudentTopBar = () => {
   const { toggleMobileSidebar } = useSidebarStore();
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
   const [query, setQuery] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
@@ -130,9 +132,12 @@ const StudentTopBar = () => {
           href="/student/profile"
           aria-label="Profile"
           title="Profile"
-          className="rounded-lg p-1 transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
+          className="flex items-center gap-2 rounded-lg p-1 pl-1.5 transition hover:bg-(--secondary-bg-dashboard) hover:cursor-pointer"
         >
-          <Avatar name={student.name} size="sm" />
+          <ProfileAvatar name={user?.name || student.name} picture={user?.profilePicture} size="sm" />
+          <span className="hidden max-w-[10rem] truncate text-sm font-medium text-(--text-primary-dashboard) md:block">
+            {user?.name || student.name}
+          </span>
         </Link>
       </div>
     </div>
