@@ -30,8 +30,11 @@ export default function RouteGuard({
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hasHydrated = useAuthStore((s) => s.hasHydrated);
 
   useEffect(() => {
+    if (!hasHydrated) return;
+
     if (!isAuthenticated || !user) {
       router.replace("/login");
       return;
@@ -56,8 +59,9 @@ export default function RouteGuard({
     if (!hasAccess) {
       router.replace(ROLE_HOME[user.role]);
     }
-  }, [isAuthenticated, user, allowedRoles, pathname, router]);
+  }, [isAuthenticated, user, allowedRoles, pathname, router, hasHydrated]);
 
+  if (!hasHydrated) return null;
   if (!isAuthenticated || !user) return null;
   if (!allowedRoles.includes(user.role)) return null;
 
