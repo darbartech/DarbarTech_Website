@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import IllustrationAndContent from "../components/IllustrationAndContent";
 import aboutImage from "@/public/about/illustrator2.png";
@@ -108,9 +109,12 @@ const page = () => {
                 No fake products and services. The customer is king. Their lives
                 and needs are the inspiration.
               </p>
-              <button className="bg-(--secondary-bg-color) text-(--primary-bg-color) px-5 py-2 rounded text-sm">
+              <Link
+                href="/contact"
+                className="bg-(--secondary-bg-color) text-(--primary-bg-color) px-5 py-2 rounded text-sm"
+              >
                 CONTACT US
-              </button>
+              </Link>
             </div>
 
             {/* play button */}

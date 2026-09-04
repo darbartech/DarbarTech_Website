@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
@@ -16,11 +17,7 @@ interface FormErrors {
   confirmPassword?: string;
 }
 
-interface SignupFormProps {
-  onSwitchToLogin: () => void;
-}
-
-export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
+export default function SignupForm() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -36,6 +33,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
   const register = useAuthStore((s) => s.register);
   const isLoadingStore = useAuthStore((s) => s.isLoading);
   const addToast = useToastStore((s) => s.addToast);
+  const router = useRouter();
 
   // Validation rules
   const validateForm = (): boolean => {
@@ -116,7 +114,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
         if (result.success) {
           addToast(result.message, "success");
           setTimeout(() => {
-            onSwitchToLogin();
+            router.push("/login");
           }, 2000);
         } else {
           setErrors({ email: "An error occurred. Please try again." });
@@ -294,7 +292,6 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
             Already have an account?{" "}
             <Link
               href="/login"
-              onClick={onSwitchToLogin}
               className="text-(--secondary-bg-color) font-semibold hover:underline focus:outline-none focus:underline transition"
             >
               Sign In

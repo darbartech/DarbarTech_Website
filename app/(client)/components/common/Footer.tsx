@@ -10,7 +10,6 @@ import linkedinImage from "@/public/social-medias/linkedin.png"
 
 import {
   CircleFadingPlus,
-  MessageCircleIcon,
   MessageSquareCodeIcon,
   PhoneCall,
 } from "lucide-react";
@@ -84,7 +83,7 @@ const Footer = () => {
 
               <div className="text-xs">
                 <span>DO YOU HAVE A QUESTION?</span>
-                <span className="block">hello@karison.com</span>
+                <span className="block">info@darbartech.com</span>
               </div>
             </div>
 
@@ -125,7 +124,7 @@ const Footer = () => {
           <div className="grid grid-cols-2 gap-2 font-semibold">
             <Link className={linkClasses} href="/">Home</Link>
             <Link className={linkClasses} href="/about">About</Link>
-            <Link className={linkClasses} href="">Contact</Link>
+            <Link className={linkClasses} href="/contact">Contact</Link>
             <Link className={linkClasses} href="/services">Services</Link>
             <Link className={linkClasses} href="">Digital</Link>
             <Link className={linkClasses} href="">Support</Link>
@@ -226,9 +225,9 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-wrap gap-1 text-xs sm:text-sm">
-          <span>Terms & Conditions</span>
+          <Link className={linkClasses} href="/terms-conditions">Terms & Conditions</Link>
           <span>|</span>
-          <span>Privacy Policy</span>
+          <Link className={linkClasses} href="/privacy-policy">Privacy Policy</Link>
         </div>
       </div>
     </footer>
