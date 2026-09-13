@@ -220,7 +220,7 @@ export default function LoginForm() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Enter password"
-                className={`w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 transition text-(--primary-text-color) bg-(--primary-bg-color) placeholder-(--bg-muted) ${
+                className={`w-full px-4 py-2 pr-14 border rounded-lg focus:outline-none focus:ring-2 transition text-(--primary-text-color) bg-(--primary-bg-color) placeholder-(--bg-muted) ${
                   errors.password
                     ? "border-(--secondary-bg-color) focus:ring-(--secondary-bg-color)"
                     : "border-(--surface) focus:ring-(--secondary-bg-color)"
@@ -229,7 +229,7 @@ export default function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-(--bg-muted) hover:text-(--primary-text-color)/70 focus:outline-none hover:cursor-pointer"
+                className="absolute right-1.5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-(--bg-muted) transition hover:text-(--primary-text-color)/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-(--secondary-bg-color) hover:cursor-pointer touch-manipulation"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -287,6 +287,9 @@ export default function LoginForm() {
           </p>
         </div>
       </section>
+
+      {/* Clearance for the fixed mobile bottom nav */}
+      <div className="h-24 lg:hidden" aria-hidden="true" />
       </main>
       <Footer />
     </>

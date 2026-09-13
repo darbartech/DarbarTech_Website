@@ -97,17 +97,17 @@ const Footer = () => {
                 <span>SOCIAL NETWORK</span>
 
                 <div className="mt-1 flex items-center gap-2">
-                  <span>
+                  <Link href="https://www.facebook.com/share/1HCzzUGhmJ/">
                     <Image src={facebookImage} alt="Facebook Image" className="h-5 w-5 hover:cursor-pointer"/>
-                  </span>
+                  </Link>
 
-                  <span>
+                  <Link href="https://www.instagram.com/darbartech?stkn=MW5ramM5ajY0ZDl1Nw==">
                     <Image src={instagramImage} alt="Instagram Image" className="h-5 w-5 hover:cursor-pointer"/>
-                  </span>
+                  </Link>
 
-                  <span>
+                  <Link href="">
                     <Image src={linkedinImage} alt="LinkedIn Image" className="h-5 w-5 hover:cursor-pointer"/>
-                  </span>
+                  </Link>
 
                 </div>
               </div>

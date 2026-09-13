@@ -4,9 +4,18 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, ChevronUp, Menu, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Home,
+  Info,
+  Layers,
+  User,
+} from "lucide-react";
 
 import logo from "@/public/logos/dark_logo.png";
+import { useAuthStore } from "@/lib/auth/auth-store";
 
 const navLinks = [
   {
@@ -60,52 +69,32 @@ const desktopserviceButtonClasses = `
   sm:px-4
 `;
 
-const mobileLinkClasses = `
-  flex
-  w-full
-  items-center
-  justify-between
-  rounded-xl
-  px-4
-  py-3
-  text-sm
-  transition-all
-  hover:cursor-pointer
-  hover:rounded-2xl
-  hover:text-(--accent-color)
-  hover:shadow-md
-  sm:text-base
-`;
-
-const mobileserviceLinkClasses = `
+const popoverServiceLinkClasses = `
   block
   rounded-lg
   px-4
-  py-2
+  py-2.5
   text-sm
   transition-all
+  hover:cursor-pointer
   hover:text-(--accent-color)
   hover:shadow-md
-  sm:text-base
 `;
 
 const Navbar = () => {
   const pathname = usePathname();
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isserviceOpen, setIsserviceOpen] = useState(false);
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-    setIsserviceOpen(false);
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const toggleservice = () => {
     setIsserviceOpen((prev) => !prev);
+  };
+
+  const closeService = () => {
+    setIsserviceOpen(false);
   };
 
   // Check whether a normal navigation link is active
@@ -126,349 +115,169 @@ const Navbar = () => {
   // service dropdown is active for any /services/... route
   const isserviceActive = pathname.startsWith("/services");
 
+  // Profile → the user's portal profile when signed in, otherwise the login page
+  const profileHref = isAuthenticated && user
+    ? user.role === "teacher"
+      ? "/teacher/profile"
+      : user.role === "student"
+        ? "/student/profile"
+        : "/admin/profile"
+    : "/login";
+
+  const profileActive = pathname === profileHref;
+
   return (
-    <header className="sticky top-0 z-50 font-semibold bg-(--primary-bg-color) text-(--primary-text-color)">
-      {/* Main navbar */}
-      <div className="flex items-center justify-between px-4 py-4 sm:px-6 md:px-10 md:py-5 lg:py-7">
-        {/* Logo + Desktop navigation */}
-        <div className="flex items-center sm:gap-4 lg:gap-10">
-          {/* Logo */}
-          <Link href="/" aria-label="Home" onClick={closeMenu}>
-            <Image
-              src={logo}
-              alt="Logo"
-              priority
-              className="w-40"
-            />
-          </Link>
+    <>
+      <header className="sticky top-0 z-50 font-semibold bg-(--primary-bg-color) text-(--primary-text-color)">
+        {/* Main navbar */}
+        <div className="flex items-center justify-between px-4 py-4 sm:px-6 md:px-10 md:py-5 lg:py-7">
+          {/* Logo + Desktop navigation */}
+          <div className="flex items-center sm:gap-4 lg:gap-10">
+            {/* Logo */}
+            <Link href="/" aria-label="Home">
+              <Image
+                src={logo}
+                alt="Logo"
+                priority
+                className="w-40"
+              />
+            </Link>
 
-          {/* Desktop navigation */}
-          <nav aria-label="Main navigation" className="hidden lg:block ">
-            <ul className="flex items-center gap-6">
-              {navLinks.map((link) => {
-                const active = link.hasDropdown
-                  ? isserviceActive
-                  : isActive(link.href);
+            {/* Desktop navigation */}
+            <nav aria-label="Main navigation" className="hidden lg:block ">
+              <ul className="flex items-center gap-6">
+                {navLinks.map((link) => {
+                  const active = link.hasDropdown
+                    ? isserviceActive
+                    : isActive(link.href);
 
-                return (
-                  <li
-                    key={link.label}
-                    className={link.hasDropdown ? "group relative" : ""}
-                  >
-                    {link.hasDropdown ? (
-                      <button
-                        type="button"
-                        aria-expanded={isserviceOpen}
-                        onClick={toggleservice}
-                        className={`
-                          ${linkClasses}
-                          ${active ? "text-(--accent-color)" : ""}
-                        `}
-                      >
-                        <span>{link.label}</span>
-
-                        <span className="relative h-4.5 w-4.5">
-                          <ChevronDown
-                            size={18}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            className="
-                              absolute
-                              inset-0
-                              opacity-100
-                              transition-opacity
-                              duration-200
-                              group-hover:opacity-0
-                            "
-                          />
-
-                          <ChevronUp
-                            size={18}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                            className="
-                              absolute
-                              inset-0
-                              opacity-0
-                              transition-opacity
-                              duration-200
-                              group-hover:opacity-100
-                            "
-                          />
-                        </span>
-                      </button>
-                    ) : (
-                      <Link
-                        href={link.href!}
-                        aria-current={active ? "page" : undefined}
-                        className={`
-                          ${linkClasses}
-                          ${active ? "text-(--accent-color)" : ""}
-                        `}
-                      >
-                        <span>{link.label}</span>
-                      </Link>
-                    )}
-
-                    {/* service dropdown */}
-                    {link.hasDropdown && (
-                      <div
-                        className="
-                          invisible
-                          absolute
-                          left-6/7
-                          top-full
-                          z-50
-                          mt-2
-                          flex
-                          w-48
-                          -translate-x-1/2
-                          translate-y-2
-                          flex-col
-                          rounded-xl
-                          bg-(--primary-bg-color)
-                          p-2
-                          opacity-0
-                          shadow-2xl
-                          transition-all
-                          duration-200
-                          group-hover:visible
-                          group-hover:translate-y-0
-                          group-hover:opacity-100
-                          sm:w-52
-                        "
-                      >
-                        {servicesLinks.map((service) => (
-                          <Link
-                            key={service.href}
-                            href={service.href}
-                            onClick={closeMenu}
-                            className={`
-                              ${desktopserviceButtonClasses}
-                              ${
-                                pathname === service.href
-                                  ? "bg-(--secondary-bg-color) text-(--primary-bg-color)"
-                                  : ""
-                              }
-                            `}
-                          >
-                            {service.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
-
-        {/* Desktop actions */}
-        <div className="ml-auto hidden items-center gap-2 lg:flex xl:gap-3">
-          <Link href="/login"
-            className="
-              rounded-3xl
-              px-4
-              py-2
-              text-sm
-              transition-all
-              hover:cursor-pointer
-              hover:ring-2
-              hover:ring-(--secondary-bg-color)
-              xl:px-5
-              xl:text-base
-            "
-          >
-            Login
-          </Link>
-
-          <Link
-            href="/register"
-            className="
-              rounded-4xl
-              bg-(--secondary-bg-color)
-              px-4
-              py-2
-              text-sm
-              text-(--primary-bg-color)
-              transition-all
-              hover:cursor-pointer
-              hover:bg-(--primary-bg-color)
-              hover:text-(--secondary-bg-color)
-              hover:outline-2
-              hover:outline-(--secondary-bg-color)
-              xl:px-5
-              xl:text-base
-            "
-          >
-            Start for free
-          </Link>
-        </div>
-
-        {/* Mobile menu toggle button */}
-        <button
-          type="button"
-          onClick={toggleMenu}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMenuOpen}
-          className="
-            ml-auto
-            rounded-lg
-            p-2
-            transition-all
-            hover:cursor-pointer
-            hover:text-(--accent-color)
-            hover:shadow-md
-            lg:hidden
-          "
-        >
-          {isMenuOpen ? (
-            <X size={26} aria-hidden="true" />
-          ) : (
-            <Menu size={26} aria-hidden="true" />
-          )}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      <div
-        className={`
-          absolute
-          right-4
-          top-full
-          z-50
-          w-[calc(100vw-2rem)]
-          max-w-72
-          overflow-hidden
-          rounded-2xl
-          border
-          border-(--border)
-          bg-(--primary-bg-color)
-          shadow-xl
-          transition-all
-          duration-300
-          sm:right-6
-          md:right-10
-          lg:hidden
-          ${
-            isMenuOpen
-              ? "pointer-events-auto max-h-125 translate-y-2 opacity-100"
-              : "pointer-events-none max-h-0 translate-y-0 opacity-0"
-          }
-        `}
-      >
-        <nav aria-label="Mobile navigation" className="p-3">
-          <ul className="flex flex-col gap-1">
-            {navLinks.map((link) => {
-              const active = link.hasDropdown
-                ? isserviceActive
-                : isActive(link.href);
-
-              return (
-                <li key={link.label}>
-                  {link.hasDropdown ? (
-                    <>
-                      {/* service button */}
-                      <button
-                        type="button"
-                        onClick={toggleservice}
-                        aria-expanded={isserviceOpen}
-                        className={`
-                          ${mobileLinkClasses}
-                          ${
-                            active
-                              ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
-                              : ""
-                          }
-                        `}
-                      >
-                        <span>{link.label}</span>
-
-                        <ChevronDown
-                          size={18}
-                          strokeWidth={2}
-                          aria-hidden="true"
+                  return (
+                    <li
+                      key={link.label}
+                      className={link.hasDropdown ? "group relative" : ""}
+                    >
+                      {link.hasDropdown ? (
+                        <button
+                          type="button"
+                          aria-expanded={isserviceOpen}
+                          onClick={toggleservice}
                           className={`
-                            transition-transform
-                            duration-200
-                            ${isserviceOpen ? "rotate-180" : "rotate-0"}
+                            ${linkClasses}
+                            ${active ? "text-(--accent-color)" : ""}
                           `}
-                        />
-                      </button>
+                        >
+                          <span>{link.label}</span>
 
-                      {/* Mobile service dropdown */}
-                      <div
-                        className={`
-                          overflow-hidden
-                          transition-all
-                          duration-300
-                          ${
-                            isserviceOpen
-                              ? "max-h-40 opacity-100"
-                              : "max-h-0 opacity-0"
-                          }
-                        `}
-                      >
-                        <div className="ml-3 mt-1 space-y-1 border-l border-(--border) pl-3">
+                          <span className="relative h-4.5 w-4.5">
+                            <ChevronDown
+                              size={18}
+                              strokeWidth={2}
+                              aria-hidden="true"
+                              className="
+                                absolute
+                                inset-0
+                                opacity-100
+                                transition-opacity
+                                duration-200
+                                group-hover:opacity-0
+                              "
+                            />
+
+                            <ChevronUp
+                              size={18}
+                              strokeWidth={2}
+                              aria-hidden="true"
+                              className="
+                                absolute
+                                inset-0
+                                opacity-0
+                                transition-opacity
+                                duration-200
+                                group-hover:opacity-100
+                              "
+                            />
+                          </span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={link.href!}
+                          aria-current={active ? "page" : undefined}
+                          className={`
+                            ${linkClasses}
+                            ${active ? "text-(--accent-color)" : ""}
+                          `}
+                        >
+                          <span>{link.label}</span>
+                        </Link>
+                      )}
+
+                      {/* service dropdown */}
+                      {link.hasDropdown && (
+                        <div
+                          className="
+                            invisible
+                            absolute
+                            left-6/7
+                            top-full
+                            z-50
+                            mt-2
+                            flex
+                            w-48
+                            -translate-x-1/2
+                            translate-y-2
+                            flex-col
+                            rounded-xl
+                            bg-(--primary-bg-color)
+                            p-2
+                            opacity-0
+                            shadow-2xl
+                            transition-all
+                            duration-200
+                            group-hover:visible
+                            group-hover:translate-y-0
+                            group-hover:opacity-100
+                            sm:w-52
+                          "
+                        >
                           {servicesLinks.map((service) => (
                             <Link
                               key={service.href}
                               href={service.href}
-                              onClick={closeMenu}
                               className={`
-                                  ${mobileserviceLinkClasses}
-                                  ${
-                                    pathname === service.href
-                                      ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
-                                      : ""
-                                  }
-                                `}
+                                ${desktopserviceButtonClasses}
+                                ${
+                                  pathname === service.href
+                                    ? "bg-(--secondary-bg-color) text-(--primary-bg-color)"
+                                    : ""
+                                }
+                              `}
                             >
                               {service.label}
                             </Link>
                           ))}
                         </div>
-                      </div>
-                    </>
-                  ) : (
-                    <Link
-                      href={link.href!}
-                      onClick={closeMenu}
-                      aria-current={active ? "page" : undefined}
-                      className={`
-                        ${mobileLinkClasses}
-                        ${
-                          active
-                            ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
-                            : ""
-                        }
-                      `}
-                    >
-                      <span>{link.label}</span>
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </div>
 
-          {/* Mobile actions */}
-          <div className="mt-3 flex flex-col gap-2 border-t border-(--border) pt-3">
-            <Link
-              href="/login"
+          {/* Desktop actions */}
+          <div className="ml-auto hidden items-center gap-2 lg:flex xl:gap-3">
+            <Link href="/login"
               className="
-                w-full
-                rounded-xl
+                rounded-3xl
                 px-4
-                py-3
-                text-left
+                py-2
                 text-sm
                 transition-all
                 hover:cursor-pointer
-                hover:text-(--accent-color)
-                hover:shadow-md
-                sm:text-base
+                hover:ring-2
+                hover:ring-(--secondary-bg-color)
+                xl:px-5
+                xl:text-base
               "
             >
               Login
@@ -477,11 +286,10 @@ const Navbar = () => {
             <Link
               href="/register"
               className="
-                w-full
-                rounded-xl
+                rounded-4xl
                 bg-(--secondary-bg-color)
                 px-4
-                py-3
+                py-2
                 text-sm
                 text-(--primary-bg-color)
                 transition-all
@@ -490,15 +298,237 @@ const Navbar = () => {
                 hover:text-(--secondary-bg-color)
                 hover:outline-2
                 hover:outline-(--secondary-bg-color)
-                sm:text-base
+                xl:px-5
+                xl:text-base
               "
             >
               Start for free
             </Link>
           </div>
+        </div>
+      </header>
+
+      {/* Mobile bottom navigation — visible only on smaller screens */}
+      <div className="fixed inset-x-0 bottom-0 z-50 lg:hidden">
+        <nav
+          aria-label="Mobile bottom navigation"
+          className="
+            relative
+            border-t
+            border-(--surface)
+            bg-(--primary-bg-color)
+            shadow-[0_-4px_16px_rgba(0,0,0,0.08)]
+            backdrop-blur
+          "
+        >
+          {/* Service popover */}
+          <div
+            className={`
+              absolute
+              bottom-full
+              left-3
+              right-3
+              z-50
+              mb-3
+              flex
+              flex-col
+              gap-1
+              rounded-2xl
+              border
+              border-(--surface)
+              bg-(--primary-bg-color)
+              p-2
+              shadow-xl
+              transition-all
+              duration-200
+              ${
+                isserviceOpen
+                  ? "translate-y-0 opacity-100"
+                  : "pointer-events-none translate-y-2 opacity-0"
+              }
+            `}
+          >
+            <p className="px-4 pb-1 pt-2 text-xs text-(--tertiary-text-color)">
+              Our Services
+            </p>
+            {servicesLinks.map((service) => (
+              <Link
+                key={service.href}
+                href={service.href}
+                onClick={closeService}
+                className={`
+                  ${popoverServiceLinkClasses}
+                  ${
+                    pathname === service.href
+                      ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
+                      : ""
+                  }
+                `}
+              >
+                {service.label}
+              </Link>
+            ))}
+          </div>
+
+          <ul className="grid grid-cols-5 pb-[env(safe-area-inset-bottom)]">
+            {/* Service */}
+            <li>
+              <button
+                type="button"
+                onClick={toggleservice}
+                aria-expanded={isserviceOpen}
+                aria-haspopup="true"
+                className={`
+                  flex
+                  w-full
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  py-2.5
+                  transition-colors
+                  hover:cursor-pointer
+                  ${
+                    isserviceActive
+                      ? "text-(--accent-color)"
+                      : "text-(--bg-muted)"
+                  }
+                `}
+              >
+                <Layers size={22} strokeWidth={2} aria-hidden="true" />
+                <span className="text-[10px]">Service</span>
+              </button>
+            </li>
+
+            {/* About */}
+            <li>
+              <Link
+                href="/about"
+                aria-current={isActive("/about") ? "page" : undefined}
+                className={`
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  py-2.5
+                  transition-colors
+                  ${
+                    isActive("/about")
+                      ? "text-(--accent-color)"
+                      : "text-(--bg-muted)"
+                  }
+                `}
+              >
+                <Info size={22} strokeWidth={2} aria-hidden="true" />
+                <span className="text-[10px]">About</span>
+              </Link>
+            </li>
+
+            {/* Home (center) */}
+            <li>
+              <Link
+                href="/"
+                aria-current={isActive("/") ? "page" : undefined}
+                className={`
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  pt-1.5
+                  transition-colors
+                  ${
+                    isActive("/")
+                      ? "text-(--accent-color)"
+                      : "text-(--bg-muted)"
+                  }
+                `}
+              >
+                <span
+                  className={`
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-full
+                    transition-colors
+                    ${
+                      isActive("/")
+                        ? "bg-(--secondary-bg-color)"
+                        : "bg-(--surface)"
+                    }
+                  `}
+                >
+                  <Home
+                    size={22}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className={
+                      isActive("/")
+                        ? "text-(--primary-bg-color)"
+                        : "text-(--bg-muted)"
+                    }
+                  />
+                </span>
+                <span className="text-[10px]">Home</span>
+              </Link>
+            </li>
+
+            {/* Case Study */}
+            <li>
+              <Link
+                href="/case-study"
+                aria-current={isActive("/case-study") ? "page" : undefined}
+                className={`
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  py-2.5
+                  transition-colors
+                  ${
+                    isActive("/case-study")
+                      ? "text-(--accent-color)"
+                      : "text-(--bg-muted)"
+                  }
+                `}
+              >
+                <FileText size={22} strokeWidth={2} aria-hidden="true" />
+                <span className="text-[10px]">Case Study</span>
+              </Link>
+            </li>
+
+            {/* Profile */}
+            <li>
+              <Link
+                href={profileHref}
+                aria-current={profileActive ? "page" : undefined}
+                className={`
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  py-2.5
+                  transition-colors
+                  ${
+                    profileActive
+                      ? "text-(--accent-color)"
+                      : "text-(--bg-muted)"
+                  }
+                `}
+              >
+                <User size={22} strokeWidth={2} aria-hidden="true" />
+                <span className="text-[10px]">Profile</span>
+              </Link>
+            </li>
+          </ul>
         </nav>
       </div>
-    </header>
+    </>
   );
 };
 

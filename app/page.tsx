@@ -32,7 +32,6 @@ export default function Home() {
     gap-5
     overflow-y-hidden
     px-5
-    pb-10
     text-center
     text-sm
     font-bold
@@ -42,6 +41,7 @@ export default function Home() {
     lg:px-20
     xl:px-30
     xl:pb-15
+
   "
         >
           <h1
@@ -57,7 +57,237 @@ export default function Home() {
             Create, inspect, and apply synthetic surveillance broadly.
           </h1>
 
-          <div className="space-y-4 font-semibold sm:space-y-5">
+          {/* Absolute hero-section-line image */}
+          <Image
+            src={heroSectionLine}
+            alt="Hero Section Line Image"
+            loading="eager"
+            className="
+      absolute
+      bottom-95
+      left-1/2
+      w-[120%]
+      -translate-x-1/2
+      pointer-events-none
+
+      sm:bottom-6
+      sm:w-[110%]
+
+      md:bottom-8
+      md:w-full
+
+      lg:bottom-10
+    "
+          />
+
+          {/* top left */}
+          <div
+            className="
+      absolute
+      bottom-110
+      left-15
+      w-fit
+      rounded-lg
+      bg-pink-600
+      p-1.5
+
+      sm:bottom-35
+      sm:left-30
+
+      md:bottom-40
+      md:left-30
+
+      lg:p-2
+      lg:bottom-50
+      lg:left-50
+
+      xl:p-3
+      xl:bottom-65
+      xl:left-60
+
+      2xl:bottom-80
+      2xl:left-65
+    "
+          >
+            <CircleDashed
+              className="h-4 w-4 text-(--primary-bg-color) sm:h-5 sm:w-5 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+
+          {/* top right */}
+          <div
+            className="
+      absolute
+      right-10
+      bottom-112
+      w-fit
+      rounded-lg
+      bg-(--bg-table)
+      p-1.5
+
+      sm:right-15
+      sm:bottom-40
+
+      md:right-16
+      md:bottom-45
+
+      lg:p-2
+      lg:right-20
+      lg:bottom-70
+
+      xl:p-3
+      xl:right-30
+      xl:bottom-75
+
+      2xl:bottom-90
+    "
+          >
+            <CircleDashed
+              className="h-4 w-4 text-blue-400 sm:h-5 sm:w-5 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+
+          {/* middle left */}
+          <div
+            className="
+      absolute
+      bottom-100
+      left-30
+      w-fit
+      rounded-lg
+      bg-(--accent-color)
+      p-1.5
+
+      sm:bottom-18
+      sm:left-50
+
+      md:bottom-20
+      md:left-55
+
+      lg:p-2
+      lg:bottom-29
+      lg:left-80
+
+      xl:p-3
+      xl:bottom-32
+      xl:left-100
+
+      2xl:bottom-37
+      2xl:left-115
+    "
+          >
+            <CircleDashed
+              className="h-4 w-4 text-(--primary-bg-color) sm:h-5 sm:w-5 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+
+          {/* middle right */}
+          <div
+            className="
+      absolute
+      right-17
+      bottom-102
+      w-fit
+      rounded-lg
+      bg-(--bg-table)
+      p-1.5
+
+      sm:right-35
+      sm:bottom-25
+
+      md:right-35
+      md:bottom-30
+
+      lg:p-2
+      lg:right-50
+      lg:bottom-45
+
+      xl:p-3
+      xl:right-65
+      xl:bottom-50
+
+      2xl:right-70
+      2xl:bottom-55
+    "
+          >
+            <CircleDashed
+              className="h-4 w-4 text-(--primary-text-color) sm:h-5 sm:w-5 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+
+          {/* bottom left */}
+          <div
+            className="
+      absolute
+      bottom-90
+      left-10
+      w-fit
+      rounded-lg
+      bg-(--bg-footer)
+      p-1.5
+
+      sm:left-20
+      sm:bottom-2
+
+      md:left-24
+
+      lg:p-2
+      lg:left-36
+
+      xl:p-3
+      xl:left-50
+      xl:bottom-5
+
+      2xl:bottom-0
+    "
+          >
+            <ChessKnight
+              className="h-4 w-4 text-orange-400 sm:h-5 sm:w-5 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+
+          {/* bottom right */}
+          <div
+            className="
+      absolute
+      right-25
+      bottom-95
+      w-fit
+      rounded-lg
+      bg-(--bg-footer)
+      p-1.5
+
+      sm:right-45
+      sm:bottom-10
+
+      md:right-50
+      md:bottom-10
+
+      lg:p-2
+      lg:right-70
+      lg:bottom-15
+
+      xl:p-3
+      xl:right-90
+      xl:bottom-20
+
+      2xl:right-95
+      2xl:bottom-15
+    "
+          >
+            <CircleDashed
+              className="h-4 w-4 text-emerald-400 sm:h-5 sm:w-5 md:h-7 md:w-7"
+              strokeWidth={3}
+            />
+          </div>
+
+          {/* paragraphs and buttons */}
+          <div className="space-y-4 font-semibold sm:space-y-5 mt-40 sm:mt-0">
             <p
               className="
         text-base
@@ -71,7 +301,8 @@ export default function Home() {
               your pocket.
             </p>
 
-            <Link href="/register"
+            <Link
+              href="/register"
               className="
               
         mx-auto
@@ -82,8 +313,15 @@ export default function Home() {
         py-3
         text-base
         text-(--primary-bg-color)
+        border-2
+        border-(--secondary-bg-color)
 
         hover:cursor-pointer
+        hover:border-(--secondary-bg-color)
+        hover:bg-(--primary-bg-color)
+        hover:text-(--secondary-bg-color)
+        transition-all
+        duration-300
 
         sm:px-7
         sm:py-3.5
@@ -116,245 +354,25 @@ export default function Home() {
             >
               <span>Want to talk or get a live demo?</span>
 
-              <span className="flex items-center gap-1 text-(--gray-color)">
-                Get in touch
-                <ArrowRight size={18} />
-              </span>
+              <Link
+                href="/contact"
+                className="group flex items-center gap-1 text-(--gray-color)"
+              >
+                <span>Get in touch</span>
+
+                <ArrowRight
+                  size={18}
+                  className="
+      -translate-x-5
+      opacity-0
+      transition-all
+      duration-300
+      group-hover:translate-x-0
+      group-hover:opacity-100
+    "
+                />
+              </Link>
             </p>
-          </div>
-
-          {/* Absolute hero-section-line image */}
-          <Image
-            src={heroSectionLine}
-            alt="Hero Section Line Image"
-            loading="eager"
-            className="
-      absolute
-      bottom-5
-      left-1/2
-      w-[120%]
-      -translate-x-1/2
-
-      sm:bottom-6
-      sm:w-[110%]
-
-      md:bottom-8
-      md:w-full
-
-      lg:bottom-10
-    "
-          />
-
-          {/* top left */}
-          <div
-            className="
-      absolute
-      bottom-24
-      left-20
-      w-fit
-      rounded-lg
-      bg-pink-600
-      p-1.5
-
-      sm:bottom-40
-      sm:left-30
-       
-
-      md:bottom-40
-      md:left-30
-
-      lg:p-2
-      lg:bottom-50
-      lg:left-50
-
-      xl:p-3
-      xl:bottom-65
-      xl:left-60
-
-      2xl:bottom-80
-      2xl:left-65
-    "
-          >
-            <CircleDashed
-              className="h-5 w-5 text-(--primary-bg-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
-              strokeWidth={3}
-            />
-          </div>
-
-          {/* top right */}
-          <div
-            className="
-      absolute
-      right-5
-      bottom-28
-      w-fit
-      rounded-lg
-      bg-(--bg-random)
-      p-1.5
-
-      sm:right-15
-      sm:bottom-40
-       
-
-      
-      md:right-16
-      md:bottom-45
-
-      lg:p-2
-      lg:right-20
-      lg:bottom-70
-
-      xl:p-3
-      xl:right-30
-      xl:bottom-75
-
-      2xl:bottom-90
-    "
-          >
-            <CircleDashed
-              className="h-5 w-5 text-blue-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
-              strokeWidth={3}
-            />
-          </div>
-
-          {/* middle left */}
-          <div
-            className="
-      absolute
-      bottom-12
-      left-30
-      w-fit
-      rounded-lg
-      bg-(--accent-color)
-      p-1.5
-
-      sm:bottom-18
-      sm:left-50
-       
-
-      md:bottom-20
-      md:left-55
-
-      lg:p-2
-      lg:bottom-29
-      lg:left-80
-
-      xl:p-3
-      xl:bottom-32
-      xl:left-100
-
-      2xl:bottom-37
-      2xl:left-115
-    "
-          >
-            <CircleDashed
-              className="h-5 w-5 text-(--primary-bg-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
-              strokeWidth={3}
-            />
-          </div>
-
-          {/* middle right */}
-          <div
-            className="
-      absolute
-      right-20
-      bottom-15
-      w-fit
-      rounded-lg
-      bg-(--bg-random)
-      p-1.5
-
-      sm:right-35
-      sm:bottom-25
-       
-
-      md:right-35
-      md:bottom-30
-
-      lg:p-2
-      lg:right-50
-      lg:bottom-45
-
-      xl:p-3
-      xl:right-65
-      xl:bottom-50
-
-      2xl:right-70
-      2xl:bottom-55
-    "
-          >
-            <CircleDashed
-              className="h-5 w-5 text-(--primary-text-color) sm:h-6 sm:w-6 md:h-7 md:w-7"
-              strokeWidth={3}
-            />
-          </div>
-
-          {/* bottom left */}
-          <div
-            className="
-      absolute
-      bottom-0
-      left-10
-      w-fit
-      rounded-lg
-      bg-(--bg-footer)
-      p-1.5
-
-      sm:left-20
-       
-      md:left-24
-      md:bottom-2
-
-      lg:p-2
-      lg:left-36
-
-      xl:p-3
-      xl:left-50
-      xl:bottom-5
-
-      2xl:bottom-0
-    "
-          >
-            <ChessKnight
-              className="h-5 w-5 text-orange-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
-              strokeWidth={3}
-            />
-          </div>
-
-          {/* bottom right */}
-          <div
-            className="
-      absolute
-      right-25
-      bottom-5
-      w-fit
-      rounded-lg
-      bg-(--bg-footer)
-      p-1.5
-
-      sm:right-45
-      sm:bottom-10
-       
-
-      md:right-50
-      md:bottom-10
-
-      lg:p-2
-      lg:right-70
-      lg:bottom-15
-
-      xl:p-3
-      xl:right-90
-      xl:bottom-20
-
-      2xl:right-95
-      2xl:bottom-15
-    "
-          >
-            <CircleDashed
-              className="h-5 w-5 text-emerald-400 sm:h-6 sm:w-6 md:h-7 md:w-7"
-              strokeWidth={3}
-            />
           </div>
         </section>
 
@@ -817,12 +835,12 @@ export default function Home() {
           </div>
 
           <div className="flex items-center">
-                <Link
-                  href="/contact"
-                  className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg"
-                >
-                  CONTACT US
-                </Link>
+            <Link
+              href="/contact"
+              className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg"
+            >
+              CONTACT US
+            </Link>
           </div>
         </section>
 
