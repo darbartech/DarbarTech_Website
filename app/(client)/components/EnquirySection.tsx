@@ -6,10 +6,10 @@ const EnquirySection = () => {
       
     >
       <div className="
+    relative
     mx-auto
     my-10
     max-w-5xl
-    space-y-5
     px-5
     py-12
     text-center
@@ -27,9 +27,12 @@ const EnquirySection = () => {
     lg:px-20
     xl:px-30
   ">
-        <span className="block text-sm sm:text-base">GET STARTED INSTANTLY!</span>
+        <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
-      <h2 className="text-3xl sm:text-4xl md:text-5xl">
+        <div className="relative z-10 space-y-5">
+        <span className="block text-sm text-(--primary-bg-color) sm:text-base">GET STARTED INSTANTLY!</span>
+
+      <h2 className="text-3xl text-(--primary-bg-color) sm:text-4xl md:text-5xl">
         Get Only New Update From This Newsletter
       </h2>
 
@@ -77,6 +80,7 @@ const EnquirySection = () => {
         >
           SUBSCRIBE
         </button>
+      </div>
       </div>
       </div>
     </section>

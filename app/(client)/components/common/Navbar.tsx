@@ -28,7 +28,7 @@ const navLinks = [
   },
   {
     label: "Service",
-    hasDropdown: true,
+    hasDropdown: true
   },
   {
     label: "Case Study",
