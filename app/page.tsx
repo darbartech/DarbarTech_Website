@@ -803,6 +803,7 @@ export default function Home() {
         {/* lets get to work section */}
         <section
           className="
+    relative
     flex
     flex-col
     gap-6
@@ -826,15 +827,19 @@ export default function Home() {
     xl:px-30
   "
         >
-          <div>
-            <span className="text-base sm:text-lg">READY TO DO THIS</span>
+          <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
-            <h3 className="text-3xl sm:text-4xl md:text-5xl">
+          <div className="relative z-10">
+            <span className="text-base text-(--bg-table) sm:text-lg">
+              READY TO DO THIS
+            </span>
+
+            <h3 className="text-3xl text-(--bg-table) sm:text-4xl md:text-5xl">
               Let&apos;s Get To Work!
             </h3>
           </div>
 
-          <div className="flex items-center">
+          <div className="relative z-10 flex items-center">
             <Link
               href="/contact"
               className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg"

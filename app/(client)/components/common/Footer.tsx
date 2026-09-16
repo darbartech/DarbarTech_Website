@@ -70,7 +70,7 @@ const Footer = () => {
               </span>
 
               <div className="text-xs">
-                <span>MON TO FRI:10:00AM - 6:00PM</span>
+                <span>MON TO FRI | 10:00AM - 6:00PM</span>
                 <span className="block">+123 54253 534 42</span>
               </div>
             </div>

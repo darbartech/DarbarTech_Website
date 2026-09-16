@@ -26,23 +26,25 @@ const contents = [
     altDescription: "Service Image 1",
     btnName: "READ MORE",
     isImageOnLeft: false,
+    href: "/services?service=digital-marketing",
   },
   {
-    topic: "Digital Marketing",
+    topic: "Branding & Design",
     description:
-      "We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.",
+      "We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success. Our branding services shape an identity that people remember and trust.",
     lists: [
-      "SEO",
-      "Digital Marketing",
-      "SEO",
-      "Digital Marketing",
-      "SEO",
-      "Digital Marketing",
+      "Logo Design",
+      "Brand Strategy",
+      "UI / UX Design",
+      "Social Media Kits",
+      "Print & Digital",
+      "Brand Guidelines",
     ],
     imageName: aboutImage2,
     altDescription: "Service Image 2",
     btnName: "READ MORE",
     isImageOnLeft: true,
+    href: "/services?service=web-development",
   },
 ];
 
@@ -62,6 +64,7 @@ const page = () => {
             buttonName={item.btnName}
             lists={item.lists}
             isImageOnLeft={item.isImageOnLeft}
+            href={item.href}
             key={index}
           />
         ))}
@@ -110,10 +113,10 @@ const page = () => {
                 and needs are the inspiration.
               </p>
               <Link
-                href="/contact"
+                href="/services"
                 className="bg-(--secondary-bg-color) text-(--primary-bg-color) px-5 py-2 rounded text-sm"
               >
-                CONTACT US
+                VIEW OUR SERVICES
               </Link>
             </div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 import { CircleCheck } from "lucide-react";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
   buttonName: string;
   lists: string[];
   isImageOnLeft: boolean;
+  href?: string;
 }
 
 const IllustrationAndContent = ({
@@ -20,6 +22,7 @@ const IllustrationAndContent = ({
   buttonName,
   lists,
   isImageOnLeft,
+  href = "/services",
 }: Props) => {
   return (
     <section
@@ -97,9 +100,9 @@ const IllustrationAndContent = ({
           sm:text-lg
           "
         >
-          <button className="rounded-3xl bg-(--secondary-bg-color) px-6 py-2 text-(--primary-bg-color) text-base hover:bg(--secondary-dark-bg-color) hover:cursor-pointer">
+          <Link href={href} className="rounded-3xl bg-(--secondary-bg-color) px-6 py-2 text-(--primary-bg-color) text-base hover:bg(--secondary-dark-bg-color) hover:cursor-pointer">
             {buttonName}
-          </button>
+          </Link>
         </div>
       </div>
 

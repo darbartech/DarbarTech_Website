@@ -42,6 +42,7 @@ const allServices: ServiceItem[] = [
     ],
     imageName: serviceImage1,
     altDescription: "Digital Marketing",
+    btnName: "READ MORE",
     isImageOnLeft: false,
   },
   {
@@ -59,6 +60,7 @@ const allServices: ServiceItem[] = [
     ],
     imageName: serviceImage2,
     altDescription: "Web Development",
+    btnName: "READ MORE",
     isImageOnLeft: true,
   },
   {
@@ -76,6 +78,7 @@ const allServices: ServiceItem[] = [
     ],
     imageName: serviceImage3,
     altDescription: "AI Automation",
+    btnName: "READ MORE",
     isImageOnLeft: false,
   },
   {
@@ -93,6 +96,7 @@ const allServices: ServiceItem[] = [
     ],
     imageName: serviceImage4,
     altDescription: "Branding & Design",
+    btnName: "READ MORE",
     isImageOnLeft: true,
   },
 ];
