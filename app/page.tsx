@@ -3,7 +3,6 @@ import {
   ArrowRight,
   RotateCcw,
   CircleCheck,
-  Plus,
   CircleDashed,
   ChessKnight,
 } from "lucide-react";
@@ -15,6 +14,41 @@ import heroSectionLine from "@/public/home/hero-section-line.png";
 import EnquirySection from "./(client)/components/EnquirySection";
 import Navbar from "./(client)/components/common/Navbar";
 import Footer from "./(client)/components/common/Footer";
+import FaqSection from "./(client)/components/FaqSection";
+import { blogs } from "@/lib/blogs";
+
+const faqItems = [
+  {
+    question: "Which material types can you work with?",
+    answer:
+      "We work with a wide range of material types including papers, fabrics, plastic, wood, and foams. Tell us about your product and we will recommend the best option for your project.",
+  },
+  {
+    question: "How long does a typical project take?",
+    answer:
+      "Timelines depend on the scope and complexity of the work. A standard project is usually completed within a few weeks, and we keep you updated at every stage of the process.",
+  },
+  {
+    question: "Can we request a sample before ordering?",
+    answer:
+      "Yes. We encourage sampling before a full order so you can review the quality, finish, and materials before committing to a larger production run.",
+  },
+  {
+    question: "What is your minimum order quantity?",
+    answer:
+      "There is no fixed minimum for most products. If you have a smaller project in mind, get in touch and we will let you know the most cost-effective way to produce it.",
+  },
+  {
+    question: "Do you provide design support?",
+    answer:
+      "Absolutely. Our in-house team can help refine your designs, prepare print-ready files, and suggest improvements to make your product stand out.",
+  },
+  {
+    question: "How are shipping and delivery handled?",
+    answer:
+      "We handle packaging and shipping for you once the order is ready. Delivery times depend on your location, and we provide tracking details for every shipment.",
+  },
+];
 
 export default function Home() {
   return (
@@ -686,7 +720,7 @@ export default function Home() {
         >
           <div className="space-y-3">
             <h3 className="text-xl text-(--secondary-bg-color) sm:text-2xl">
-              TESTIMONIALS
+              Testimonials
             </h3>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl">
@@ -743,62 +777,7 @@ export default function Home() {
         </section>
 
         {/* FAQ section */}
-        <section
-          className="
-    space-y-10
-    px-5
-    py-10
-
-    sm:px-8
-    sm:py-12
-
-    md:px-12
-    md:py-15
-
-    lg:px-20
-
-    xl:px-30
-  "
-        >
-          <div className="mx-auto max-w-2xl space-y-5 text-center font-bold">
-            <span className="text-(--secondary-bg-color)">FAQ</span>
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl">
-              Frequently Asked Questions
-            </h2>
-
-            <p className="text-base text-(--bg-muted) sm:text-lg">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-              natus, similique cumque sapiente veniam odio commodi eveniet
-              ratione totam rerum.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-15">
-            <Image
-              src={illustration}
-              alt="Illustrator"
-              className="mx-auto h-auto w-full max-w-xl lg:w-[45%]"
-            />
-
-            <div className="w-full space-y-3 lg:w-[55%]">
-              {[1, 2, 3, 4, 5, 6].map((item, index) => (
-                <div
-                  className="flex items-center rounded shadow-md"
-                  key={index}
-                >
-                  <span className="shrink-0 bg-(--secondary-bg-color) px-2 py-3">
-                    <Plus />
-                  </span>
-
-                  <p className="px-4 py-3 text-sm sm:px-6 sm:text-base lg:px-10">
-                    Which material types can you work with?
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <FaqSection illustration={illustration} items={faqItems} />
 
         {/* lets get to work section */}
         <section
@@ -873,14 +852,14 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item, index) => (
+            {blogs.map((item) => (
               <div
                 className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg"
-                key={index}
+                key={item.slug}
               >
                 <Image
-                  src={illustration}
-                  alt="Illustrator"
+                  src={item.image}
+                  alt={item.imageAlt}
                   className="h-auto w-full"
                 />
 
@@ -888,24 +867,27 @@ export default function Home() {
                   <span className="block text-sm sm:text-base">
                     By:{" "}
                     <span className="text-(--secondary-bg-color)">
-                      James Anderson
+                      {item.author}
                     </span>{" "}
-                    / June 26, 2025
+                    / {item.date}
                   </span>
 
                   <h3 className="text-xl text-(--primary-text-color) sm:text-2xl">
-                    How To Boost Your Digital Marketing Agency
+                    {item.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Iure, cumque!
-                  </p>
+                  <p className="text-sm sm:text-base">{item.excerpt}</p>
 
-                  <button className="flex items-center gap-1 text-sm text-(--secondary-bg-color) sm:text-base">
+                  <Link
+                    href={`/blogs/${item.slug}`}
+                    className="flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color) sm:text-base"
+                  >
                     Read More
-                    <ArrowRight size={16} />
-                  </button>
+                    <ArrowRight
+                      size={16}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </Link>
                 </div>
               </div>
             ))}
