@@ -257,7 +257,7 @@ const page = () => {
         {/* call to action banner */}
         <section className="bg-(--primary-text-color) mt-10">
           <div className="relative bg-[url('/about/illustrator2.png')] bg-cover bg-center">
-            <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+            <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
             <div className="relative z-10 space-y-5 px-5 py-12 text-center text-(--primary-bg-color) sm:px-8 sm:py-15 md:px-12 lg:px-20 xl:px-30">
               <h2 className="text-3xl sm:text-4xl md:text-5xl">

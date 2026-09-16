@@ -83,7 +83,7 @@ const Footer = () => {
 
               <div className="text-xs">
                 <span>DO YOU HAVE A QUESTION?</span>
-                <span className="block">info@darbartech.com</span>
+                <a href="mailto:info@darbartech.com" className="block hover:text-(--secondary-bg-color)" >info@darbartech.com</a>
               </div>
             </div>
 

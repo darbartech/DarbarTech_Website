@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useSyncExternalStore, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,16 +38,16 @@ const navLinks = [
 
 const servicesLinks = [
   {
-    label: "Service One",
-    href: "/services/service-one",
+    label: "Digital Marketing",
+    href: "/services?service=digital-marketing",
   },
   {
-    label: "Service Two",
-    href: "/services/service-two",
+    label: "Web Development",
+    href: "/services?service=web-development",
   },
   {
-    label: "Service Three",
-    href: "/services/service-three",
+    label: "AI Automation",
+    href: "/services?service=ai-automation",
   },
 ];
 
@@ -85,6 +85,13 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const [isserviceOpen, setIsserviceOpen] = useState(false);
+
+  // Active service selected on the services page (read from query param)
+  const activeService = useSyncExternalStore(
+    () => () => {},
+    () => new URLSearchParams(window.location.search).get("service") ?? "",
+    () => "",
+  );
 
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -226,6 +233,7 @@ const Navbar = () => {
                             -translate-x-1/2
                             translate-y-2
                             flex-col
+                            gap-2
                             rounded-xl
                             bg-(--primary-bg-color)
                             p-2
@@ -239,22 +247,28 @@ const Navbar = () => {
                             sm:w-52
                           "
                         >
-                          {servicesLinks.map((service) => (
-                            <Link
-                              key={service.href}
-                              href={service.href}
-                              className={`
+                          {servicesLinks.map((service) => {
+                            const serviceParam = new URLSearchParams(
+                              service.href.split("?")[1] ?? "",
+                            ).get("service");
+
+                            return (
+                              <Link
+                                key={service.href}
+                                href={service.href}
+                                className={`
                                 ${desktopserviceButtonClasses}
                                 ${
-                                  pathname === service.href
+                                  activeService === serviceParam
                                     ? "bg-(--secondary-bg-color) text-(--primary-bg-color)"
                                     : ""
                                 }
                               `}
-                            >
-                              {service.label}
-                            </Link>
-                          ))}
+                              >
+                                {service.label}
+                              </Link>
+                            );
+                          })}
                         </div>
                       )}
                     </li>
