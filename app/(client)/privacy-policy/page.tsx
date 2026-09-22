@@ -1,6 +1,5 @@
 import React from "react";
 import HeroSectionForPages from "../components/HeroSectionForPages";
-import EnquirySection from "../components/EnquirySection";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 
@@ -57,7 +56,6 @@ const page = () => {
           ))}
         </section>
 
-        <EnquirySection />
       </main>
       <Footer />
     </>

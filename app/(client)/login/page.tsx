@@ -261,7 +261,7 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isLoadingStore || isLoading}
-            className="w-full bg-(--secondary-bg-color) text-(--primary-bg-color) font-semibold py-2 px-4 rounded-lg hover:bg-(--secondary-bg-color) hover:scale-95 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full font-semibold py-2 px-4 rounded-lg btn-primary-hover-state focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing In..." : "Sign In"}
           </button>

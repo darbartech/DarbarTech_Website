@@ -7,7 +7,6 @@ import { blogs, getBlogBySlug } from "@/lib/blogs";
 import Navbar from "../../components/common/Navbar";
 import Footer from "../../components/common/Footer";
 import HeroSectionForPages from "../../components/HeroSectionForPages";
-import EnquirySection from "../../components/EnquirySection";
 
 const BlogDetailPage = async ({
   params,
@@ -32,7 +31,7 @@ const BlogDetailPage = async ({
       <Navbar />
 
       <main className="font-bold">
-        <HeroSectionForPages title="Blogs" breadcrumbLabel="blogs" />
+        <HeroSectionForPages title="Blogs" />
 
         <section className="space-y-8 px-5 pb-10 pt-5 sm:px-8 sm:pb-12 md:px-12 md:pb-15 lg:px-20 xl:px-30">
           <div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row lg:items-start">
@@ -114,7 +113,7 @@ const BlogDetailPage = async ({
               <Link
                 key={item.slug}
                 href={`/blogs/${item.slug}`}
-                className="group flex flex-col overflow-hidden rounded-lg text-(--bg-muted) shadow-lg transition-all hover:shadow-xl"
+                className="group flex flex-col overflow-hidden rounded-lg text-(--bg-muted) shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
               >
                 <Image
                   src={item.image}
@@ -151,8 +150,6 @@ const BlogDetailPage = async ({
             ))}
           </div>
         </section>
-
-        <EnquirySection />
       </main>
 
       <Footer />

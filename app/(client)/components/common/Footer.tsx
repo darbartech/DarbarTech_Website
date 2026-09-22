@@ -83,7 +83,7 @@ const Footer = () => {
 
               <div className="text-xs">
                 <span>DO YOU HAVE A QUESTION?</span>
-                <a href="mailto:info@darbartech.com" className="block hover:text-(--secondary-bg-color)" >info@darbartech.com</a>
+                <a href="mailto:info@darbartech.com" className="block hover:text-(--secondary-bg-color)" title="info@darbartech.com" >info@darbartech.com</a>
               </div>
             </div>
 
@@ -98,11 +98,11 @@ const Footer = () => {
 
                 <div className="mt-1 flex items-center gap-2">
                   <Link href="https://www.facebook.com/share/1HCzzUGhmJ/">
-                    <Image src={facebookImage} alt="Facebook Image" className="h-5 w-5 hover:cursor-pointer"/>
+                    <Image src={facebookImage} alt="Facebook Image" className="h-5 w-5 hover:cursor-pointer" title="DarbarTech"/>
                   </Link>
 
                   <Link href="https://www.instagram.com/darbartech?stkn=MW5ramM5ajY0ZDl1Nw==">
-                    <Image src={instagramImage} alt="Instagram Image" className="h-5 w-5 hover:cursor-pointer"/>
+                    <Image src={instagramImage} alt="Instagram Image" className="h-5 w-5 hover:cursor-pointer" title="darbartech"/>
                   </Link>
 
                   <Link href="">

@@ -52,7 +52,7 @@ const servicesLinks = [
 ];
 
 const linkClasses =
-  "flex items-center py-2 hover:cursor-pointer relative w-full overflow-hidden transition-all duration-200 ease-in-out after:content-[''] after:w-full after:h-1 after:absolute after:-left-full after:bottom-0 after:bg-(--accent-color) hover:after:left-0 after:transition-all after:duration-300 after:ease-in-out";
+  "flex items-center py-2 hover:cursor-pointer relative w-full overflow-hidden transition-all duration-200 ease-in-out after:content-[''] after:w-full after:h-1 after:absolute after:-left-full after:bottom-0 after:bg-(--secondary-bg-color) hover:after:left-0 after:transition-all after:duration-300 after:ease-in-out";
 
 const desktopserviceButtonClasses = `
   w-full
@@ -77,7 +77,7 @@ const popoverServiceLinkClasses = `
   text-sm
   transition-all
   hover:cursor-pointer
-  hover:text-(--accent-color)
+  hover:text-(--secondary-bg-color)
   hover:shadow-md
 `;
 
@@ -170,7 +170,7 @@ const Navbar = () => {
                           onClick={toggleservice}
                           className={`
                             ${linkClasses}
-                            ${active ? "text-(--accent-color)" : ""}
+                            ${active ? "text-(--secondary-bg-color)" : ""}
                           `}
                         >
                           <span>{link.label}</span>
@@ -211,7 +211,7 @@ const Navbar = () => {
                           aria-current={active ? "page" : undefined}
                           className={`
                             ${linkClasses}
-                            ${active ? "text-(--accent-color)" : ""}
+                            ${active ? "text-(--secondary-bg-color)" : ""}
                           `}
                         >
                           <span>{link.label}</span>
@@ -286,10 +286,7 @@ const Navbar = () => {
                 px-4
                 py-2
                 text-sm
-                transition-all
-                hover:cursor-pointer
-                hover:ring-2
-                hover:ring-(--secondary-bg-color)
+                btn-secondary-hover-state
                 xl:px-5
                 xl:text-base
               "
@@ -301,17 +298,12 @@ const Navbar = () => {
               href="/register"
               className="
                 rounded-4xl
-                bg-(--secondary-bg-color)
                 px-4
                 py-2
                 text-sm
-                text-(--primary-bg-color)
-                transition-all
-                hover:cursor-pointer
-                hover:bg-(--primary-bg-color)
-                hover:text-(--secondary-bg-color)
-                hover:outline-2
-                hover:outline-(--secondary-bg-color)
+
+                btn-primary-hover-state
+                
                 xl:px-5
                 xl:text-base
               "
@@ -374,7 +366,7 @@ const Navbar = () => {
                   ${popoverServiceLinkClasses}
                   ${
                     pathname === service.href
-                      ? "bg-(--secondary-bg-color)/10 text-(--accent-color)"
+                      ? "bg-(--secondary-bg-color)/10 text-(--secondary-bg-color)"
                       : ""
                   }
                 `}
@@ -404,7 +396,7 @@ const Navbar = () => {
                   hover:cursor-pointer
                   ${
                     isserviceActive
-                      ? "text-(--accent-color)"
+                      ? "text-(--secondary-bg-color)"
                       : "text-(--bg-muted)"
                   }
                 `}
@@ -429,7 +421,7 @@ const Navbar = () => {
                   transition-colors
                   ${
                     isActive("/about")
-                      ? "text-(--accent-color)"
+                      ? "text-(--secondary-bg-color)"
                       : "text-(--bg-muted)"
                   }
                 `}
@@ -454,7 +446,7 @@ const Navbar = () => {
                   transition-colors
                   ${
                     isActive("/")
-                      ? "text-(--accent-color)"
+                      ? "text-(--secondary-bg-color)"
                       : "text-(--bg-muted)"
                   }
                 `}
@@ -505,7 +497,7 @@ const Navbar = () => {
                   transition-colors
                   ${
                     isActive("/case-study")
-                      ? "text-(--accent-color)"
+                      ? "text-(--secondary-bg-color)"
                       : "text-(--bg-muted)"
                   }
                 `}
@@ -530,7 +522,7 @@ const Navbar = () => {
                   transition-colors
                   ${
                     profileActive
-                      ? "text-(--accent-color)"
+                      ? "text-(--secondary-bg-color)"
                       : "text-(--bg-muted)"
                   }
                 `}

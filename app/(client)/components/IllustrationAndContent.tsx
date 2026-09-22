@@ -100,7 +100,7 @@ const IllustrationAndContent = ({
           sm:text-lg
           "
         >
-          <Link href={href} className="rounded-3xl bg-(--secondary-bg-color) px-6 py-2 text-(--primary-bg-color) text-base hover:bg(--secondary-dark-bg-color) hover:cursor-pointer">
+          <Link href={href} className="rounded-3xl px-6 py-2 text-base btn-primary-hover-state">
             {buttonName}
           </Link>
         </div>

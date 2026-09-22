@@ -13,7 +13,6 @@ import serviceImage4 from "@/public/services/image 24.png";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-import EnquirySection from "../components/EnquirySection";
 
 interface ServiceItem {
   slug: string;
@@ -212,7 +211,7 @@ const ServicePageContent = () => {
             <Link
               key={item.slug}
               href={`/services?service=${item.slug}`}
-              className="group flex flex-col overflow-hidden rounded-md shadow-md transition-all hover:shadow-lg"
+              className="group flex flex-col overflow-hidden rounded-md shadow-md hover-state"
             >
               <Image
                 src={item.imageName}
@@ -244,7 +243,6 @@ const ServicePageContent = () => {
         </div>
       </section>
 
-      <EnquirySection />
     </main>
   );
 };

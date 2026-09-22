@@ -1,52 +1,95 @@
 @import "tailwindcss";
 
-html{
+html {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-
 }
 
+body {
+  font-family: var(--font-poppins), sans-serif;
+}
 
 :root {
   /* user */
-  --primary-bg-color: #FFFFFF;
+  --primary-bg-color: #ffffff;
   --primary-text-color: #000000;
 
-  --secondary-bg-color: #FF591E;
-  --secondary-dark-bg-color: #FF391E;
+  --secondary-bg-color: #ff591e;
+  --secondary-dark-bg-color: #ff391e;
 
-  --accent-color : #FB432C;
-  --gray-color: #3F3C3C;
+  --accent-color: #fb432c;
+  --gray-color: #3f3c3c;
 
-  --bg-muted: #928C8C;
-  --surface: #D9D9D9;
+  --bg-muted: #928c8c;
+  --surface: #d9d9d9;
   --bg-table: #f9f9f9;
-  
+
   --bg-footer: #282828;
-  
+
   /* dashboard */
-  --bg-primary-dashboard:#F9F9FF;
-  --bg-dashboard-hero: #0D1C32;
+  --bg-primary-dashboard: #f9f9ff;
+  --bg-dashboard-hero: #0d1c32;
 
-  --text-primary-dashboard: #111C2D;
+  --text-primary-dashboard: #111c2d;
 
-  --border-primary-dashboard: #C5C6CD;
+  --border-primary-dashboard: #c5c6cd;
 
-  --bg-lightblue: #00D2FF;
-  --color-shape: #00D2FF;
+  --bg-lightblue: #00d2ff;
+  --color-shape: #00d2ff;
 
-  --secondary-bg-dashboard: #DEE8FF;
+  --secondary-bg-dashboard: #dee8ff;
 
   --secondary-text-dashboard: #007f02;
 
-  --tertiary-text-dashboard: #44474D;
+  --tertiary-text-dashboard: #44474d;
 
   --success-dashboard: #007f02;
-  --warning-dashboard: #F59E0B;
-  --danger-dashboard: #FF3B30;
-  --info-dashboard: #2563EB;
-  --violet-dashboard: #7C3AED;
+  --warning-dashboard: #f59e0b;
+  --danger-dashboard: #ff3b30;
+  --info-dashboard: #2563eb;
+  --violet-dashboard: #7c3aed;
+}
 
-  
+/* card hover state */
+.hover-state {
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+.hover-state:hover {
+  transform: translateY(-10px);
+}
+
+/* button hover state */
+
+/* for button with border only */
+.btn-secondary-hover-state {
+  cursor: pointer;
+  border: 2px solid var(--secondary-bg-color);
+  color: var(--secondary-bg-color);
+  background-color: var(--primary-bg-color);
+  transition: all 300ms ease;
+
+}
+
+.btn-secondary-hover-state:hover {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-bg-color);
+  text-decoration: underline;
+}
+
+/* for button with background only */
+.btn-primary-hover-state {
+  cursor: pointer;
+  border: 2px solid var(--secondary-bg-color);
+  transition: all 300ms ease;
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-bg-color)
+}
+
+.btn-primary-hover-state:hover {
+  background-color: var(--primary-bg-color);
+  color: var(--secondary-bg-color);
+  text-decoration: underline;
 }

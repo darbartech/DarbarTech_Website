@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import HeroSectionForPages from "../components/HeroSectionForPages";
-import EnquirySection from "../components/EnquirySection";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import { useToastStore } from "@/components/common/toast-store";
@@ -150,7 +149,7 @@ const ContactPage = () => {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-(--secondary-bg-color) px-6 py-3 text-(--primary-bg-color) transition-all hover:cursor-pointer hover:opacity-90"
+                className="w-full rounded-lg btn-primary-hover-state px-6 py-3 "
               >
                 Send Message
               </button>
@@ -158,7 +157,6 @@ const ContactPage = () => {
           </div>
         </section>
 
-        <EnquirySection />
       </main>
       <Footer />
     </>

@@ -5,7 +5,6 @@ import image3 from "@/public/portfolio/image3.jpg";
 import image4 from "@/public/portfolio/image4.jpg";
 import image5 from "@/public/portfolio/image5.jpg";
 import Image from "next/image";
-import EnquirySection from "../components/EnquirySection";
 
 const images = [
   {
@@ -88,8 +87,7 @@ const page = () => {
           GET IN TOUCH
         </button>
       </section>
-
-      <EnquirySection />
+          
     </main>
   );
 };

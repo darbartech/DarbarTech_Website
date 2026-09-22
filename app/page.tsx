@@ -11,11 +11,72 @@ import logo from "@/public/file.svg";
 import illustration from "@/public/home/illustrator2.png";
 import illustration2 from "@/public/home/illustrator2.png";
 import heroSectionLine from "@/public/home/hero-section-line.png";
-import EnquirySection from "./(client)/components/EnquirySection";
 import Navbar from "./(client)/components/common/Navbar";
 import Footer from "./(client)/components/common/Footer";
 import FaqSection from "./(client)/components/FaqSection";
+import Testimonials from "./(client)/components/Testimonials";
 import { blogs } from "@/lib/blogs";
+
+const testimonials = [
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "Ram Bahadur",
+    role: "Developer",
+  },
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "Sita Sharma",
+    role: "Designer",
+  },
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "John Doe",
+    role: "Manager",
+  },
+
+  
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "Sita Sharma",
+    role: "Designer",
+  },
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "John Doe",
+    role: "Manager",
+  },
+  
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "Sita Sharma",
+    role: "Designer",
+  },
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "John Doe",
+    role: "Manager",
+  },
+  
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "Sita Sharma",
+    role: "Designer",
+  },
+  {
+    quote:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
+    person: "John Doe",
+    role: "Manager",
+  },
+];
 
 const faqItems = [
   {
@@ -42,6 +103,11 @@ const faqItems = [
     question: "Do you provide design support?",
     answer:
       "Absolutely. Our in-house team can help refine your designs, prepare print-ready files, and suggest improvements to make your product stand out.",
+  },
+  {
+    question: "How are shipping and delivery handled?",
+    answer:
+      "We handle packaging and shipping for you once the order is ready. Delivery times depend on your location, and we provide tracking details for every shipment.",
   },
   {
     question: "How are shipping and delivery handled?",
@@ -342,20 +408,12 @@ export default function Home() {
         mx-auto
         inline-block
         rounded-4xl
-        bg-(--secondary-bg-color)
         px-6
         py-3
         text-base
-        text-(--primary-bg-color)
         border-2
-        border-(--secondary-bg-color)
 
-        hover:cursor-pointer
-        hover:border-(--secondary-bg-color)
-        hover:bg-(--primary-bg-color)
-        hover:text-(--secondary-bg-color)
-        transition-all
-        duration-300
+        btn-primary-hover-state
 
         sm:px-7
         sm:py-3.5
@@ -484,13 +542,16 @@ export default function Home() {
     "
           >
             {[1, 2, 3, 4].map((item, index) => (
-              <div
+              <Link
+                href="/about"
                 className="
           space-y-2
           rounded-lg
           px-4
           py-7
+          group
           shadow-[5px_5px_15px_rgba(0,0,0,0.15)]
+          hover-state
 
           sm:px-5
           sm:py-8
@@ -512,19 +573,19 @@ export default function Home() {
                   Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                   Corporis, repudiandae?
                 </p>
-
-                <Link
-                  href="/about"
-                  className="text-sm text-(--accent-color) sm:text-md"
-                >
-                  Discover more
-                </Link>
-              </div>
+                <span className="inline-flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color)">
+                  Discover More
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </span>
+              </Link>
             ))}
           </div>
         </section>
 
-        {/* illustrator and description */}
+        {/* illustrator and description karlson template */}
         <section
           className="
     flex
@@ -615,14 +676,14 @@ export default function Home() {
             >
               <Link
                 href="/contact"
-                className="rounded-3xl border border-(--secondary-bg-color) px-7 py-2 text-(--accent-color)"
+                className="rounded-3xl px-7 py-2 btn-secondary-hover-state"
               >
                 Contact Us
               </Link>
 
               <Link
                 href="/about"
-                className="rounded-3xl bg-(--secondary-bg-color) px-7 py-2 text-(--primary-bg-color)"
+                className="rounded-3xl px-7 py-2 btn-primary-hover-state"
               >
                 Read More
               </Link>
@@ -683,7 +744,7 @@ export default function Home() {
 
             <Link
               href="/about"
-              className="rounded bg-(--secondary-bg-color) px-6 py-3 text-sm text-(--primary-bg-color) sm:px-8 sm:text-md"
+              className="rounded px-6 py-3 text-sm btn-primary-hover-state sm:px-8 sm:text-md"
             >
               DISCOVER MORE
             </Link>
@@ -699,82 +760,7 @@ export default function Home() {
         </section>
 
         {/* testimonials section */}
-        <section
-          className="
-    space-y-10
-    px-5
-    py-10
-    text-center
-    font-bold
-
-    sm:px-8
-    sm:py-12
-
-    md:px-12
-    md:py-15
-
-    lg:px-20
-
-    xl:px-30
-  "
-        >
-          <div className="space-y-3">
-            <h3 className="text-xl text-(--secondary-bg-color) sm:text-2xl">
-              Testimonials
-            </h3>
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl">
-              Our Featured Solutions
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item, index) => (
-              <div
-                className="
-          space-y-5
-          rounded-lg
-          border-2
-          border-(--surface)
-          p-4
-          text-smx
-          shadow-xs
-        "
-                key={index}
-              >
-                <p className="text-justify text-base text-(--bg-muted) sm:text-lg">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-                  vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf
-                  ksd flkasdf slsdklj sdkjf lsd klsdj f
-                </p>
-
-                <div className="flex items-center justify-start gap-2 text-start font-bold">
-                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                    <Image
-                      src={illustration}
-                      alt="Profile Image"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  <div>
-                    <h3 className="-mb-1 text-lg sm:text-xl">Ram Bahadur</h3>
-
-                    <p className="text-sm text-(--secondary-bg-color)">
-                      Developer
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-center gap-1">
-            <button className="h-3 w-3 rounded-full bg-(--secondary-bg-color)" />
-            <button className="h-3 w-3 rounded-full bg-(--surface)" />
-            <button className="h-3 w-3 rounded-full bg-(--surface)" />
-          </div>
-        </section>
+        <Testimonials illustration={illustration} testimonials={testimonials} />
 
         {/* FAQ section */}
         <FaqSection illustration={illustration} items={faqItems} />
@@ -821,7 +807,7 @@ export default function Home() {
           <div className="relative z-10 flex items-center">
             <Link
               href="/contact"
-              className="rounded bg-(--secondary-bg-color) px-6 py-3 text-base text-(--primary-bg-color) sm:px-8 sm:text-lg"
+              className="rounded px-6 py-3 text-base btn-primary-hover-state sm:px-8 sm:text-lg"
             >
               CONTACT US
             </Link>
@@ -854,13 +840,13 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {blogs.map((item) => (
               <div
-                className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg"
+                className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg hover-state"
                 key={item.slug}
               >
                 <Image
                   src={item.image}
                   alt={item.imageAlt}
-                  className="h-auto w-full"
+                  className="h-80 w-full object-cover"
                 />
 
                 <div className="space-y-4 px-4 py-4 sm:space-y-5">
@@ -893,9 +879,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* enquiry section */}
-        <EnquirySection />
       </main>
       <Footer />
     </>

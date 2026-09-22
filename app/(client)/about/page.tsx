@@ -5,7 +5,6 @@ import IllustrationAndContent from "../components/IllustrationAndContent";
 import aboutImage from "@/public/about/illustrator2.png";
 import aboutImage2 from "@/public/about/illustrator2.png";
 import { CircleCheck, PlayIcon } from "lucide-react";
-import EnquirySection from "../components/EnquirySection";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 
@@ -114,7 +113,7 @@ const page = () => {
               </p>
               <Link
                 href="/services"
-                className="bg-(--secondary-bg-color) text-(--primary-bg-color) px-5 py-2 rounded text-sm"
+                className="btn-primary-hover-state px-5 py-2 rounded text-sm"
               >
                 VIEW OUR SERVICES
               </Link>
@@ -133,7 +132,6 @@ const page = () => {
           </div>
         </section>
 
-        <EnquirySection />
       </main>
       <Footer />
     </>

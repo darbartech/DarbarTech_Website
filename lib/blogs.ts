@@ -64,21 +64,6 @@ export const blogs: Blog[] = [
       "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.",
     ],
   },
-  {
-    slug: "branding-more-than-logo",
-    title: "Branding Is More Than A Logo",
-    author: "Priya Shrestha",
-    date: "August 21, 2025",
-    excerpt:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iure, cumque!",
-    image: portfolioImage,
-    imageAlt: "Branding Work",
-    content: [
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-      "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
-      "Dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    ],
-  },
 ];
 
 export const getBlogBySlug = (slug: string): Blog | undefined =>

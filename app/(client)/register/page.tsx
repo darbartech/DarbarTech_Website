@@ -280,7 +280,7 @@ export default function SignupForm() {
           <button
             type="submit"
             disabled={isLoadingStore || isLoading}
-            className="w-full bg-(--secondary-bg-color) text-(--primary-bg-color) font-semibold py-2 px-4 rounded-lg  focus:outline-none focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-150 hover:cursor-pointer"
+            className="w-full btn-primary-hover-state font-semibold py-2 px-4 rounded-lg  focus:outline-none focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed "
           >
             {isLoading ? "Creating Account..." : "Create Account"}
           </button>
