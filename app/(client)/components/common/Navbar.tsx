@@ -12,6 +12,7 @@ import {
   Info,
   Layers,
   User,
+  ArrowRight
 } from "lucide-react";
 
 import logo from "@/public/logos/dark_logo.png";
@@ -33,6 +34,10 @@ const navLinks = [
   {
     label: "Case Study",
     href: "/case-study",
+  },
+  {
+    label: "Contact",
+    href: "/contact",
   },
 ];
 
@@ -279,10 +284,13 @@ const Navbar = () => {
           </div>
 
           {/* Desktop actions */}
-          <div className="ml-auto hidden items-center gap-2 lg:flex xl:gap-3">
+          <div className="ml-auto hidden items-center gap-2 lg:flex">
             <Link href="/login"
               className="
                 rounded-3xl
+                group
+                flex
+                items-center
                 px-4
                 py-2
                 text-sm
@@ -292,6 +300,12 @@ const Navbar = () => {
               "
             >
               Login
+              <ArrowRight
+                  size={18}
+                  className="
+      arrow
+    "
+                />
             </Link>
 
             <Link

@@ -37,7 +37,6 @@ const testimonials = [
     role: "Manager",
   },
 
-  
   {
     quote:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
@@ -50,7 +49,7 @@ const testimonials = [
     person: "John Doe",
     role: "Manager",
   },
-  
+
   {
     quote:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
@@ -63,7 +62,7 @@ const testimonials = [
     person: "John Doe",
     role: "Manager",
   },
-  
+
   {
     quote:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo vero eius distinctio incidunt. Assumenda, ut. alsk alskdfjosdf ksd flkasdf slsdklj sdkjf lsd klsdj f",
@@ -455,12 +454,7 @@ export default function Home() {
                 <ArrowRight
                   size={18}
                   className="
-      -translate-x-5
-      opacity-0
-      transition-all
-      duration-300
-      group-hover:translate-x-0
-      group-hover:opacity-100
+      arrow
     "
                 />
               </Link>
@@ -576,9 +570,11 @@ export default function Home() {
                 <span className="inline-flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color)">
                   Discover More
                   <ArrowRight
-                    size={16}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
+                  size={18}
+                  className="
+      arrow
+    "
+                />
                 </span>
               </Link>
             ))}
@@ -676,14 +672,20 @@ export default function Home() {
             >
               <Link
                 href="/contact"
-                className="rounded-3xl px-7 py-2 btn-secondary-hover-state"
+                className="group flex items-center rounded-3xl px-7 py-2 btn-secondary-hover-state"
               >
                 Contact Us
+                <ArrowRight
+                  size={18}
+                  className="
+      arrow
+    "
+                />
               </Link>
 
               <Link
                 href="/about"
-                className="rounded-3xl px-7 py-2 btn-primary-hover-state"
+                className="rounded-3xl flex items-center px-7 py-2 btn-primary-hover-state"
               >
                 Read More
               </Link>
@@ -840,7 +842,7 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {blogs.map((item) => (
               <div
-                className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg hover-state"
+                className="overflow-hidden rounded-lg text-(--bg-muted) shadow-lg hover-state group"
                 key={item.slug}
               >
                 <Image
@@ -871,7 +873,7 @@ export default function Home() {
                     Read More
                     <ArrowRight
                       size={16}
-                      className="transition-transform group-hover:translate-x-1"
+                      className="arrow"
                     />
                   </Link>
                 </div>

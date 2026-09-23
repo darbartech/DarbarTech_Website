@@ -151,10 +151,10 @@ const page = () => {
 
               <Link
                 href="/contact"
-                className="inline-flex w-fit items-center gap-1 rounded-3xl btn-primary-hover-state px-6 py-2 text-sm "
+                className="group flex w-fit items-center gap-1 rounded-3xl btn-primary-hover-state px-6 py-2 text-sm "
               >
                 View Full Case Study
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="arrow"/>
               </Link>
             </div>
           </div>
@@ -175,7 +175,7 @@ const page = () => {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {caseStudies.map((item, index) => (
               <div
-                className="flex flex-col overflow-hidden rounded-md shadow-md hover-state"
+                className="group flex flex-col overflow-hidden rounded-md shadow-md hover-state"
                 key={index}
               >
                 <Image
@@ -208,10 +208,10 @@ const page = () => {
 
                   <Link
                     href="/contact"
-                    className="inline-flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color)"
+                    className="flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color)"
                   >
                     Read Case Study
-                    <ArrowRight size={16} />
+                    <ArrowRight size={16} className="arrow"/>
                   </Link>
                 </div>
               </div>
@@ -271,10 +271,10 @@ const page = () => {
 
               <Link
                 href="/contact"
-                className="inline-flex w-fit items-center gap-1 rounded-3xl px-6 py-2 text-sm btn-secondary-hover-state  sm:text-base"
+                className="group flex w-fit mx-auto items-center gap-1 rounded-3xl px-6 py-2 text-sm btn-secondary-hover-state  sm:text-base"
               >
                 Start Your Project
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="arrow"/>
               </Link>
             </div>
           </div>

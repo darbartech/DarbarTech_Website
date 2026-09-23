@@ -96,7 +96,7 @@ const Testimonials = ({ illustration, testimonials }: TestimonialsProps) => {
       <div
         ref={trackRef}
         onScroll={handleScroll}
-        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden scrollbar-none"
       >
         {testimonials.map((item, index) => (
           <div

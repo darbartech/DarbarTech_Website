@@ -12,10 +12,11 @@ import {
   CircleFadingPlus,
   MessageSquareCodeIcon,
   PhoneCall,
+  ArrowRight
 } from "lucide-react";
 
 const linkClasses =
-  "hover:cursor-pointer hover:text-(--secondary-bg-color) transition-all duration-150";
+  "hover:text-(--secondary-bg-color) group flex items-center";
 
 const Footer = () => {
 
@@ -83,7 +84,12 @@ const Footer = () => {
 
               <div className="text-xs">
                 <span>DO YOU HAVE A QUESTION?</span>
-                <a href="mailto:info@darbartech.com" className="block hover:text-(--secondary-bg-color)" title="info@darbartech.com" >info@darbartech.com</a>
+                <a href="mailto:info@darbartech.com" className=" hover:text-(--secondary-bg-color) group flex items-center" title="info@darbartech.com" >info@darbartech.com<ArrowRight
+                  size={18}
+                  className="
+      arrow
+    "
+                /></a>
               </div>
             </div>
 
@@ -122,12 +128,12 @@ const Footer = () => {
           </h3>
 
           <div className="grid grid-cols-2 gap-2 font-semibold">
-            <Link className={linkClasses} href="/">Home</Link>
-            <Link className={linkClasses} href="/about">About</Link>
-            <Link className={linkClasses} href="/contact">Contact</Link>
-            <Link className={linkClasses} href="/services">Services</Link>
-            <Link className={linkClasses} href="">Digital</Link>
-            <Link className={linkClasses} href="">Support</Link>
+            <Link className={linkClasses} href="/">Home<ArrowRight size={18} className="arrow"/></Link>
+            <Link className={linkClasses} href="/about">About<ArrowRight size={18} className="arrow"/></Link>
+            <Link className={linkClasses} href="/contact">Contact<ArrowRight size={18} className="arrow"/></Link>
+            <Link className={linkClasses} href="/services">Services<ArrowRight size={18} className="arrow"/></Link>
+            <Link className={linkClasses} href="">Digital<ArrowRight size={18} className="arrow"/></Link>
+            <Link className={linkClasses} href="">Support<ArrowRight size={18} className="arrow"/></Link>
           </div>
         </div>
 

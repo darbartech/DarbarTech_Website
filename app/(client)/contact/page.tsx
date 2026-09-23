@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, ArrowRight } from "lucide-react";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
@@ -149,9 +149,15 @@ const ContactPage = () => {
 
               <button
                 type="submit"
-                className="w-full rounded-lg btn-primary-hover-state px-6 py-3 "
+                className="w-full group flex items-center justify-center rounded-lg btn-primary-hover-state px-6 py-3 "
               >
                 Send Message
+                <ArrowRight
+                  size={18}
+                  className="
+      arrow
+    "
+                />
               </button>
             </form>
           </div>

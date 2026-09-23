@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import HeroSectionForPages from "../components/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
@@ -276,13 +276,19 @@ export default function LoginForm() {
 
         {/* Switch to Signup */}
         <div className="mt-6 text-center">
-          <p className="text-(--bg-muted)">
+          <p className="text-(--bg-muted) flex items-center justify-center gap-2">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              className="text-(--secondary-bg-color) font-semibold hover:underline"
+              className="text-(--secondary-bg-color) font-semibold focus:outline-none group flex items-center"
             >
               Sign Up
+              <ArrowRight
+                  size={18}
+                  className="
+      arrow
+    "
+                />
             </Link>
           </p>
         </div>

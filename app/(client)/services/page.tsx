@@ -230,11 +230,11 @@ const ServicePageContent = () => {
                   {item.description}
                 </p>
 
-                <span className="inline-flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color)">
+                <span className="group flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color)">
                   Read More
                   <ArrowRight
                     size={16}
-                    className="transition-transform group-hover:translate-x-1"
+                    className="arrow"
                   />
                 </span>
               </div>
