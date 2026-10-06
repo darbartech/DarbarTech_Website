@@ -74,8 +74,6 @@ body {
 }
 
 .btn-secondary-hover-state:hover {
-  background-color: var(--secondary-bg-color);
-  color: var(--primary-bg-color);
   text-decoration: underline;
 }
 

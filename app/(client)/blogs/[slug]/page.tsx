@@ -1,12 +1,38 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
-import { blogs, getBlogBySlug } from "@/lib/blogs";
+import pool from "@/lib/db";
+
 import Navbar from "../../components/common/Navbar";
 import Footer from "../../components/common/Footer";
-import HeroSectionForPages from "../../components/HeroSectionForPages";
+import HeroSectionForPages from "../../components/common/HeroSectionForPages";
+
+export const dynamic = "force-dynamic";
+
+interface BlogListItem {
+  slug: string;
+  title: string;
+  author: string;
+  btnName: string;
+  imageName: string;
+  description: string;
+  date_created: string;
+}
+
+// Blog content lives in the `blogs` table as a single row holding a
+// `lists` jsonb array, which is also what LatestBlogsSection renders.
+const getBlogListItems = async (): Promise<BlogListItem[]> => {
+  const result = await pool.query(
+    `SELECT lists FROM blogs ORDER BY id LIMIT 1`
+  );
+
+  const lists = result.rows[0]?.lists;
+
+  return Array.isArray(lists) ? (lists as BlogListItem[]) : [];
+};
 
 const BlogDetailPage = async ({
   params,
@@ -14,41 +40,41 @@ const BlogDetailPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const blog = getBlogBySlug(slug) ?? blogs[0];
 
-  const otherBlogs = blogs.filter((item) => item.slug !== blog.slug);
+  const blogList = await getBlogListItems();
+  const blog = blogList.find((item) => item.slug === slug);
 
-  const shortDescription = (item: (typeof blogs)[number]) =>
-    item.content
-      .join(" ")
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 30)
-      .join(" ") + "...";
+  if (!blog) {
+    notFound();
+  }
+
+  const otherBlogs = blogList.filter((item) => item.slug !== blog.slug);
 
   return (
     <>
       <Navbar />
 
       <main className="font-bold">
-        <HeroSectionForPages title="Blogs" />
+        <HeroSectionForPages title={blog.title} />
 
         <section className="space-y-8 px-5 pb-10 pt-5 sm:px-8 sm:pb-12 md:px-12 md:pb-15 lg:px-20 xl:px-30">
           <div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row lg:items-start">
             {/* blogs */}
             <div className="mx-auto w-full max-w-4xl space-y-6 lg:mx-0 lg:flex-1">
-<Image
-                src={blog.image}
-                alt={blog.imageAlt}
-                width={800}
-                height={450}
+              <Image
+                src={`/blogs/${blog.imageName}`}
+                alt={blog.title}
+                width={830}
+                height={750}
                 className="h-auto w-full rounded-md shadow-md"
               />
 
               <span className="block text-sm text-(--bg-muted) sm:text-base">
                 By:{" "}
-                <span className="text-(--secondary-bg-color)">{blog.author}</span>{" "}
-                / {blog.date}
+                <span className="text-(--secondary-bg-color)">
+                  {blog.author}
+                </span>{" "}
+                / {blog.date_created}
               </span>
 
               <h2 className="text-2xl text-(--primary-text-color) sm:text-3xl md:text-4xl">
@@ -56,11 +82,9 @@ const BlogDetailPage = async ({
               </h2>
 
               <div className="space-y-4 font-sans sm:space-y-5">
-                {blog.content.map((paragraph, index) => (
-                  <p key={index} className="text-sm text-(--bg-muted) sm:text-base">
-                    {paragraph}
-                  </p>
-                ))}
+                <p className="text-sm text-(--primary-text-color) sm:text-base">
+                  {blog.description}
+                </p>
               </div>
             </div>
 
@@ -70,39 +94,42 @@ const BlogDetailPage = async ({
                 Latest News
               </h3>
 
-              {otherBlogs.map((item) => (
-                <div
-                  key={item.slug}
-                  className="space-y-2 border-b border-(--bg-muted)/40 pb-4 last:border-none last:pb-0"
-                >
-                  <h4 className="text-base text-(--primary-text-color) sm:text-lg">
-                    {item.title}
-                  </h4>
-
-                  <span className="block text-xs text-(--secondary-bg-color) sm:text-sm">
-                    By: {item.author}
-                  </span>
-
-                  <p className="text-xs text-(--bg-muted) sm:text-sm">
-                    {shortDescription(item)}
-                  </p>
-
-                  <Link
-                    href={`/blogs/${item.slug}`}
-                    className="flex w-fit items-center gap-1 text-xs text-(--secondary-bg-color) sm:text-sm"
+              <div className="flex flex-col gap-5">
+                {otherBlogs.map((item) => (
+                  <div
+                    key={item.slug}
+                    className="group hover-state space-y-2 border-b border-(--bg-muted)/40 pb-4 last:border-none last:pb-0"
                   >
-                    Read More
-                    <ArrowRight
-                      size={14}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
-                  </Link>
-                </div>
-              ))}
+                    <h4 className="text-base text-(--primary-text-color) sm:text-lg">
+                      {item.title}
+                    </h4>
+
+                    <span className="block text-xs text-(--secondary-bg-color) sm:text-sm">
+                      By: {item.author}
+                    </span>
+
+                    <p className="text-xs text-(--bg-muted) sm:text-sm">
+                      {item.description}
+                    </p>
+
+                    <Link
+                      href={`/blogs/${item.slug}`}
+                      className="flex w-fit items-center gap-1 text-xs text-(--secondary-bg-color) sm:text-sm"
+                    >
+                      {item.btnName}
+                      <ArrowRight
+                        size={14}
+                        className="arrow"
+                      />
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </aside>
           </div>
         </section>
 
+        {/* other news/blogs section */}
         <section className="space-y-8 bg-(--primary-bg-color) px-5 pb-10 pt-5 sm:px-8 sm:pb-12 md:px-12 md:pb-15 lg:px-20 xl:px-30">
           <h3 className="text-center text-3xl sm:text-4xl md:text-5xl">
             Other News
@@ -113,14 +140,14 @@ const BlogDetailPage = async ({
               <Link
                 key={item.slug}
                 href={`/blogs/${item.slug}`}
-                className="group flex flex-col overflow-hidden rounded-lg text-(--bg-muted) shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+                className="group flex flex-col overflow-hidden rounded-lg text-(--bg-muted) shadow-lg hover-state"
               >
                 <Image
-                  src={item.image}
-                  alt={item.imageAlt}
-                  width={600}
-                  height={375}
-                  className="h-52 w-full object-cover"
+                  src={`/blogs/${item.imageName}`}
+                  alt={item.title}
+                  width={830}
+                  height={750}
+                  className="h-80 w-full object-cover"
                 />
 
                 <div className="flex flex-1 flex-col space-y-4 px-4 py-4 sm:space-y-5">
@@ -129,20 +156,22 @@ const BlogDetailPage = async ({
                     <span className="text-(--secondary-bg-color)">
                       {item.author}
                     </span>{" "}
-                    / {item.date}
+                    / {item.date_created}
                   </span>
 
                   <h4 className="text-xl text-(--primary-text-color) sm:text-2xl">
                     {item.title}
                   </h4>
 
-                  <p className="flex-1 text-sm sm:text-base">{item.excerpt}</p>
+                  <p className="flex-1 text-sm sm:text-base">
+                    {item.description}
+                  </p>
 
                   <span className="flex w-fit items-center gap-1 text-sm text-(--secondary-bg-color) sm:text-base">
-                    Read More
+                    {item.btnName}
                     <ArrowRight
                       size={16}
-                      className="transition-transform group-hover:translate-x-1"
+                      className="arrow"
                     />
                   </span>
                 </div>

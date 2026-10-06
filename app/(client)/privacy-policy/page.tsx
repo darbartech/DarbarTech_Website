@@ -1,5 +1,5 @@
 import React from "react";
-import HeroSectionForPages from "../components/HeroSectionForPages";
+import HeroSectionForPages from "../components/common/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 

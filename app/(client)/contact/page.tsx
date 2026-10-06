@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Mail, MapPin, Phone, ArrowRight } from "lucide-react";
-import HeroSectionForPages from "../components/HeroSectionForPages";
+import HeroSectionForPages from "../components/common/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import { useToastStore } from "@/components/common/toast-store";
@@ -36,7 +36,7 @@ const ContactPage = () => {
         <HeroSectionForPages title="Contact Us" />
 
         <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:px-12">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 ">
             {/* Contact info */}
             <div className="space-y-6">
               <h2 className="text-2xl sm:text-3xl">Get In Touch</h2>

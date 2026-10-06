@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Navbar from "@/app/(client)/components/common/Navbar";
 import Footer from "@/app/(client)/components/common/Footer";
-import HeroSectionForPages from "@/app/(client)/components/HeroSectionForPages";
+import HeroSectionForPages from "@/app/(client)/components/common/HeroSectionForPages";
 import { useAuthStore } from "@/lib/auth/auth-store";
 import { useToastStore } from "@/components/common/toast-store";
 import { authService } from "@/lib/auth/auth-service";

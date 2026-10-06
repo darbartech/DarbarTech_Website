@@ -101,6 +101,17 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      establishSession: (user: User) => {
+        setSessionCookie();
+        set({
+          user,
+          isAuthenticated: true,
+          sessionExpiry: Date.now() + SESSION_DURATION,
+          failedAttempts: 0,
+          lockoutUntil: null,
+        });
+      },
+
       setUser: (user: User) => {
         set({ user });
       },

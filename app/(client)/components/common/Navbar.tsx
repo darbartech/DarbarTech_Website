@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore, useState } from "react";
+import { useSyncExternalStore, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import {
   Info,
   Layers,
   User,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
 import logo from "@/public/logos/dark_logo.png";
@@ -29,30 +29,15 @@ const navLinks = [
   },
   {
     label: "Service",
-    hasDropdown: true
+    hasDropdown: true,
   },
-  {
-    label: "Case Study",
-    href: "/case-study",
-  },
+  // {
+  //   label: "Case Study",
+  //   href: "/case-study",
+  // },
   {
     label: "Contact",
     href: "/contact",
-  },
-];
-
-const servicesLinks = [
-  {
-    label: "Digital Marketing",
-    href: "/services?service=digital-marketing",
-  },
-  {
-    label: "Web Development",
-    href: "/services?service=web-development",
-  },
-  {
-    label: "AI Automation",
-    href: "/services?service=ai-automation",
   },
 ];
 
@@ -87,6 +72,44 @@ const popoverServiceLinkClasses = `
 `;
 
 const Navbar = () => {
+  const [servicesLinks, setServicesLinks] = useState<
+    { label: string; href: string }[]
+  >([]);
+
+  useEffect(() => {
+    const getServicesLinks = async () => {
+      try {
+        const response = await fetch("/api/client/services");
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const links = data.map((service: { title: string }) => {
+          const slug = service.title
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, "and")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+
+          return {
+            label: service.title,
+            href: `/services?service=${slug}`,
+          };
+        });
+
+        setServicesLinks(links);
+      } catch (error) {
+        console.error("Error fetching service links:", error);
+      }
+    };
+
+    getServicesLinks();
+  }, []);
+
   const pathname = usePathname();
 
   const [isserviceOpen, setIsserviceOpen] = useState(false);
@@ -128,13 +151,14 @@ const Navbar = () => {
   const isserviceActive = pathname.startsWith("/services");
 
   // Profile → the user's portal profile when signed in, otherwise the login page
-  const profileHref = isAuthenticated && user
-    ? user.role === "teacher"
-      ? "/teacher/profile"
-      : user.role === "student"
-        ? "/student/profile"
-        : "/admin/profile"
-    : "/login";
+  const profileHref =
+    isAuthenticated && user
+      ? user.role === "teacher"
+        ? "/teacher/profile"
+        : user.role === "student"
+          ? "/student/profile"
+          : "/admin/profile"
+      : "/login";
 
   const profileActive = pathname === profileHref;
 
@@ -147,12 +171,7 @@ const Navbar = () => {
           <div className="flex items-center sm:gap-4 lg:gap-10">
             {/* Logo */}
             <Link href="/" aria-label="Home">
-              <Image
-                src={logo}
-                alt="Logo"
-                priority
-                className="w-40"
-              />
+              <Image src={logo} alt="Logo" priority className="w-40" />
             </Link>
 
             {/* Desktop navigation */}
@@ -285,7 +304,8 @@ const Navbar = () => {
 
           {/* Desktop actions */}
           <div className="ml-auto hidden items-center gap-2 lg:flex">
-            <Link href="/login"
+            <Link
+              href="/login"
               className="
                 rounded-3xl
                 group
@@ -301,11 +321,11 @@ const Navbar = () => {
             >
               Login
               <ArrowRight
-                  size={18}
-                  className="
+                size={18}
+                className="
       arrow
     "
-                />
+              />
             </Link>
 
             <Link
@@ -368,9 +388,7 @@ const Navbar = () => {
               }
             `}
           >
-            <p className="px-4 pb-1 pt-2 text-xs text-(--tertiary-text-color)">
-              Our Services
-            </p>
+            
             {servicesLinks.map((service) => (
               <Link
                 key={service.href}
@@ -499,8 +517,8 @@ const Navbar = () => {
             {/* Case Study */}
             <li>
               <Link
-                href="/case-study"
-                aria-current={isActive("/case-study") ? "page" : undefined}
+                href="/contact"
+                aria-current={isActive("/contact") ? "page" : undefined}
                 className={`
                   flex
                   flex-col
@@ -510,14 +528,14 @@ const Navbar = () => {
                   py-2.5
                   transition-colors
                   ${
-                    isActive("/case-study")
+                    isActive("/contact")
                       ? "text-(--secondary-bg-color)"
                       : "text-(--bg-muted)"
                   }
                 `}
               >
                 <FileText size={22} strokeWidth={2} aria-hidden="true" />
-                <span className="text-[10px]">Case Study</span>
+                <span className="text-[10px]">Contact</span>
               </Link>
             </li>
 

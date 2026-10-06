@@ -1,91 +1,121 @@
-import React from "react";
+
+"use client";
+
 import Link from "next/link";
-import HeroSectionForPages from "../components/HeroSectionForPages";
+import { useEffect, useState } from "react";
+import HeroSectionForPages from "../components/common/HeroSectionForPages";
 import IllustrationAndContent from "../components/IllustrationAndContent";
-import aboutImage from "@/public/about/illustrator2.png";
-import aboutImage2 from "@/public/about/illustrator2.png";
 import { CircleCheck, PlayIcon } from "lucide-react";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 
-const contents = [
-  {
-    topic: "Digital Marketing",
-    description:
-      "We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.",
-    lists: [
-      "SEO",
-      "Email Marketing",
-      "Facebook Marketing",
-      "Data scraping",
-      "Social Marketing",
-      "Digital Youtube Marketing",
-    ],
-    imageName: aboutImage,
-    altDescription: "Service Image 1",
-    btnName: "READ MORE",
-    isImageOnLeft: false,
-    href: "/services?service=digital-marketing",
-  },
-  {
-    topic: "Branding & Design",
-    description:
-      "We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success. Our branding services shape an identity that people remember and trust.",
-    lists: [
-      "Logo Design",
-      "Brand Strategy",
-      "UI / UX Design",
-      "Social Media Kits",
-      "Print & Digital",
-      "Brand Guidelines",
-    ],
-    imageName: aboutImage2,
-    altDescription: "Service Image 2",
-    btnName: "READ MORE",
-    isImageOnLeft: true,
-    href: "/services?service=web-development",
-  },
-];
+interface AboutUsContent {
+  id: number;
+  info: string;
+  title: string;
+  description: string;
+  lists:
+    | string[]
+    | {
+        [key: string]: string;
+      };
+  imageName: string;
+  isImageOnLeft: boolean;
+}
+
+interface AboutUsPillar {
+  id: number;
+  title: string;
+  description: string;
+  items: string[];
+}
 
 const page = () => {
+  const [heroAndWhyChooseUs, setHeroAndWhyChooseUs] = useState<
+    AboutUsContent[]
+  >([]);
+
+  const [pillars, setPillars] = useState<AboutUsPillar[]>([]);
+
+  useEffect(() => {
+    const getAboutUsData = async () => {
+      try {
+        const [contentsResponse, pillarsResponse] = await Promise.all([
+          fetch("/api/client/about/contents"),
+          fetch("/api/client/about/pillars"),
+        ]);
+
+        if (!contentsResponse.ok || !pillarsResponse.ok) {
+          throw new Error("Failed to fetch About Us data");
+        }
+
+        const [contents, pillars] = await Promise.all([
+          contentsResponse.json(),
+          pillarsResponse.json(),
+        ]);
+
+        setHeroAndWhyChooseUs(contents);
+        setPillars(pillars);
+      } catch (error) {
+        console.error("Error fetching about us data:", error);
+      }
+    };
+
+    getAboutUsData();
+  }, []);
+
   return (
     <>
       <Navbar />
+
       <main className="font-bold">
         <HeroSectionForPages title="About Us" />
 
-        {contents.map((item, index) => (
-          <IllustrationAndContent
-            topic={item.topic}
-            description={item.description}
-            image={item.imageName}
-            altDescription={item.altDescription}
-            buttonName={item.btnName}
-            lists={item.lists}
-            isImageOnLeft={item.isImageOnLeft}
-            href={item.href}
-            key={index}
-          />
-        ))}
+        {heroAndWhyChooseUs.map((item) => {
+          const lists = Array.isArray(item.lists)
+            ? item.lists
+            : Object.entries(item.lists).map(
+                ([title, description]) => ({
+                  slug: title.toLowerCase().replace(/\s+/g, "-"),
+                  title,
+                  description,
+                  lists: [],
+                }),
+              );
 
-        {/* history, mission  and who are we section */}
-        <section className="px-5 py-10 sm:px-15 lg:px-30 lg:py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5  text-sm">
-          {[1, 2, 3].map((item, index) => (
-            <div className="space-y-5" key={index}>
+          return (
+            <IllustrationAndContent
+              info={item.info}
+              topic={item.title}
+              description={item.description}
+              lists={lists}
+              image={item.imageName}
+              isImageOnLeft={item.isImageOnLeft}
+              key={item.id}
+            />
+          );
+        })}
+
+        {/* history, mission and who are we section */}
+        <section className="px-5 py-10 sm:px-15 lg:px-30 lg:py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
+          {pillars.map((item) => (
+            <div className="space-y-5" key={item.id}>
               <h3 className="border-b border-(--bg-muted) pb-2 text-2xl">
-                Our Mission
+                {item.title}
               </h3>
+
               <p className="text-(--bg-muted) font-semibold">
-                Real innovations and a positive customer experienceare the heart
-                of successful communication.
+                {item.description}
               </p>
+
               <ul className="space-y-2 font-semibold">
-                {[1, 2, 3, 4].map((item, index) => (
+                {item.items.map((item, index) => (
                   <li className="flex items-center gap-1" key={index}>
                     <span>
                       <CircleCheck size={18} />
                     </span>
-                    List 1
+
+                    {item}
                   </li>
                 ))}
               </ul>
@@ -104,13 +134,16 @@ const page = () => {
               <p className="text-(--secondary-bg-color) text-sm">
                 WATCH OUR VIDEO
               </p>
+
               <h3 className="text-2xl lg:text-5xl">
                 Get Better Solution For Your Business
               </h3>
+
               <p className="text-sm text-(--bg-muted)">
                 No fake products and services. The customer is king. Their lives
                 and needs are the inspiration.
               </p>
+
               <Link
                 href="/services"
                 className="btn-primary-hover-state px-5 py-2 rounded text-sm"
@@ -131,8 +164,8 @@ const page = () => {
             </div>
           </div>
         </section>
-
       </main>
+
       <Footer />
     </>
   );

@@ -1,41 +1,10 @@
 import React from "react";
-import image1 from "@/public/portfolio/image1.jpg";
-import image2 from "@/public/portfolio/image2.jpg";
-import image3 from "@/public/portfolio/image3.jpg";
-import image4 from "@/public/portfolio/image4.jpg";
-import image5 from "@/public/portfolio/image5.jpg";
 import Image from "next/image";
 
-const images = [
-  {
-    label: "Image 1",
-    image: image1,
-    altText: "Image 1",
-  },
-  {
-    label: "Image 2",
-    image: image2,
-    altText: "Image 2",
-  },
-  {
-    label: "Image 3",
-    image: image3,
-    altText: "Image 3",
-  },
-  {
-    label: "Image 4",
-    image: image4,
-    altText: "Image 4",
-  },
-  {
-    label: "Image 5",
-    image: image5,
-    altText: "Image 5",
-  },
-];
+import { portfolioImages } from "@/lib/client/data";
 
-const topRowImages = images.slice(0, 2);
-const bottomRowImages = images.slice(2);
+const topRowImages = portfolioImages.slice(0, 2);
+const bottomRowImages = portfolioImages.slice(2);
 
 const page = () => {
   return (

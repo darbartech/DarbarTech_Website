@@ -1,93 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ClipboardList, Rocket, Search } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
-import HeroSectionForPages from "../components/HeroSectionForPages";
+import HeroSectionForPages from "../components/common/HeroSectionForPages";
 import StatsCounter from "../components/StatsCounter";
-
-import caseImage1 from "@/public/portfolio/image1.jpg";
-import caseImage2 from "@/public/portfolio/image2.jpg";
-import caseImage3 from "@/public/portfolio/image3.jpg";
-import caseImage4 from "@/public/portfolio/image4.jpg";
-import caseImage5 from "@/public/portfolio/image5.jpg";
-
-const stats = [
-  {
-    value: "120+",
-    label: "Projects Delivered",
-  },
-  {
-    value: "85+",
-    label: "Happy Clients",
-  },
-  {
-    value: "12",
-    label: "Industries Served",
-  },
-  {
-    value: "98%",
-    label: "Client Satisfaction",
-  },
-];
-
-const processSteps = [
-  {
-    icon: Search,
-    title: "Discover",
-    description:
-      "We dig deep into your business, audience, and goals to find the exact problem worth solving.",
-  },
-  {
-    icon: ClipboardList,
-    title: "Strategize",
-    description:
-      "A clear roadmap is built around measurable outcomes so every step moves the needle.",
-  },
-  {
-    icon: Rocket,
-    title: "Deliver",
-    description:
-      "We ship fast, measure results, and fine-tune until the numbers speak for themselves.",
-  },
-];
-
-const caseStudies = [
-  {
-    image: caseImage2,
-    category: "Digital Marketing",
-    title: "Growing Organic Traffic for a SaaS Platform",
-    description:
-      "A full-funnel content strategy that turned the brand into a search authority in under a year.",
-    metrics: ["+210% Traffic", "3x Leads", "9 Months"],
-  },
-  {
-    image: caseImage3,
-    category: "Branding",
-    title: "Rebranding a Local Business for Bigger Reach",
-    description:
-      "Fresh identity and messaging that doubled offline-to-online conversions within the first quarter.",
-    metrics: ["+95% Reach", "×2 Sales", "12 Weeks"],
-  },
-  {
-    image: caseImage4,
-    category: "Development",
-    title: "Modernizing an Aging Web Platform",
-    description:
-      "A performance-first rebuild that cut load times and lifted user retention across devices.",
-    metrics: ["-68% Load Time", "+40% Retention", "5 Months"],
-  },
-  {
-    image: caseImage5,
-    category: "Social Media",
-    title: "Turning Social Presence Into Revenue",
-    description:
-      "Consistent content engines and paid campaigns that filled the pipeline every single month.",
-    metrics: ["+150% Followers", "+55% Revenue", "8 Months"],
-  },
-];
+import {
+  stats,
+  processSteps,
+  caseStudies,
+  featuredCaseStudyImage,
+} from "@/lib/client/data";
 
 const page = () => {
   return (
@@ -117,7 +42,7 @@ const page = () => {
         <section className="px-5 py-10 sm:px-6 md:px-10 lg:px-20 xl:px-30">
           <div className="grid grid-cols-1 overflow-hidden rounded-md shadow-md md:grid-cols-2">
             <Image
-              src={caseImage1}
+              src={featuredCaseStudyImage}
               alt="Featured Case Study"
               className="h-60 w-full object-cover sm:h-80 md:h-full"
             />

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import HeroSectionForPages from "../components/HeroSectionForPages";
+import HeroSectionForPages from "../components/common/HeroSectionForPages";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import { useAuthStore } from "@/lib/auth/auth-store";
@@ -53,7 +53,7 @@ export default function LoginForm() {
     password: "",
   });
 
-  const login = useAuthStore((s) => s.login);
+  const establishSession = useAuthStore((s) => s.establishSession);
   const isLoadingStore = useAuthStore((s) => s.isLoading);
   const failedAttempts = useAuthStore((s) => s.failedAttempts);
   const lockoutUntil = useAuthStore((s) => s.lockoutUntil);
@@ -113,34 +113,94 @@ export default function LoginForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isLockedOut) return;
-    if (validateForm()) {
-      setIsLoading(true);
-      try {
-        const result = await login(formData.email, formData.password);
+  const handleSubmit = async (
+  e: React.FormEvent<HTMLFormElement>
+) => {
+  e.preventDefault();
 
-        if (result.success && result.user) {
-          addToast(result.message, "success");
-          const roleRedirects: Record<string, string> = {
-            superadmin: "/admin",
-            admin: "/admin",
-            teacher: "/teacher",
-            student: "/student",
-          };
-          router.push(roleRedirects[result.user.role] || "/student");
-        } else {
-          setErrors({ email: result.message || "Invalid email or password." });
-        }
-      } catch {
-        setErrors({ email: "An error occurred. Please try again." });
-        addToast("An error occurred. Please try again.", "error");
-      } finally {
-        setIsLoading(false);
-      }
+  if (isLockedOut) return;
+
+  if (!validateForm()) {
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.email.trim(),
+        password: formData.password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      setErrors({
+        email: result.message || "Invalid email or password.",
+      });
+
+      addToast(
+        result.message || "Invalid email or password.",
+        "error"
+      );
+
+      return;
     }
-  };
+
+    // Login successful
+    addToast(
+      result.message || "Login successful",
+      "success"
+    );
+
+    // Sync the client auth store so the app is authenticated after redirect
+    if (result.user) {
+      establishSession(result.user);
+    }
+
+    // Redirect based on user role
+    const roleRedirects: Record<string, string> = {
+      superadmin: "/admin",
+      admin: "/admin",
+      teacher: "/teacher",
+      student: "/student",
+      user: "/",
+    };
+
+    // Honour the originally requested path that the proxy passed along,
+    // but only if it is a safe internal path.
+    const requested =
+      new URLSearchParams(window.location.search).get("redirect");
+    const safeRedirect =
+      requested && requested.startsWith("/") && !requested.startsWith("//")
+        ? requested
+        : null;
+
+    const redirectPath =
+      safeRedirect || roleRedirects[result.user?.role] || "/";
+
+    router.push(redirectPath);
+  } catch (error) {
+    console.error("Login error:", error);
+
+    setErrors({
+      email: "An error occurred. Please try again.",
+    });
+
+    addToast(
+      "An error occurred. Please try again.",
+      "error"
+    );
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <>

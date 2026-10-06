@@ -5,7 +5,7 @@ import { Mail, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/app/(client)/components/common/Navbar";
 import Footer from "@/app/(client)/components/common/Footer";
-import HeroSectionForPages from "@/app/(client)/components/HeroSectionForPages";
+import HeroSectionForPages from "@/app/(client)/components/common/HeroSectionForPages";
 import { authService } from "@/lib/auth/auth-service";
 import { useAuthStore } from "@/lib/auth/auth-store";
 import { useToastStore } from "@/components/common/toast-store";
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-(--secondary-bg-color) text-(--primary-bg-color) font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-(--secondary-bg-color) focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-150 hover:cursor-pointer"
+                className="w-full btn-primary-hover-state font-semibold py-2 px-4 rounded-lg "
               >
                 {isLoading ? "Sending..." : "Send Reset Link"}
               </button>
@@ -144,9 +144,9 @@ export default function ForgotPasswordPage() {
             <div className="mt-6 text-center">
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 text-(--secondary-bg-color) font-semibold hover:underline"
+                className="inline-flex items-center group gap-2 text-(--secondary-bg-color) font-semibold hover:underline"
               >
-                <ArrowLeft size={16} />
+                <ArrowLeft size={16} className="arrow" />
                 Back to Login
               </Link>
             </div>

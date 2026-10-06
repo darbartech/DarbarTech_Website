@@ -1,10 +1,6 @@
-
 "use client";
 
-import React, {
-  useReducer,
-  useState,
-} from "react";
+import React, { useReducer, useState, useEffect } from "react";
 
 import {
   Pencil,
@@ -16,100 +12,21 @@ import {
   Eye,
 } from "lucide-react";
 
-const initialHeroData = [
-  {
-    id: 1,
-    name: "heading",
-    content: "Create, impact and apply synthetic",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Primary paragraph",
-    content:
-      "Start with a stunning homepage. Stay motivated without hurting your pocket",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Primary button",
-    content: "Start for free",
-    link: "#cta",
-    status: "active",
-  },
-  {
-    id: 4,
-    name: "Secondary paragraph",
-    content: "Want to talk or get a live demo?",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "Secondary button",
-    content: "Get in touch",
-    link: "/contact",
-    status: "active",
-  },
-  {
-    id: 6,
-    name: "Icon (top-left)",
-    content: "Icon name",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 7,
-    name: "Icon (top-right)",
-    content: "Icon name 2",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 8,
-    name: "Icon (middle-left)",
-    content: "Icon name 3",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 9,
-    name: "Icon (middle-right)",
-    content: "Icon name 4",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 10,
-    name: "Icon (bottom-left)",
-    content: "Icon name 5",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 11,
-    name: "Icon (bottom-right)",
-    content: "Icon name 6",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 12,
-    name: "Line Image",
-    content: "url",
-    link: "",
-    status: "active",
-  },
-];
-
-type HeroItem = (typeof initialHeroData)[number] & {
+type HeroItem = {
+  id: number;
+  name: string;
+  content: string;
+  link: string;
+  status: Status;
   image?: string;
   imageName?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
-
 type Status = "active" | "inactive";
+
+const formatDate = (value?: string) =>
+  value ? new Date(value).toLocaleString() : "-";
 
 // ================= FORM STATE / REDUCER =================
 
@@ -122,6 +39,7 @@ type FormState = {
   editLink: string;
   editImage: string;
   editImageName: string;
+  editImageFile: File | null;
 };
 
 type FormAction =
@@ -132,7 +50,8 @@ type FormAction =
   | { type: "UPDATE_CONTENT"; value: string }
   | { type: "UPDATE_LINK"; value: string }
   | { type: "UPDATE_IMAGE"; value: string }
-  | { type: "UPDATE_IMAGE_NAME"; value: string };
+  | { type: "UPDATE_IMAGE_NAME"; value: string }
+  | { type: "SET_IMAGE_FILE"; file: File | null };
 
 const initialFormState: FormState = {
   selectedItem: null,
@@ -143,12 +62,10 @@ const initialFormState: FormState = {
   editLink: "",
   editImage: "",
   editImageName: "",
+  editImageFile: null,
 };
 
-const formReducer = (
-  state: FormState,
-  action: FormAction,
-): FormState => {
+const formReducer = (state: FormState, action: FormAction): FormState => {
   switch (action.type) {
     case "OPEN_EDIT":
       return {
@@ -161,6 +78,7 @@ const formReducer = (
         editLink: action.item.link,
         editImage: action.item.image ?? "",
         editImageName: action.item.imageName ?? "",
+        editImageFile: null,
       };
 
     case "OPEN_ADD":
@@ -174,6 +92,7 @@ const formReducer = (
         editLink: "",
         editImage: "",
         editImageName: "",
+        editImageFile: null,
       };
 
     case "CLOSE":
@@ -194,6 +113,9 @@ const formReducer = (
     case "UPDATE_IMAGE_NAME":
       return { ...state, editImageName: action.value };
 
+    case "SET_IMAGE_FILE":
+      return { ...state, editImageFile: action.file };
+
     default:
       return state;
   }
@@ -202,15 +124,55 @@ const formReducer = (
 const Page = () => {
   // ================= TABLE DATA =================
 
-  const [heroData, setHeroData] =
-    useState<HeroItem[]>(initialHeroData);
+  const [heroData, setHeroData] = useState<HeroItem[]>([]);
+
+  // ================= LOAD FROM API =================
+
+  const fetchHeroData = async (): Promise<HeroItem[] | null> => {
+    const response = await fetch("/api/client/home/hero-section");
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    const data: HeroItem[] = await response.json();
+
+    return Array.isArray(data) ? data : null;
+  };
+
+  const refreshHeroData = async () => {
+    try {
+      const data = await fetchHeroData();
+
+      if (data) {
+        setHeroData(data);
+      }
+    } catch (error) {
+      console.error("Error fetching hero section content:", error);
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchHeroData()
+      .then((data) => {
+        if (isMounted && data) {
+          setHeroData(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching hero section content:", error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // ================= FORM / MODAL REDUCER =================
 
-  const [formState, dispatch] = useReducer(
-    formReducer,
-    initialFormState,
-  );
+  const [formState, dispatch] = useReducer(formReducer, initialFormState);
 
   const {
     selectedItem,
@@ -221,37 +183,53 @@ const Page = () => {
     editLink,
     editImage,
     editImageName,
+    editImageFile,
   } = formState;
 
   // ================= STATUS DROPDOWN STATE =================
 
-  const [openDropdownId, setOpenDropdownId] =
-    useState<number | null>(null);
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
-  const handleStatusChange = (
-    id: number,
-    status: Status,
-  ) => {
-    setHeroData((previousData) =>
-      previousData.map((item) =>
-        item.id === id
-          ? { ...item, status }
-          : item,
-      ),
-    );
+  const handleStatusChange = async (id: number, status: Status) => {
+    try {
+      const response = await fetch("/api/client/home/hero-section", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          status,
+        }),
+      });
 
-    setOpenDropdownId(null);
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error || `Request failed with status ${response.status}`,
+        );
+      }
+
+      setHeroData((previousData) =>
+        previousData.map((item) =>
+          item.id === id ? { ...item, status: data.data.status } : item,
+        ),
+      );
+
+      setOpenDropdownId(null);
+    } catch (error) {
+      console.error("Error updating hero section status:", error);
+    }
   };
 
   // ================= ACTIONS DROPDOWN STATE =================
 
-  const [openActionsId, setOpenActionsId] =
-    useState<number | null>(null);
+  const [openActionsId, setOpenActionsId] = useState<number | null>(null);
 
   // ================= VIEW MODAL =================
 
-  const [viewItem, setViewItem] =
-    useState<HeroItem | null>(null);
+  const [viewItem, setViewItem] = useState<HeroItem | null>(null);
 
   const handleView = (item: HeroItem) => {
     setOpenActionsId(null);
@@ -280,12 +258,24 @@ const Page = () => {
 
   // ================= DELETE =================
 
-  const handleDelete = (id: number) => {
-    setHeroData((previousData) =>
-      previousData.filter(
-        (item) => item.id !== id,
-      ),
-    );
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(`/api/client/home/hero-section?id=${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error || `Request failed with status ${response.status}`,
+        );
+      }
+
+      await refreshHeroData();
+    } catch (error) {
+      console.error("Error deleting hero section content:", error);
+    }
   };
 
   // ================= CLOSE MODAL =================
@@ -296,9 +286,7 @@ const Page = () => {
 
   // ================= IMAGE SELECT =================
 
-  const handleImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -314,94 +302,96 @@ const Page = () => {
       type: "UPDATE_IMAGE_NAME",
       value: file.name,
     });
+
+    dispatch({
+      type: "SET_IMAGE_FILE",
+      file,
+    });
   };
 
   // ================= SAVE =================
 
-  const handleSave = (
-    event: React.FormEvent,
-  ) => {
+  const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // ================= ADD NEW ITEM =================
+    try {
+      const name = editName.trim();
+      const content = editContent.trim();
+      const link = editLink.trim();
+      const status = isAddMode ? "active" : (selectedItem?.status ?? "active");
 
-    if (isAddMode) {
-      const newId =
-        heroData.length > 0
-          ? Math.max(
-              ...heroData.map(
-                (item) => item.id,
-              ),
-            ) + 1
-          : 1;
+      if (!name || !content) {
+        return;
+      }
 
-      const newItem: HeroItem = {
-        id: newId,
-        name: editName,
-        content: editContent,
-        link: editLink,
-        status: "active",
-        image: editImage,
-        imageName: editImageName,
-      };
+      if (!isAddMode && !selectedItem) {
+        throw new Error("No hero section item selected");
+      }
 
-      setHeroData((previousData) => [
-        ...previousData,
-        newItem,
-      ]);
+      const formData = new FormData();
 
+      formData.append("name", name);
+      formData.append("content", content);
+      formData.append("link", link);
+      formData.append("status", status);
+
+      if (!isAddMode && selectedItem) {
+        formData.append("id", String(selectedItem.id));
+      }
+
+      // Keep the stored filename when no replacement file was chosen.
+      if (!editImageFile && editImageName) {
+        formData.append("imageName", editImageName);
+      }
+
+      if (editImageFile) {
+        formData.append("file", editImageFile);
+      }
+
+      const response = await fetch("/api/client/home/hero-section", {
+        method: isAddMode ? "POST" : "PUT",
+        body: formData,
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error || `Request failed with status ${response.status}`,
+        );
+      }
+
+      await refreshHeroData();
       handleCloseModal();
-
-      return;
+    } catch (error) {
+      console.error("Error saving hero section content:", error);
     }
-
-    // ================= UPDATE EXISTING ITEM =================
-
-    if (!selectedItem) return;
-
-    setHeroData((previousData) =>
-      previousData.map((item) =>
-        item.id === selectedItem.id
-          ? {
-              ...item,
-              name: editName,
-              content: editContent,
-              link: editLink,
-              image: editImage,
-              imageName: editImageName,
-            }
-          : item,
-      ),
-    );
-
-    handleCloseModal();
   };
 
   return (
     <>
       <section className="px-4 py-2">
-          {/* ================= HEADER ================= */}
+        {/* ================= HEADER ================= */}
 
-          <div className="mb-6 flex items-center justify-between gap-4">
-            {/* Header Content */}
+        <div className="mb-6 flex items-center justify-between gap-4">
+          {/* Header Content */}
 
-            <div>
-              <h1 className="text-2xl font-semibold text-(--text-primary-dashboard)">
-                Hero Management
-              </h1>
+          <div>
+            <h1 className="text-2xl font-semibold text-(--text-primary-dashboard)">
+              Hero Management
+            </h1>
 
-              <p className="mt-2 text-sm text-(--text-primary-dashboard)/70">
-                Manage the content displayed in the
-                hero section.
-              </p>
-            </div>
+            <p className="mt-2 text-sm text-(--text-primary-dashboard)/70">
+              Manage the content displayed in the hero section.
+            </p>
+          </div>
 
-            {/* ================= ADD BUTTON ================= */}
+          {/* ================= ADD BUTTON ================= */}
 
-            <button
-              type="button"
-              onClick={handleAdd}
-              className="
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="
                 flex
                 shrink-0
                 items-center
@@ -417,31 +407,30 @@ const Page = () => {
                 hover:opacity-90
                 hover:cursor-pointer
               "
-            >
-              <Plus size={17} />
+          >
+            <Plus size={17} />
+            Add
+          </button>
+        </div>
 
-              Add
-            </button>
-          </div>
+        {/* ================= TABLE ================= */}
 
-          {/* ================= TABLE ================= */}
-
-          <div
-            className="
+        <div
+          className="
               w-full
               overflow-x-auto
               rounded-xl
               border
               border-(--border-primary-dashboard)
             "
-          >
-            <table className="w-full min-w-175 border-collapse">
-              {/* ================= TABLE HEAD ================= */}
+        >
+          <table className="w-full min-w-175 border-collapse">
+            {/* ================= TABLE HEAD ================= */}
 
-              <thead>
-                <tr>
-                  <th
-                    className="
+            <thead>
+              <tr>
+                <th
+                  className="
                       bg-(--bg-table)
                       px-5
                       py-4
@@ -450,12 +439,11 @@ const Page = () => {
                       font-semibold
                       text-(--text-primary-dashboard)
                     "
-                  >
-                    ID
-                  </th>
-
-                  <th
-                    className="
+                >
+                  ID
+                </th>
+                <th
+                  className="
                       bg-(--bg-table)
                       px-5
                       py-4
@@ -464,12 +452,12 @@ const Page = () => {
                       font-semibold
                       text-(--text-primary-dashboard)
                     "
-                  >
-                    Name
-                  </th>
+                >
+                  Name
+                </th>
 
-                  <th
-                    className="
+                <th
+                  className="
                       bg-(--bg-table)
                       px-5
                       py-4
@@ -478,12 +466,12 @@ const Page = () => {
                       font-semibold
                       text-(--text-primary-dashboard)
                     "
-                  >
-                    Content
-                  </th>
+                >
+                  Content
+                </th>
 
-                  <th
-                    className="
+                <th
+                  className="
                       bg-(--bg-table)
                       px-5
                       py-4
@@ -492,12 +480,12 @@ const Page = () => {
                       font-semibold
                       text-(--text-primary-dashboard)
                     "
-                  >
-                    Link
-                  </th>
+                >
+                  Link
+                </th>
 
-                  <th
-                    className="
+                <th
+                  className="
                       bg-(--bg-table)
                       px-5
                       py-4
@@ -506,12 +494,12 @@ const Page = () => {
                       font-semibold
                       text-(--text-primary-dashboard)
                     "
-                  >
-                    Status
-                  </th>
+                >
+                  Status
+                </th>
 
-                  <th
-                    className="
+                <th
+                  className="
                       bg-(--bg-table)
                       px-5
                       py-4
@@ -520,96 +508,93 @@ const Page = () => {
                       font-semibold
                       text-(--text-primary-dashboard)
                     "
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
 
-              {/* ================= TABLE BODY ================= */}
+            {/* ================= TABLE BODY ================= */}
 
-              <tbody>
-                {heroData.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="
+            <tbody>
+              {heroData.map((item) => (
+                <tr
+                  key={item.id}
+                  className="
                       border-t
                       border-(--border-primary-dashboard)
                       transition
                       hover:cursor-pointer
                       hover:bg-(--secondary-bg-dashboard)
                     "
-                  >
-                    {/* ID */}
+                >
+                  {/* ID */}
 
-                    <td
-                      className="
+                  <td
+                    className="
                         px-5
                         py-4
                         text-sm
                         text-(--text-primary-dashboard)
                       "
-                    >
-                      {item.id}
-                    </td>
+                  >
+                    {item.id}
+                  </td>
 
-                    {/* NAME */}
+                  {/* NAME */}
 
-                    <td
-                      className="
+                  <td
+                    className="
                         px-5
                         py-4
                         text-sm
                         font-medium
                         text-(--text-primary-dashboard)
                       "
-                    >
-                      {item.name}
-                    </td>
+                  >
+                    {item.name}
+                  </td>
 
-                    {/* CONTENT */}
+                  {/* CONTENT */}
 
-                    <td
-                      className="
+                  <td
+                    className="
                         px-5
                         py-4
                         text-sm
                         text-(--text-primary-dashboard)
                       "
-                    >
-                      {item.content}
-                    </td>
+                  >
+                    {item.content}
+                  </td>
 
-                    {/* LINK */}
+                  {/* LINK */}
 
-                    <td
-                      className="
+                  <td
+                    className="
                         px-5
                         py-4
                         text-sm
                         text-(--bg-lightblue)
                       "
-                    >
-                      {item.link || "-"}
-                    </td>
+                  >
+                    {item.link || "-"}
+                  </td>
 
-                    {/* STATUS */}
+                  {/* STATUS */}
 
-                    <td className="px-5 py-4">
-                      <div className="relative inline-block">
-                        {/* TRIGGER */}
+                  <td className="px-5 py-4">
+                    <div className="relative inline-block">
+                      {/* TRIGGER */}
 
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenDropdownId(
-                              openDropdownId ===
-                                item.id
-                                ? null
-                                : item.id,
-                            )
-                          }
-                          className={`
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setOpenDropdownId(
+                            openDropdownId === item.id ? null : item.id,
+                          )
+                        }
+                        className={`
                             flex
                             items-center
                             gap-2
@@ -623,52 +608,43 @@ const Page = () => {
                             transition
                             hover:cursor-pointer
                             ${
-                              item.status ===
-                              "active"
+                              item.status === "active"
                                 ? "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)"
                                 : "border-(--danger-dashboard)/30 bg-(--danger-dashboard)/10 text-(--danger-dashboard)"
                             }
                           `}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              item.status ===
-                              "active"
-                                ? "bg-(--success-dashboard)"
-                                : "bg-(--danger-dashboard)"
-                            }`}
-                          />
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            item.status === "active"
+                              ? "bg-(--success-dashboard)"
+                              : "bg-(--danger-dashboard)"
+                          }`}
+                        />
 
-                          {item.status}
+                        {item.status}
 
-                          <ChevronDown
-                            size={14}
-                            className={`transition-transform ${
-                              openDropdownId ===
-                              item.id
-                                ? "rotate-180"
-                                : ""
-                            }`}
-                          />
-                        </button>
+                        <ChevronDown
+                          size={14}
+                          className={`transition-transform ${
+                            openDropdownId === item.id ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
 
-                        {/* DROPDOWN MENU */}
+                      {/* DROPDOWN MENU */}
 
-                        {openDropdownId ===
-                          item.id && (
-                          <div className="absolute right-0 top-full z-10 mt-1 w-32 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
-                            {(["active", "inactive"] as Status[]).map(
-                              (statusOption) => (
-                                <button
-                                  key={statusOption}
-                                  type="button"
-                                  onClick={() =>
-                                    handleStatusChange(
-                                      item.id,
-                                      statusOption,
-                                    )
-                                  }
-                                  className={`
+                      {openDropdownId === item.id && (
+                        <div className="absolute right-0 top-full z-10 mt-1 w-32 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
+                          {(["active", "inactive"] as Status[]).map(
+                            (statusOption) => (
+                              <button
+                                key={statusOption}
+                                type="button"
+                                onClick={() =>
+                                  handleStatusChange(item.id, statusOption)
+                                }
+                                className={`
                                     flex
                                     w-full
                                     items-center
@@ -682,49 +658,44 @@ const Page = () => {
                                     hover:bg-(--secondary-bg-dashboard)
                                     hover:cursor-pointer
                                     ${
-                                      item.status ===
-                                      statusOption
+                                      item.status === statusOption
                                         ? "font-medium text-(--background)"
                                         : "text-(--text-primary-dashboard)"
                                     }
                                   `}
-                                >
-                                  <span
-                                    className={`h-2 w-2 rounded-full ${
-                                      statusOption ===
-                                      "active"
-                                        ? "bg-(--success-dashboard)"
-                                        : "bg-(--danger-dashboard)"
-                                    }`}
-                                  />
+                              >
+                                <span
+                                  className={`h-2 w-2 rounded-full ${
+                                    statusOption === "active"
+                                      ? "bg-(--success-dashboard)"
+                                      : "bg-(--danger-dashboard)"
+                                  }`}
+                                />
 
-                                  {statusOption}
-                                </button>
-                              ),
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </td>
+                                {statusOption}
+                              </button>
+                            ),
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </td>
 
-                    {/* ACTIONS */}
+                  {/* ACTIONS */}
 
-                    <td className="px-5 py-4">
-                      <div className="relative inline-block text-left">
-                        {/* TRIGGER */}
+                  <td className="px-5 py-4">
+                    <div className="relative inline-block text-left">
+                      {/* TRIGGER */}
 
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenActionsId(
-                              openActionsId ===
-                                item.id
-                                ? null
-                                : item.id,
-                            )
-                          }
-                          aria-label="Actions"
-                          className="
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setOpenActionsId(
+                            openActionsId === item.id ? null : item.id,
+                          )
+                        }
+                        aria-label="Actions"
+                        className="
                             flex
                             h-8
                             w-8
@@ -736,23 +707,20 @@ const Page = () => {
                             hover:bg-(--secondary-bg-dashboard)
                             hover:cursor-pointer
                           "
-                        >
-                          <MoreHorizontal size={18} />
-                        </button>
+                      >
+                        <MoreHorizontal size={18} />
+                      </button>
 
-                        {/* DROPDOWN MENU */}
+                      {/* DROPDOWN MENU */}
 
-                        {openActionsId ===
-                          item.id && (
-                          <div className="absolute right-0 top-full z-10 mt-1 w-36 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
-                            {/* VIEW */}
+                      {openActionsId === item.id && (
+                        <div className="absolute right-0 top-full z-10 mt-1 w-36 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
+                          {/* VIEW */}
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleView(item)
-                              }
-                              className="
+                          <button
+                            type="button"
+                            onClick={() => handleView(item)}
+                            className="
                                 flex
                                 w-full
                                 items-center
@@ -766,24 +734,21 @@ const Page = () => {
                                 hover:bg-(--secondary-bg-dashboard)
                                 hover:cursor-pointer
                               "
-                            >
-                              <Eye size={15} />
+                          >
+                            <Eye size={15} />
+                            View
+                          </button>
 
-                              View
-                            </button>
+                          {/* EDIT */}
 
-                            {/* EDIT */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setOpenActionsId(null);
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setOpenActionsId(
-                                  null,
-                                );
-
-                                handleEdit(item);
-                              }}
-                              className="
+                              handleEdit(item);
+                            }}
+                            className="
                                 flex
                                 w-full
                                 items-center
@@ -797,24 +762,21 @@ const Page = () => {
                                 hover:bg-(--secondary-bg-dashboard)
                                 hover:cursor-pointer
                               "
-                            >
-                              <Pencil size={15} />
+                          >
+                            <Pencil size={15} />
+                            Edit
+                          </button>
 
-                              Edit
-                            </button>
+                          {/* DELETE */}
 
-                            {/* DELETE */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setOpenActionsId(null);
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setOpenActionsId(
-                                  null,
-                                );
-
-                                handleDelete(item.id);
-                              }}
-                              className="
+                              handleDelete(item.id);
+                            }}
+                            className="
                                 flex
                                 w-full
                                 items-center
@@ -828,21 +790,20 @@ const Page = () => {
                                 hover:bg-(--danger-dashboard)/10
                                 hover:cursor-pointer
                               "
-                            >
-                              <Trash2 size={15} />
-
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                          >
+                            <Trash2 size={15} />
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* ================================================= */}
       {/* ADD / EDIT MODAL */}
@@ -876,9 +837,7 @@ const Page = () => {
               p-6
               shadow-xl
             "
-            onClick={(event) =>
-              event.stopPropagation()
-            }
+            onClick={(event) => event.stopPropagation()}
           >
             {/* ================= MODAL HEADER ================= */}
 
@@ -899,9 +858,7 @@ const Page = () => {
                     text-(--text-primary-dashboard)
                   "
                 >
-                  {isAddMode
-                    ? "Add Hero Content"
-                    : "Edit Hero Content"}
+                  {isAddMode ? "Add Hero Content" : "Edit Hero Content"}
                 </h2>
 
                 <p
@@ -969,13 +926,9 @@ const Page = () => {
                   value={
                     isAddMode
                       ? heroData.length > 0
-                        ? Math.max(
-                            ...heroData.map(
-                              (item) => item.id,
-                            ),
-                          ) + 1
+                        ? Math.max(...heroData.map((item) => item.id)) + 1
                         : 1
-                      : selectedItem?.id ?? ""
+                      : (selectedItem?.id ?? "")
                   }
                   readOnly
                   className="
@@ -1246,9 +1199,7 @@ const Page = () => {
                     hover:cursor-pointer
                   "
                 >
-                  {isAddMode
-                    ? "Add Content"
-                    : "Save Changes"}
+                  {isAddMode ? "Add Content" : "Save Changes"}
                 </button>
               </div>
             </form>
@@ -1288,9 +1239,7 @@ const Page = () => {
               p-6
               shadow-xl
             "
-            onClick={(event) =>
-              event.stopPropagation()
-            }
+            onClick={(event) => event.stopPropagation()}
           >
             {/* ================= MODAL HEADER ================= */}
 
@@ -1442,14 +1391,67 @@ const Page = () => {
                     text-sm
                     capitalize
                     ${
-                      viewItem.status ===
-                      "active"
+                      viewItem.status === "active"
                         ? "text-(--success-dashboard)"
                         : "text-(--danger-dashboard)"
                     }
                   `}
                 >
                   {viewItem.status}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Image Name
+                </dt>
+
+                <dd className="break-all text-sm text-(--text-primary-dashboard)">
+                  {viewItem.imageName || "-"}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Created At
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {formatDate(viewItem.createdAt)}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Updated At
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {formatDate(viewItem.updatedAt)}
                 </dd>
               </div>
             </dl>

@@ -3,6 +3,7 @@
 import React, {
   useReducer,
   useState,
+  useEffect,
 } from "react";
 
 import {
@@ -10,41 +11,123 @@ import {
   Trash2,
   X,
   Plus,
-  ChevronDown,
   MoreHorizontal,
   Eye,
 } from "lucide-react";
 
-const initialProductData = [
-  {
-    id: 1,
-    name: "heading",
-    content: "Create, impact and apply synthetic",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "subheading",
-    content: "Build meaningful digital experiences for everyone.",
-    link: "",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "button",
-    content: "Explore our services",
-    link: "/services",
-    status: "inactive",
-  },
-];
-
-type ProductItem = (typeof initialProductData)[number] & {
-  image?: string;
-  imageName?: string;
+type ServiceCategory = {
+  slug: string;
+  title: string;
+  description: string;
+  lists: string[];
 };
 
-type Status = "active" | "inactive";
+type ProductItem = {
+  id: number;
+  name: string;
+  content: string;
+  image?: string;
+  imageName?: string;
+  category: ServiceCategory[];
+  altDescription: string;
+  btnName: string;
+  isImageOnLeft: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type ServiceRow = {
+  id: number;
+  title: string;
+  description: string | null;
+  category: ServiceCategory[] | null;
+  image: string | null;
+  altDescription: string | null;
+  btnName: string | null;
+  isImageOnLeft: boolean | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+// The API exposes the `services` schema (title/description/image/...); the
+// form and table use name/content, and the remaining columns are surfaced in
+// the details modal.
+const toProductItem = (row: ServiceRow): ProductItem => ({
+  id: row.id,
+  name: row.title,
+  content: row.description ?? "",
+  image: row.image ? `/services/${row.image}` : "",
+  imageName: row.image ?? "",
+  category: row.category ?? [],
+  altDescription: row.altDescription ?? "",
+  btnName: row.btnName ?? "",
+  isImageOnLeft: row.isImageOnLeft ?? false,
+  createdAt: row.createdAt,
+  updatedAt: row.updatedAt,
+});
+
+const formatDate = (value?: string) =>
+  value ? new Date(value).toLocaleString() : "-";
+
+type CategoryDraft = {
+  slug: string;
+  title: string;
+  description: string;
+  lists: string;
+};
+
+const emptyDraft = (): CategoryDraft => ({
+  slug: "",
+  title: "",
+  description: "",
+  lists: "",
+});
+
+const toDraft = (
+  category: ServiceCategory,
+): CategoryDraft => ({
+  slug: category.slug,
+  title: category.title,
+  description: category.description,
+  lists: category.lists.join(", "),
+});
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const buildCategories = (
+  drafts: CategoryDraft[],
+): ServiceCategory[] => {
+  const used = new Set<string>();
+
+  return drafts.map((draft, index) => {
+    const base =
+      slugify(draft.slug) ||
+      slugify(draft.title) ||
+      `category-${index}`;
+
+    const slug = used.has(base)
+      ? `${base}-${index}`
+      : base;
+
+    used.add(slug);
+
+    return {
+      slug,
+      title: draft.title.trim(),
+      description: draft.description.trim(),
+      lists: draft.lists
+        .split(",")
+        .map((list) => list.trim())
+        .filter(Boolean),
+    };
+  });
+};
 
 // ================= FORM STATE / REDUCER =================
 
@@ -54,9 +137,14 @@ type FormState = {
   isAddMode: boolean;
   editName: string;
   editContent: string;
-  editLink: string;
   editImage: string;
   editImageName: string;
+  editCategory: CategoryDraft[];
+  editAltDescription: string;
+  editBtnName: string;
+  editIsImageOnLeft: boolean;
+  editCreatedAt: string;
+  editUpdatedAt: string;
 };
 
 type FormAction =
@@ -65,9 +153,18 @@ type FormAction =
   | { type: "CLOSE" }
   | { type: "UPDATE_NAME"; value: string }
   | { type: "UPDATE_CONTENT"; value: string }
-  | { type: "UPDATE_LINK"; value: string }
   | { type: "UPDATE_IMAGE"; value: string }
-  | { type: "UPDATE_IMAGE_NAME"; value: string };
+  | { type: "UPDATE_IMAGE_NAME"; value: string }
+  | { type: "ADD_CATEGORY" }
+  | { type: "REMOVE_CATEGORY"; index: number }
+  | {
+      type: "UPDATE_CATEGORY";
+      index: number;
+      category: CategoryDraft;
+    }
+  | { type: "UPDATE_ALT_DESCRIPTION"; value: string }
+  | { type: "UPDATE_BTN_NAME"; value: string }
+  | { type: "UPDATE_IS_IMAGE_ON_LEFT"; value: boolean };
 
 const initialFormState: FormState = {
   selectedItem: null,
@@ -75,9 +172,14 @@ const initialFormState: FormState = {
   isAddMode: false,
   editName: "",
   editContent: "",
-  editLink: "",
   editImage: "",
   editImageName: "",
+  editCategory: [],
+  editAltDescription: "",
+  editBtnName: "",
+  editIsImageOnLeft: false,
+  editCreatedAt: "",
+  editUpdatedAt: "",
 };
 
 const formReducer = (
@@ -93,9 +195,14 @@ const formReducer = (
         isAddMode: false,
         editName: action.item.name,
         editContent: action.item.content,
-        editLink: action.item.link,
         editImage: action.item.image ?? "",
         editImageName: action.item.imageName ?? "",
+        editCategory: action.item.category.map(toDraft),
+        editAltDescription: action.item.altDescription,
+        editBtnName: action.item.btnName,
+        editIsImageOnLeft: action.item.isImageOnLeft,
+        editCreatedAt: action.item.createdAt,
+        editUpdatedAt: action.item.updatedAt,
       };
 
     case "OPEN_ADD":
@@ -106,9 +213,14 @@ const formReducer = (
         isAddMode: true,
         editName: "",
         editContent: "",
-        editLink: "",
         editImage: "",
         editImageName: "",
+        editCategory: [],
+        editAltDescription: "",
+        editBtnName: "",
+        editIsImageOnLeft: false,
+        editCreatedAt: "",
+        editUpdatedAt: "",
       };
 
     case "CLOSE":
@@ -120,14 +232,48 @@ const formReducer = (
     case "UPDATE_CONTENT":
       return { ...state, editContent: action.value };
 
-    case "UPDATE_LINK":
-      return { ...state, editLink: action.value };
-
     case "UPDATE_IMAGE":
       return { ...state, editImage: action.value };
 
     case "UPDATE_IMAGE_NAME":
       return { ...state, editImageName: action.value };
+
+    case "ADD_CATEGORY":
+      return {
+        ...state,
+        editCategory: [
+          ...state.editCategory,
+          emptyDraft(),
+        ],
+      };
+
+    case "REMOVE_CATEGORY":
+      return {
+        ...state,
+        editCategory: state.editCategory.filter(
+          (_, index) => index !== action.index,
+        ),
+      };
+
+    case "UPDATE_CATEGORY":
+      return {
+        ...state,
+        editCategory: state.editCategory.map(
+          (category, index) =>
+            index === action.index
+              ? action.category
+              : category,
+        ),
+      };
+
+    case "UPDATE_ALT_DESCRIPTION":
+      return { ...state, editAltDescription: action.value };
+
+    case "UPDATE_BTN_NAME":
+      return { ...state, editBtnName: action.value };
+
+    case "UPDATE_IS_IMAGE_ON_LEFT":
+      return { ...state, editIsImageOnLeft: action.value };
 
     default:
       return state;
@@ -138,7 +284,57 @@ const Page = () => {
   // ================= TABLE DATA =================
 
   const [productData, setProductData] =
-    useState<ProductItem[]>(initialProductData);
+    useState<ProductItem[]>([]);
+
+  // ================= LOAD FROM API =================
+
+  const fetchServiceData = async (): Promise<
+    ProductItem[] | null
+  > => {
+    const response = await fetch("/api/client/services");
+
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status}`,
+      );
+    }
+
+    const data = await response.json();
+
+    return Array.isArray(data)
+      ? data.map((row: ServiceRow) => toProductItem(row))
+      : null;
+  };
+
+  const refreshServiceData = async () => {
+    try {
+      const data = await fetchServiceData();
+
+      if (data) {
+        setProductData(data);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchServiceData()
+      .then((data) => {
+        if (isMounted && data) {
+          setProductData(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching services:", error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // ================= FORM / MODAL REDUCER =================
 
@@ -153,30 +349,15 @@ const Page = () => {
     isAddMode,
     editName,
     editContent,
-    editLink,
     editImage,
     editImageName,
+    editCategory,
+    editAltDescription,
+    editBtnName,
+    editIsImageOnLeft,
+    editCreatedAt,
+    editUpdatedAt,
   } = formState;
-
-  // ================= STATUS DROPDOWN STATE =================
-
-  const [openDropdownId, setOpenDropdownId] =
-    useState<number | null>(null);
-
-  const handleStatusChange = (
-    id: number,
-    status: Status,
-  ) => {
-    setProductData((previousData) =>
-      previousData.map((item) =>
-        item.id === id
-          ? { ...item, status }
-          : item,
-      ),
-    );
-
-    setOpenDropdownId(null);
-  };
 
   // ================= ACTIONS DROPDOWN STATE =================
 
@@ -215,12 +396,33 @@ const Page = () => {
 
   // ================= DELETE =================
 
-  const handleDelete = (id: number) => {
-    setProductData((previousData) =>
-      previousData.filter(
-        (item) => item.id !== id,
-      ),
-    );
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(
+        `/api/client/services?id=${id}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      const data = await response
+        .json()
+        .catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error ||
+            `Request failed with status ${response.status}`,
+        );
+      }
+
+      await refreshServiceData();
+    } catch (error) {
+      console.error(
+        "Error deleting service:",
+        error,
+      );
+    }
   };
 
   // ================= CLOSE MODAL =================
@@ -253,63 +455,72 @@ const Page = () => {
 
   // ================= SAVE =================
 
-  const handleSave = (
+  const handleSave = async (
     event: React.FormEvent,
   ) => {
     event.preventDefault();
 
-    // ================= ADD NEW ITEM =================
+    try {
+      const title = editName.trim();
 
-    if (isAddMode) {
-      const newId =
-        productData.length > 0
-          ? Math.max(
-              ...productData.map(
-                (item) => item.id,
-              ),
-            ) + 1
-          : 1;
+      if (!title) return;
 
-      const newItem: ProductItem = {
-        id: newId,
-        name: editName,
-        content: editContent,
-        link: editLink,
-        status: "active",
-        image: editImage,
-        imageName: editImageName,
+      if (!isAddMode && !selectedItem) {
+        throw new Error("No service selected");
+      }
+
+      if (
+        editCategory.some(
+          (draft) => !draft.title.trim(),
+        )
+      ) {
+        alert("Every category needs a title.");
+        return;
+      }
+
+      const category = buildCategories(editCategory);
+
+      const payload = {
+        title,
+        description: editContent,
+        image: editImageName || null,
+        category,
+        altDescription: editAltDescription || null,
+        btnName: editBtnName || null,
+        isImageOnLeft: editIsImageOnLeft,
       };
 
-      setProductData((previousData) => [
-        ...previousData,
-        newItem,
-      ]);
+      const response = await fetch(
+        "/api/client/services",
+        {
+          method: isAddMode ? "POST" : "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(
+            isAddMode
+              ? payload
+              : { id: selectedItem?.id, ...payload },
+          ),
+        },
+      );
 
+      const data = await response
+        .json()
+        .catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error ||
+            `Request failed with status ${response.status}`,
+        );
+      }
+
+      await refreshServiceData();
       handleCloseModal();
-
-      return;
+    } catch (error) {
+      console.error("Error saving service:", error);
     }
-
-    // ================= UPDATE EXISTING ITEM =================
-
-    if (!selectedItem) return;
-
-    setProductData((previousData) =>
-      previousData.map((item) =>
-        item.id === selectedItem.id
-          ? {
-              ...item,
-              name: editName,
-              content: editContent,
-              link: editLink,
-              image: editImage,
-              imageName: editImageName,
-            }
-          : item,
-      ),
-    );
-
-    handleCloseModal();
   };
 
   return (
@@ -432,34 +643,6 @@ const Page = () => {
                       text-(--text-primary-dashboard)
                     "
                   >
-                    Link
-                  </th>
-
-                  <th
-                    className="
-                      bg-(--bg-table)
-                      px-5
-                      py-4
-                      text-left
-                      text-sm
-                      font-semibold
-                      text-(--text-primary-dashboard)
-                    "
-                  >
-                    Status
-                  </th>
-
-                  <th
-                    className="
-                      bg-(--bg-table)
-                      px-5
-                      py-4
-                      text-left
-                      text-sm
-                      font-semibold
-                      text-(--text-primary-dashboard)
-                    "
-                  >
                     Actions
                   </th>
 
@@ -521,132 +704,6 @@ const Page = () => {
                       {item.content}
                     </td>
 
-                    {/* LINK */}
-
-                    <td
-                      className="
-                        px-5
-                        py-4
-                        text-sm
-                        text-(--bg-lightblue)
-                      "
-                    >
-                      {item.link || "-"}
-                    </td>
-
-                    {/* STATUS */}
-
-                    <td className="px-5 py-4">
-                      <div className="relative inline-block">
-                        {/* TRIGGER */}
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenDropdownId(
-                              openDropdownId ===
-                                item.id
-                                ? null
-                                : item.id,
-                            )
-                          }
-                          className={`
-                            flex
-                            items-center
-                            gap-2
-                            rounded-full
-                            border
-                            px-3
-                            py-1.5
-                            text-xs
-                            font-medium
-                            capitalize
-                            transition
-                            hover:cursor-pointer
-                            ${
-                              item.status ===
-                              "active"
-                                ? "border-(--success-dashboard)/30 bg-(--success-dashboard)/10 text-(--success-dashboard)"
-                                : "border-(--danger-dashboard)/30 bg-(--danger-dashboard)/10 text-(--danger-dashboard)"
-                            }
-                          `}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              item.status ===
-                              "active"
-                                ? "bg-(--success-dashboard)"
-                                : "bg-(--danger-dashboard)"
-                            }`}
-                          />
-
-                          {item.status}
-
-                          <ChevronDown
-                            size={14}
-                            className={`transition-transform ${
-                              openDropdownId ===
-                              item.id
-                                ? "rotate-180"
-                                : ""
-                            }`}
-                          />
-                        </button>
-
-                        {/* DROPDOWN MENU */}
-
-                        {openDropdownId ===
-                          item.id && (
-                          <div className="absolute right-0 top-full z-10 mt-1 w-32 overflow-hidden rounded-lg border border-(--border-primary-dashboard) bg-(--bg-primary-dashboard) shadow-lg">
-                            {(["active", "inactive"] as Status[]).map(
-                              (statusOption) => (
-                                <button
-                                  key={statusOption}
-                                  type="button"
-                                  onClick={() =>
-                                    handleStatusChange(
-                                      item.id,
-                                      statusOption,
-                                    )
-                                  }
-                                  className={`
-                                    flex
-                                    w-full
-                                    items-center
-                                    gap-2
-                                    px-3
-                                    py-2
-                                    text-left
-                                    text-sm
-                                    capitalize
-                                    transition
-                                    hover:bg-(--secondary-bg-dashboard)
-                                    hover:cursor-pointer
-                                    ${
-                                      item.status ===
-                                      statusOption
-                                        ? "font-medium text-(--background)"
-                                        : "text-(--text-primary-dashboard)"
-                                    }
-                                  `}
-                                >
-                                  <span
-                                    className={`h-2 w-2 rounded-full ${
-                                      statusOption ===
-                                      "active"
-                                        ? "bg-(--success-dashboard)"
-                                        : "bg-(--danger-dashboard)"
-                                    }`}
-                                  />
-
-                                  {statusOption}
-                                </button>
-                              ),
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </td>
 {/* ACTIONS */}
 
                     <td className="px-5 py-4">
@@ -809,8 +866,10 @@ const Page = () => {
 
           <div
             className="
+              max-h-[calc(100dvh-2rem)]
               w-full
               max-w-lg
+              overflow-y-auto
               rounded-2xl
               border
               border-(--border-primary-dashboard)
@@ -897,7 +956,7 @@ const Page = () => {
 
               {/* ================= ID ================= */}
 
-              <div className="sm:col-span-2">
+              <div>
 
                 <label
                   htmlFor="product-id"
@@ -946,7 +1005,7 @@ const Page = () => {
 
               {/* ================= NAME ================= */}
 
-              <div className="sm:col-span-2">
+              <div>
 
                 <label
                   htmlFor="product-name"
@@ -1043,54 +1102,6 @@ const Page = () => {
 
               </div>
 
-              {/* ================= LINK ================= */}
-
-              <div>
-
-                <label
-                  htmlFor="product-link"
-                  className="
-                    mb-2
-                    block
-                    text-sm
-                    font-medium
-                    text-(--text-primary-dashboard)
-                  "
-                >
-                  Link
-                </label>
-
-                <input
-                  id="product-link"
-                  type="text"
-                  value={editLink}
-                  onChange={(event) =>
-                    dispatch({
-                      type: "UPDATE_LINK",
-                      value: event.target.value,
-                    })
-                  }
-                  placeholder="Enter product link"
-                  className="
-                    w-full
-                    rounded-lg
-                    border
-                    border-(--border-primary-dashboard)
-                    bg-(--bg-primary-dashboard)
-                    px-4
-                    py-2.5
-                    text-sm
-                    text-(--text-primary-dashboard)
-                    outline-none
-                    transition
-                    focus:border-(--bg-lightblue)
-                    focus:ring-2
-                    focus:ring-(--bg-lightblue)/20
-                  "
-                />
-
-              </div>
-
               {/* ================= IMAGE UPLOAD ================= */}
 
               <div>
@@ -1157,6 +1168,536 @@ const Page = () => {
                     focus:border-(--bg-lightblue)
                     focus:ring-2
                     focus:ring-(--bg-lightblue)/20
+                  "
+                />
+
+              </div>
+
+              {/* ================= ALT DESCRIPTION ================= */}
+
+              <div>
+
+                <label
+                  htmlFor="product-alt-description"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Alt Description
+                </label>
+
+                <input
+                  id="product-alt-description"
+                  type="text"
+                  value={editAltDescription}
+                  onChange={(event) =>
+                    dispatch({
+                      type: "UPDATE_ALT_DESCRIPTION",
+                      value: event.target.value,
+                    })
+                  }
+                  placeholder="Enter alt description"
+                  className="
+                    w-full
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    bg-(--bg-primary-dashboard)
+                    px-4
+                    py-2.5
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    outline-none
+                    transition
+                    focus:border-(--bg-lightblue)
+                    focus:ring-2
+                    focus:ring-(--bg-lightblue)/20
+                  "
+                />
+
+              </div>
+
+              {/* ================= BUTTON NAME ================= */}
+
+              <div>
+
+                <label
+                  htmlFor="product-btn-name"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Button Name
+                </label>
+
+                <input
+                  id="product-btn-name"
+                  type="text"
+                  value={editBtnName}
+                  onChange={(event) =>
+                    dispatch({
+                      type: "UPDATE_BTN_NAME",
+                      value: event.target.value,
+                    })
+                  }
+                  placeholder="Enter button name"
+                  className="
+                    w-full
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    bg-(--bg-primary-dashboard)
+                    px-4
+                    py-2.5
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    outline-none
+                    transition
+                    focus:border-(--bg-lightblue)
+                    focus:ring-2
+                    focus:ring-(--bg-lightblue)/20
+                  "
+                />
+
+              </div>
+
+              {/* ================= IMAGE ON LEFT ================= */}
+
+              <div>
+
+                <span
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Image on Left
+                </span>
+
+                <label
+                  className="
+                    flex
+                    w-fit
+                    items-center
+                    gap-2
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    hover:cursor-pointer
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    checked={editIsImageOnLeft}
+                    onChange={(event) =>
+                      dispatch({
+                        type: "UPDATE_IS_IMAGE_ON_LEFT",
+                        value: event.target.checked,
+                      })
+                    }
+                    className="
+                      h-4
+                      w-4
+                      cursor-pointer
+                    "
+                  />
+
+                  {editIsImageOnLeft ? "Yes" : "No"}
+                </label>
+
+              </div>
+
+              {/* ================= CATEGORY ================= */}
+
+              <div className="sm:col-span-2">
+
+                <span
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Category
+                </span>
+
+                <div
+                  className="
+                    w-full
+                    overflow-x-auto
+                    rounded-xl
+                    border
+                    border-(--border-primary-dashboard)
+                  "
+                >
+                  <table
+                    className="
+                      w-full
+                      border-collapse
+                      text-left
+                    "
+                  >
+                    <thead>
+                      <tr>
+                        <th
+                          className="
+                            bg-(--bg-table)
+                            px-3
+                            py-2
+                            text-xs
+                            font-semibold
+                            text-(--text-primary-dashboard)
+                          "
+                        >
+                          Slug
+                        </th>
+
+                        <th
+                          className="
+                            bg-(--bg-table)
+                            px-3
+                            py-2
+                            text-xs
+                            font-semibold
+                            text-(--text-primary-dashboard)
+                          "
+                        >
+                          Title
+                        </th>
+
+                        <th
+                          className="
+                            bg-(--bg-table)
+                            px-3
+                            py-2
+                            text-xs
+                            font-semibold
+                            text-(--text-primary-dashboard)
+                          "
+                        >
+                          Description
+                        </th>
+
+                        <th
+                          className="
+                            bg-(--bg-table)
+                            px-3
+                            py-2
+                            text-xs
+                            font-semibold
+                            text-(--text-primary-dashboard)
+                          "
+                        >
+                          Lists
+                        </th>
+
+                        <th
+                          className="
+                            bg-(--bg-table)
+                            px-3
+                            py-2
+                            text-xs
+                            font-semibold
+                            text-(--text-primary-dashboard)
+                          "
+                        >
+                          <span className="sr-only">
+                            Actions
+                          </span>
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {editCategory.map(
+                        (category, index) => (
+                          <tr
+                            key={index}
+                            className="border-t border-(--border-primary-dashboard)"
+                          >
+                            <td className="p-0 align-top">
+                              <input
+                                value={category.slug}
+                                onChange={(event) =>
+                                  dispatch({
+                                    type: "UPDATE_CATEGORY",
+                                    index,
+                                    category: {
+                                      ...category,
+                                      slug: event.target
+                                        .value,
+                                    },
+                                  })
+                                }
+                                placeholder="auto"
+                                className="
+                                  w-full
+                                  min-w-32
+                                  bg-transparent
+                                  px-3
+                                  py-2
+                                  text-sm
+                                  text-(--text-primary-dashboard)
+                                  outline-none
+                                  transition
+                                  focus:bg-(--bg-table)
+                                "
+                              />
+                            </td>
+
+                            <td className="p-0 align-top">
+                              <input
+                                value={category.title}
+                                onChange={(event) =>
+                                  dispatch({
+                                    type: "UPDATE_CATEGORY",
+                                    index,
+                                    category: {
+                                      ...category,
+                                      title: event.target
+                                        .value,
+                                    },
+                                  })
+                                }
+                                placeholder="Title"
+                                className="
+                                  w-full
+                                  min-w-40
+                                  bg-transparent
+                                  px-3
+                                  py-2
+                                  text-sm
+                                  font-medium
+                                  text-(--text-primary-dashboard)
+                                  outline-none
+                                  transition
+                                  focus:bg-(--bg-table)
+                                "
+                              />
+                            </td>
+
+                            <td className="p-0 align-top">
+                              <input
+                                value={
+                                  category.description
+                                }
+                                onChange={(event) =>
+                                  dispatch({
+                                    type: "UPDATE_CATEGORY",
+                                    index,
+                                    category: {
+                                      ...category,
+                                      description:
+                                        event.target.value,
+                                    },
+                                  })
+                                }
+                                placeholder="Description"
+                                className="
+                                  w-full
+                                  min-w-48
+                                  bg-transparent
+                                  px-3
+                                  py-2
+                                  text-sm
+                                  text-(--text-primary-dashboard)/70
+                                  outline-none
+                                  transition
+                                  focus:bg-(--bg-table)
+                                "
+                              />
+                            </td>
+
+                            <td className="p-0 align-top">
+                              <input
+                                value={category.lists}
+                                onChange={(event) =>
+                                  dispatch({
+                                    type: "UPDATE_CATEGORY",
+                                    index,
+                                    category: {
+                                      ...category,
+                                      lists: event.target
+                                        .value,
+                                    },
+                                  })
+                                }
+                                placeholder="item one, item two"
+                                className="
+                                  w-full
+                                  min-w-56
+                                  bg-transparent
+                                  px-3
+                                  py-2
+                                  text-sm
+                                  text-(--text-primary-dashboard)
+                                  outline-none
+                                  transition
+                                  focus:bg-(--bg-table)
+                                "
+                              />
+                            </td>
+
+                            <td className="px-2 py-2 align-top">
+                              <button
+                                type="button"
+                                aria-label="Remove category"
+                                onClick={() =>
+                                  dispatch({
+                                    type: "REMOVE_CATEGORY",
+                                    index,
+                                  })
+                                }
+                                className="
+                                  rounded-md
+                                  p-1.5
+                                  text-(--text-primary-dashboard)/60
+                                  transition
+                                  hover:bg-(--bg-table)
+                                  hover:text-red-500
+                                "
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </td>
+                          </tr>
+                        ),
+                      )}
+
+                      {editCategory.length === 0 && (
+                        <tr>
+                          <td
+                            colSpan={5}
+                            className="
+                              px-3
+                              py-4
+                              text-center
+                              text-sm
+                              text-(--text-primary-dashboard)/70
+                            "
+                          >
+                            No categories yet.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    dispatch({ type: "ADD_CATEGORY" })
+                  }
+                  className="
+                    mt-3
+                    inline-flex
+                    items-center
+                    gap-2
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    px-3
+                    py-2
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                    transition
+                    hover:border-(--bg-lightblue)
+                    hover:text-(--bg-lightblue)
+                  "
+                >
+                  <Plus size={15} />
+                  Add Category
+                </button>
+
+              </div>
+
+              {/* ================= CREATED AT ================= */}
+
+              <div>
+
+                <label
+                  htmlFor="product-created-at"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Created At
+                </label>
+
+                <input
+                  id="product-created-at"
+                  type="text"
+                  value={formatDate(editCreatedAt)}
+                  readOnly
+                  className="
+                    w-full
+                    cursor-not-allowed
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    bg-(--secondary-bg-dashboard)
+                    px-4
+                    py-2.5
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    outline-none
+                  "
+                />
+
+              </div>
+
+              {/* ================= UPDATED AT ================= */}
+
+              <div>
+
+                <label
+                  htmlFor="product-updated-at"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)
+                  "
+                >
+                  Updated At
+                </label>
+
+                <input
+                  id="product-updated-at"
+                  type="text"
+                  value={formatDate(editUpdatedAt)}
+                  readOnly
+                  className="
+                    w-full
+                    cursor-not-allowed
+                    rounded-lg
+                    border
+                    border-(--border-primary-dashboard)
+                    bg-(--secondary-bg-dashboard)
+                    px-4
+                    py-2.5
+                    text-sm
+                    text-(--text-primary-dashboard)
+                    outline-none
                   "
                 />
 
@@ -1248,8 +1789,10 @@ const Page = () => {
 
           <div
             className="
+              max-h-[calc(100dvh-2rem)]
               w-full
               max-w-lg
+              overflow-y-auto
               rounded-2xl
               border
               border-(--border-primary-dashboard)
@@ -1321,6 +1864,7 @@ const Page = () => {
             {/* ================= DETAILS ================= */}
 
             <dl className="space-y-4">
+
               <div className="flex items-start gap-4">
                 <dt
                   className="
@@ -1334,7 +1878,7 @@ const Page = () => {
                   ID
                 </dt>
 
-                <dd className="text-sm text-(--text-primary-dashboard)">
+                <dd className="min-w-0 text-sm text-(--text-primary-dashboard)">
                   {viewItem.id}
                 </dd>
               </div>
@@ -1352,7 +1896,7 @@ const Page = () => {
                   Name
                 </dt>
 
-                <dd className="text-sm text-(--text-primary-dashboard)">
+                <dd className="min-w-0 break-words text-sm text-(--text-primary-dashboard)">
                   {viewItem.name}
                 </dd>
               </div>
@@ -1385,11 +1929,11 @@ const Page = () => {
                     text-(--text-primary-dashboard)/70
                   "
                 >
-                  Link
+                  Image
                 </dt>
 
-                <dd className="text-sm text-(--bg-lightblue)">
-                  {viewItem.link || "-"}
+                <dd className="break-all text-sm text-(--text-primary-dashboard)">
+                  {viewItem.imageName || "-"}
                 </dd>
               </div>
 
@@ -1403,22 +1947,175 @@ const Page = () => {
                     text-(--text-primary-dashboard)/70
                   "
                 >
-                  Status
+                  Category
                 </dt>
 
-                <dd
-                  className={`
+                <dd className="min-w-0 flex-1 text-sm text-(--text-primary-dashboard)">
+                  {viewItem.category.length === 0 ? (
+                    "-"
+                  ) : (
+                    <div className="w-full overflow-x-auto rounded-xl border border-(--border-primary-dashboard)">
+                      <table className="w-full border-collapse text-left">
+                        <thead>
+                          <tr>
+                            <th
+                              className="
+                                bg-(--bg-table)
+                                px-3
+                                py-2
+                                text-xs
+                                font-semibold
+                                text-(--text-primary-dashboard)
+                              "
+                            >
+                              Title
+                            </th>
+
+                            <th
+                              className="
+                                bg-(--bg-table)
+                                px-3
+                                py-2
+                                text-xs
+                                font-semibold
+                                text-(--text-primary-dashboard)
+                              "
+                            >
+                              Description
+                            </th>
+
+                            <th
+                              className="
+                                bg-(--bg-table)
+                                px-3
+                                py-2
+                                text-xs
+                                font-semibold
+                                text-(--text-primary-dashboard)
+                              "
+                            >
+                              Lists
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {viewItem.category.map(
+                            (category) => (
+                              <tr
+                                key={category.slug}
+                                className="border-t border-(--border-primary-dashboard)"
+                              >
+                                <td className="px-3 py-2 align-top font-medium">
+                                  {category.title}
+                                </td>
+
+                                <td className="px-3 py-2 align-top text-(--text-primary-dashboard)/70">
+                                  {category.description}
+                                </td>
+
+                                <td className="px-3 py-2 align-top">
+                                  {category.lists.join(
+                                    ", ",
+                                  )}
+                                </td>
+                              </tr>
+                            ),
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
                     text-sm
-                    capitalize
-                    ${
-                      viewItem.status ===
-                      "active"
-                        ? "text-(--success-dashboard)"
-                        : "text-(--danger-dashboard)"
-                    }
-                  `}
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
                 >
-                  {viewItem.status}
+                  Alt Description
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {viewItem.altDescription || "-"}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Button Name
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {viewItem.btnName || "-"}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Image on Left
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {viewItem.isImageOnLeft ? "Yes" : "No"}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Created At
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {formatDate(viewItem.createdAt)}
+                </dd>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <dt
+                  className="
+                    w-24
+                    shrink-0
+                    text-sm
+                    font-medium
+                    text-(--text-primary-dashboard)/70
+                  "
+                >
+                  Updated At
+                </dt>
+
+                <dd className="text-sm text-(--text-primary-dashboard)">
+                  {formatDate(viewItem.updatedAt)}
                 </dd>
               </div>
             </dl>

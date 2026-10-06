@@ -21,6 +21,7 @@ export interface AuthState {
   register: (data: RegisterData) => Promise<AuthResponse>;
   logout: () => void;
   refreshSession: () => void;
+  establishSession: (user: User) => void;
   setUser: (user: User) => void;
   setProfilePicture: (picture: string) => void;
   setHasHydrated: (value: boolean) => void;
